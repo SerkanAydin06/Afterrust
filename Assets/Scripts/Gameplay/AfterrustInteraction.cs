@@ -34,10 +34,25 @@ namespace Afterrust
             if (Keyboard.current == null || !Keyboard.current.eKey.wasPressedThisFrame) return;
             if (target != null)
             {
-                if (target.TrySalvage(inventory))
-                    feedback = "Sokuldu: " + target.displayName + " (+" + target.SaleValue + " K)";
-                else
-                    feedback = "Sokulemedi: alet eksik veya cantan dolu.";
+                SalvageResult result = target.TrySalvageDetailed(inventory);
+                switch (result)
+                {
+                    case SalvageResult.Success:
+                        feedback = "Sokuldu: " + target.displayName + " (deger " + target.SaleValue + " K)";
+                        break;
+                    case SalvageResult.MissingTool:
+                        feedback = "Gerekli alet: " + target.EffectiveTool;
+                        break;
+                    case SalvageResult.Blocked:
+                        feedback = "Once diger bagli parcalari sokmelisin.";
+                        break;
+                    case SalvageResult.InventoryFull:
+                        feedback = "Canta dolu veya kapasite yetersiz.";
+                        break;
+                    default:
+                        feedback = "Bu parca zaten sokulmus.";
+                        break;
+                }
             }
             else if (nearTrader && inventory != null)
                 feedback = "Satis tamamlandi: +" + inventory.SellAll() + " K";
@@ -48,7 +63,8 @@ namespace Afterrust
             GUIStyle style = new GUIStyle(GUI.skin.label) { fontSize = 18, alignment = TextAnchor.MiddleCenter };
             style.normal.textColor = Color.white;
             GUI.Label(new Rect(Screen.width / 2f - 15f, Screen.height / 2f - 15f, 30f, 30f), "+", style);
-            string hint = target != null ? "E - Sok: " + target.displayName + " (%" + target.condition + ")"
+            string hint = target != null ? "E - Sok: " + target.displayName + " (%" + target.condition + ", " +
+                    target.EffectiveTool + (target.PrerequisitesComplete ? "" : ", once baglantilari sok") + ")"
                 : nearTrader ? "E - Cantadaki hurdalari sat" : "WASD hareket | Fare bakis | Shift kos | Space zipla | ESC fare serbest";
             GUI.Label(new Rect(0f, Screen.height - 100f, Screen.width, 28f), hint, style);
             GUI.Label(new Rect(0f, Screen.height - 64f, Screen.width, 30f), feedback, style);
