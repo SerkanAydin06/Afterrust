@@ -31,7 +31,22 @@ namespace Afterrust
                 nearTrader = hit.collider.GetComponentInParent<AfterrustTrader>() != null;
             }
 
-            if (Keyboard.current == null || !Keyboard.current.eKey.wasPressedThisFrame) return;
+            if (Keyboard.current == null) return;
+            if (nearTrader && Keyboard.current.fKey.wasPressedThisFrame)
+            {
+                if (inventory == null) feedback = "Envanter bulunamadi.";
+                else if (inventory.hasWireCutter) feedback = "Kablo kesici zaten sende.";
+                else if (inventory.credits < 60) feedback = "Kablo kesici icin 60 kredi gerekiyor.";
+                else
+                {
+                    inventory.credits -= 60;
+                    inventory.hasWireCutter = true;
+                    feedback = "Kablo kesici alindi. Alternator kablosunu sokebilirsin.";
+                }
+                return;
+            }
+
+            if (!Keyboard.current.eKey.wasPressedThisFrame) return;
             if (target != null)
             {
                 SalvageResult result = target.TrySalvageDetailed(inventory);
@@ -65,7 +80,7 @@ namespace Afterrust
             GUI.Label(new Rect(Screen.width / 2f - 15f, Screen.height / 2f - 15f, 30f, 30f), "+", style);
             string hint = target != null ? "E - Sok: " + target.displayName + " (%" + target.condition + ", " +
                     target.EffectiveTool + (target.PrerequisitesComplete ? "" : ", once baglantilari sok") + ")"
-                : nearTrader ? "E - Cantadaki hurdalari sat" : "WASD hareket | Fare bakis | Shift kos | Space zipla | ESC fare serbest";
+                : nearTrader ? "E - Hurdalari sat | F - Kablo kesici satin al (60 K)" : "WASD hareket | Fare bakis | Shift kos | Space zipla | ESC fare serbest";
             GUI.Label(new Rect(0f, Screen.height - 100f, Screen.width, 28f), hint, style);
             GUI.Label(new Rect(0f, Screen.height - 64f, Screen.width, 30f), feedback, style);
             if (inventory != null)
