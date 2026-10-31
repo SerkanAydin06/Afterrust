@@ -66,18 +66,48 @@
     },
     {
       "id": "05_character_test",
-      "description": "Scavenger humanoid model test pedestal (Meshy FBX or placeholder)",
+      "description": "Front-level diagnosis of imported scavenger on centered pedestal",
       "position": {
         "x": 8,
-        "y": 2,
-        "z": 2.5
+        "y": 1.4,
+        "z": 4
       },
       "rotation": {
-        "x": 5,
+        "x": 0,
         "y": 0,
         "z": 0
       },
       "fieldOfView": 55
+    },
+    {
+      "id": "06_character_side",
+      "description": "Side view to inspect FBX rotation, height, and feet alignment",
+      "position": {
+        "x": 12,
+        "y": 1.4,
+        "z": 8
+      },
+      "rotation": {
+        "x": 0,
+        "y": 270,
+        "z": 0
+      },
+      "fieldOfView": 55
+    },
+    {
+      "id": "07_character_overview",
+      "description": "High-angle inspection of pedestal and character placement",
+      "position": {
+        "x": 8,
+        "y": 4.5,
+        "z": 2
+      },
+      "rotation": {
+        "x": 26,
+        "y": 0,
+        "z": 0
+      },
+      "fieldOfView": 58
     }
   ]
 }
