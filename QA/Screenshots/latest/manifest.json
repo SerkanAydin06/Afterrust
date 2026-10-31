@@ -1,9 +1,9 @@
 {
-    "capturedAtUtc": "2026-10-31T20:09:02.4566266Z",
+    "capturedAtUtc": "2026-10-31T20:11:52.6654711Z",
     "unityVersion": "6000.3.27f2",
     "scene": "AfterrustPrototype",
     "planAsset": "Assets/Resources/qa_screenshot_plan.json",
-    "imageCount": 5,
+    "imageCount": 7,
     "images": [
         {
             "file": "01_spawn_and_vehicle.png",
@@ -63,14 +63,42 @@
         },
         {
             "file": "05_character_test.png",
-            "description": "Scavenger humanoid model test pedestal (Meshy FBX or placeholder)",
+            "description": "Front-level diagnosis of imported scavenger on centered pedestal",
             "position": {
                 "x": 8.0,
-                "y": 2.0,
-                "z": 2.5
+                "y": 1.399999976158142,
+                "z": 4.0
             },
             "rotation": {
-                "x": 5.0,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "06_character_side.png",
+            "description": "Side view to inspect FBX rotation, height, and feet alignment",
+            "position": {
+                "x": 12.0,
+                "y": 1.399999976158142,
+                "z": 8.0
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 270.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "07_character_overview.png",
+            "description": "High-angle inspection of pedestal and character placement",
+            "position": {
+                "x": 8.0,
+                "y": 4.5,
+                "z": 2.0
+            },
+            "rotation": {
+                "x": 26.0,
                 "y": 0.0,
                 "z": 0.0
             }
