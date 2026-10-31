@@ -17,3 +17,10 @@ Sahibi kod yazmadan, güvenli ve test edilebilir küçük iterasyonlarla oyunu y
 
 ## Ajan rol dağılımı
 Claude Code ana uygulama, Codex bağımsız kod/test incelemesi, Gemini seçici ikinci görüş, Meshy varlık üretimi, ChatGPT görev ve ürün yönetimi. Entegrasyonlar yapılandırılana kadar otomatik çalıştıkları varsayılmaz.
+
+## Görsel kalite kontrol otomasyonu
+- Unity Editor Play modunda `Assets/Resources/qa_screenshot_plan.json` içindeki açılardan ekran görüntüsü üretilir.
+- AI yeni görev için yalnız gerekli kamera açılarını plan dosyasında düzenler; kısa, sabit kimlikler ve açıklamalar kullanır.
+- Çıktılar yalnız `QA/Screenshots/latest/` altında tutulur; kullanıcı commit/push yaptıktan sonra GitHub üzerinden incelenir.
+- Ekran görüntülerini gerçekten görmeden veya Unity'de derleme yapmadan kalite kontrolünün geçtiğini iddia etme.
+- Talimatlar: `docs/SCREENSHOT_QA.md`.
