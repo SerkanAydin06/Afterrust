@@ -1,0 +1,65 @@
+{
+    "capturedAtUtc": "2026-10-31T19:02:28.0620043Z",
+    "unityVersion": "6000.3.27f2",
+    "scene": "AfterrustPrototype",
+    "planAsset": "Assets/Resources/qa_screenshot_plan.json",
+    "imageCount": 4,
+    "images": [
+        {
+            "file": "01_player_spawn.png",
+            "description": "Player starting view towards salvage items",
+            "position": {
+                "x": 0.0,
+                "y": 2.75,
+                "z": -9.0
+            },
+            "rotation": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "02_salvage_area.png",
+            "description": "Detailed view of battery alternator and scrap",
+            "position": {
+                "x": 0.0,
+                "y": 1.9500000476837159,
+                "z": -4.5
+            },
+            "rotation": {
+                "x": 8.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "03_trade_post.png",
+            "description": "Trade point viewed from front",
+            "position": {
+                "x": 5.0,
+                "y": 2.0,
+                "z": -5.0
+            },
+            "rotation": {
+                "x": 4.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "04_industrial_overview.png",
+            "description": "Wide high-angle view of the industrial prototype",
+            "position": {
+                "x": 0.0,
+                "y": 17.0,
+                "z": -20.0
+            },
+            "rotation": {
+                "x": 32.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        }
+    ]
+}
