@@ -5,38 +5,38 @@
   "delaySeconds": 2,
   "views": [
     {
-      "id": "01_player_spawn",
-      "description": "Player starting view towards salvage items",
+      "id": "01_spawn_and_vehicle",
+      "description": "Player start: prototype car and salvage work area",
       "position": {
         "x": 0,
         "y": 2.75,
         "z": -9
       },
       "rotation": {
-        "x": 0,
+        "x": 7,
         "y": 0,
         "z": 0
       },
       "fieldOfView": 65
     },
     {
-      "id": "02_salvage_area",
-      "description": "Detailed view of battery alternator and scrap",
+      "id": "02_car_connections",
+      "description": "Closer view of car battery clamp, battery, alternator cable and alternator",
       "position": {
         "x": 0,
-        "y": 1.95,
-        "z": -4.5
+        "y": 2.1,
+        "z": -3.3
       },
       "rotation": {
-        "x": 8,
+        "x": 19,
         "y": 0,
         "z": 0
       },
-      "fieldOfView": 65
+      "fieldOfView": 67
     },
     {
       "id": "03_trade_post",
-      "description": "Trade point viewed from front",
+      "description": "Trade post for sale and wire-cutter purchase",
       "position": {
         "x": 5,
         "y": 2,
@@ -51,7 +51,7 @@
     },
     {
       "id": "04_industrial_overview",
-      "description": "Wide high-angle view of the industrial prototype",
+      "description": "Industrial graybox overview for visual composition",
       "position": {
         "x": 0,
         "y": 17,
