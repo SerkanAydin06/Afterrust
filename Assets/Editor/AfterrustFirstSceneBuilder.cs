@@ -146,7 +146,7 @@ namespace Afterrust.EditorTools
         private static GameObject FindCharacterAsset()
         {
             if (!AssetDatabase.IsValidFolder(CharacterDirectory)) return null;
-            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { CharacterDirectory });
+            string[] guids = AssetDatabase.FindAssets("t:GameObject", new[] { CharacterDirectory });
             GameObject glb = null;
             for (int i = 0; i < guids.Length; i++)
             {
