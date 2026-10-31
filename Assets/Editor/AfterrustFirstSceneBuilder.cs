@@ -91,12 +91,32 @@ namespace Afterrust.EditorTools
             sunlight.color = new Color(0.86f, 0.89f, 0.92f);
             lightObject.transform.rotation = Quaternion.Euler(45f, -30f, 0f);
 
-            CreateSalvage("Car Battery", new Vector3(-1.2f, 0.7f, 0f), new Vector3(0.7f, 0.5f, 0.5f),
-                "battery", "Arac Akusu", 14f, 80, 72, true, darkMetal);
-            CreateSalvage("Alternator", new Vector3(0f, 0.7f, 0f), new Vector3(0.5f, 0.5f, 0.5f),
-                "alternator", "Alternator", 6f, 170, 91, true, rust);
-            CreateSalvage("Loose Metal", new Vector3(1.2f, 0.5f, 0f), new Vector3(0.7f, 0.2f, 0.7f),
-                "scrap", "Metal Hurda", 3f, 15, 60, false, ruinMetal);
+            // Modular vehicle salvage sample. Take the battery clamp first, then the battery.
+            GameObject chassis = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            chassis.name = "Abandoned Car - Chassis (prototype)";
+            chassis.transform.position = new Vector3(0f, 0.35f, 0f);
+            chassis.transform.localScale = new Vector3(3.6f, 0.4f, 1.6f);
+            ApplyMaterial(chassis, rust);
+
+            SalvageablePart clamp = CreateSalvage("Battery Clamp", new Vector3(-1.2f, 1.04f, -0.05f),
+                new Vector3(0.75f, 0.12f, 0.25f), "battery-clamp", "Aku Baglantisi",
+                0.5f, 15, 80, SalvageTool.Screwdriver, darkMetal);
+            SalvageablePart battery = CreateSalvage("Car Battery", new Vector3(-1.2f, 0.72f, 0f),
+                new Vector3(0.7f, 0.55f, 0.5f), "battery", "Arac Akusu",
+                14f, 80, 72, SalvageTool.Wrench, darkMetal);
+            battery.removeFirst = new[] { clamp };
+
+            SalvageablePart wire = CreateSalvage("Alternator Wire", new Vector3(0f, 1.04f, -0.05f),
+                new Vector3(0.55f, 0.12f, 0.2f), "alternator-wire", "Alternator Kablosu",
+                0.3f, 20, 60, SalvageTool.WireCutter, darkMetal);
+            SalvageablePart alternator = CreateSalvage("Alternator", new Vector3(0f, 0.72f, 0f),
+                new Vector3(0.5f, 0.5f, 0.5f), "alternator", "Alternator",
+                6f, 170, 91, SalvageTool.Wrench, ruinMetal);
+            alternator.removeFirst = new[] { wire };
+
+            CreateSalvage("Loose Metal", new Vector3(2.4f, 0.4f, -1.5f),
+                new Vector3(0.7f, 0.3f, 0.7f), "scrap", "Metal Hurda",
+                3f, 15, 60, SalvageTool.None, ruinMetal);
 
             GameObject trader = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             trader.name = "Trade Post - E to Sell";
@@ -149,8 +169,8 @@ namespace Afterrust.EditorTools
             return material;
         }
 
-        private static void CreateSalvage(string name, Vector3 position, Vector3 scale,
-            string id, string title, float mass, int value, int condition, bool wrench, Material material)
+        private static SalvageablePart CreateSalvage(string name, Vector3 position, Vector3 scale,
+            string id, string title, float mass, int value, int condition, SalvageTool tool, Material material)
         {
             GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
             obj.name = name;
@@ -163,7 +183,8 @@ namespace Afterrust.EditorTools
             part.massKg = mass;
             part.baseValue = value;
             part.condition = condition;
-            part.requiresWrench = wrench;
+            part.requiredTool = tool;
+            return part;
         }
     }
 }
