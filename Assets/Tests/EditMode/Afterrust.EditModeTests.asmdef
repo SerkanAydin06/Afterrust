@@ -1,7 +1,9 @@
 {
   "name": "Afterrust.EditModeTests",
   "rootNamespace": "Afterrust.Tests",
-  "references": [],
+  "references": [
+    "Afterrust.Runtime"
+  ],
   "includePlatforms": [
     "Editor"
   ],
