@@ -1,0 +1,31 @@
+name: Validate project docs
+on:
+  push:
+    paths:
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'docs/**'
+      - '.github/workflows/docs-check.yml'
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'AGENTS.md'
+      - 'docs/**'
+      - '.github/workflows/docs-check.yml'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate core project files
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in README.md AGENTS.md docs/DECISIONS.md docs/GAME_DESIGN.md docs/ROADMAP.md docs/AI_EFFICIENCY.md docs/TECH_STACK.md docs/AI_AUTOMATION_SETUP.md; do
+            test -s "$f" || { echo "Missing or empty: $f"; exit 1; }
+          done
+          grep -qi 'Afterrust' README.md
+          grep -qi 'Unity 6.3 LTS' docs/TECH_STACK.md
+          echo "Project documentation checks passed."
