@@ -141,7 +141,28 @@ namespace Afterrust.EditorTools
             Debug.Log("[Afterrust] Industrial prototype rebuilt with dark materials and balanced lighting. Press Play.");
         }
 
-        private const string CharacterModelPath = "Assets/Art/Characters/Scavenger/Scavenger.fbx";
+        private const string CharacterDirectory = "Assets/Arts/Characters/Scavenger";
+
+        private static GameObject FindCharacterAsset()
+        {
+            if (!AssetDatabase.IsValidFolder(CharacterDirectory)) return null;
+
+            // Prefer Meshy GLB but also accept a later FBX export without editing this script.
+            string[] guids = AssetDatabase.FindAssets("t:GameObject", new[] { CharacterDirectory });
+            GameObject fbx = null;
+            for (int i = 0; i < guids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+                if (!path.EndsWith(".glb", System.StringComparison.OrdinalIgnoreCase) &&
+                    !path.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase)) continue;
+                GameObject imported = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (imported == null) continue;
+                if (path.EndsWith(".glb", System.StringComparison.OrdinalIgnoreCase))
+                    return imported;
+                fbx = imported;
+            }
+            return fbx;
+        }
 
         private static void CreateCharacterTestSpot(Material darkMetal, Material traderPaint)
         {
@@ -152,11 +173,11 @@ namespace Afterrust.EditorTools
             baseObject.transform.localScale = new Vector3(1.5f, 0.1f, 1.5f);
             ApplyMaterial(baseObject, darkMetal);
 
-            GameObject source = AssetDatabase.LoadAssetAtPath<GameObject>(CharacterModelPath);
+            GameObject source = FindCharacterAsset();
             if (source != null)
             {
                 GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(source);
-                model.name = "Meshy Scavenger - Imported FBX";
+                model.name = "Meshy Scavenger - Imported Model";
                 model.transform.position = spot + new Vector3(0f, 0.2f, 0f);
                 model.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
                 Renderer[] renderers = model.GetComponentsInChildren<Renderer>();
@@ -176,7 +197,7 @@ namespace Afterrust.EditorTools
                         model.transform.position += Vector3.up * ((spot.y + 0.2f) - bounds.min.y);
                     }
                 }
-                Debug.Log("[Afterrust] Meshy scavenger FBX installed at character test spot.");
+                Debug.Log("[Afterrust] Meshy scavenger model placed at character test spot.");
             }
             else
             {
@@ -185,7 +206,7 @@ namespace Afterrust.EditorTools
                 placeholder.transform.position = spot + new Vector3(0f, 1.1f, 0f);
                 placeholder.transform.localScale = new Vector3(0.55f, 0.9f, 0.55f);
                 ApplyMaterial(placeholder, traderPaint);
-                Debug.Log("[Afterrust] Character placeholder active; place Scavenger.fbx in Assets/Art/Characters/Scavenger and rebuild scene.");
+                Debug.LogWarning("[Afterrust] Character model is not imported yet. GLB requires glTFast package, then rebuild scene. Check Assets/Arts/Characters/Scavenger.");
             }
         }
 
