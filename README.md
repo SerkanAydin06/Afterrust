@@ -22,3 +22,11 @@ Medeniyetin çökmesinin ardından eski dünyanın makineleri hayatta kalanları
 Önce küçük çalışan sürüm; kapsamlı açık dünya ve ağır lojistik daha sonra. Her özellik küçük değişiklikler, testler ve geri alınabilir Git commit'leriyle geliştirilecek.
 
 **Marka notu:** Afterrust adının ticari kullanım uygunluğu resmî marka incelemesiyle henüz kesinleşmedi.
+
+## Unity 6.3 LTS prototip (ilk proje iskeleti)
+- [Bilgisayarda açılış adımları](docs/UNITY_QUICKSTART.md)
+- [Otomasyon ve entegrasyon durumları](docs/AI_AUTOMATION_SETUP.md)
+- [Unity teknik kararları](docs/TECH_STACK.md)
+- [AI görev şablonu](.github/ISSUE_TEMPLATE/ai-task.yml)
+
+Not: İlk FPS/hurda prototip kodları depoya eklendi; Unity Editor içinde derleme ve çalışma testi henüz yapılmadı. GitHub Actions yalnız belge ve yapı doğruluyor, gerçek Unity derlemesi henüz etkin değil.
