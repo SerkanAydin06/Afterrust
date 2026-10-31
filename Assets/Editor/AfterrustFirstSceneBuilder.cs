@@ -146,22 +146,73 @@ namespace Afterrust.EditorTools
         private static GameObject FindCharacterAsset()
         {
             if (!AssetDatabase.IsValidFolder(CharacterDirectory)) return null;
-
-            // Prefer Meshy GLB but also accept a later FBX export without editing this script.
-            string[] guids = AssetDatabase.FindAssets("t:GameObject", new[] { CharacterDirectory });
-            GameObject fbx = null;
+            string[] guids = AssetDatabase.FindAssets("t:Model", new[] { CharacterDirectory });
+            GameObject glb = null;
             for (int i = 0; i < guids.Length; i++)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guids[i]);
-                if (!path.EndsWith(".glb", System.StringComparison.OrdinalIgnoreCase) &&
-                    !path.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase)) continue;
-                GameObject imported = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                if (imported == null) continue;
-                if (path.EndsWith(".glb", System.StringComparison.OrdinalIgnoreCase))
-                    return imported;
-                fbx = imported;
+                bool isFbx = path.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase);
+                bool isGlb = path.EndsWith(".glb", System.StringComparison.OrdinalIgnoreCase);
+                if (!isFbx && !isGlb) continue;
+                GameObject model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (model == null) continue;
+                if (isFbx) return model;
+                if (glb == null) glb = model;
             }
-            return fbx;
+            return glb;
+        }
+
+        private static Material GetCharacterMaterial()
+        {
+            string[] guids = AssetDatabase.FindAssets("t:Texture2D", new[] { CharacterDirectory });
+            Texture2D baseColor = null;
+            Texture2D normalMap = null;
+            for (int i = 0; i < guids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+                string filename = System.IO.Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
+                if (filename.EndsWith("_normal"))
+                {
+                    TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                    if (importer != null && importer.textureType != TextureImporterType.NormalMap)
+                    {
+                        importer.textureType = TextureImporterType.NormalMap;
+                        importer.SaveAndReimport();
+                    }
+                    normalMap = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                }
+                else if (!filename.EndsWith("_metallic") && !filename.EndsWith("_roughness") &&
+                         !filename.EndsWith("_metallic_roughness") && !filename.EndsWith("_metallic-roughness"))
+                {
+                    baseColor = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+                }
+            }
+            if (baseColor == null) return null;
+
+            string pathToMaterial = "Assets/Materials/M_Scavenger.mat";
+            Material material = AssetDatabase.LoadAssetAtPath<Material>(pathToMaterial);
+            Shader shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null) shader = Shader.Find("Standard");
+            if (shader == null) return null;
+            if (material == null)
+            {
+                material = new Material(shader) { name = "M_Scavenger" };
+                AssetDatabase.CreateAsset(material, pathToMaterial);
+            }
+            else if (material.shader != shader) material.shader = shader;
+
+            if (material.HasProperty("_BaseMap")) material.SetTexture("_BaseMap", baseColor);
+            if (material.HasProperty("_MainTex")) material.SetTexture("_MainTex", baseColor);
+            if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", Color.white);
+            if (material.HasProperty("_Color")) material.SetColor("_Color", Color.white);
+            if (material.HasProperty("_Smoothness")) material.SetFloat("_Smoothness", 0.16f);
+            if (normalMap != null)
+            {
+                material.EnableKeyword("_NORMALMAP");
+                if (material.HasProperty("_BumpMap")) material.SetTexture("_BumpMap", normalMap);
+            }
+            EditorUtility.SetDirty(material);
+            return material;
         }
 
         private static void CreateCharacterTestSpot(Material darkMetal, Material traderPaint)
@@ -178,6 +229,16 @@ namespace Afterrust.EditorTools
             {
                 GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(source);
                 model.name = "Meshy Scavenger - Imported Model";
+                Material characterMaterial = GetCharacterMaterial();
+                if (characterMaterial != null)
+                {
+                    foreach (Renderer renderer in model.GetComponentsInChildren<Renderer>(true))
+                    {
+                        Material[] materials = renderer.sharedMaterials;
+                        for (int i = 0; i < materials.Length; i++) materials[i] = characterMaterial;
+                        renderer.sharedMaterials = materials;
+                    }
+                }
                 model.transform.position = spot + new Vector3(0f, 0.2f, 0f);
                 model.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
                 Renderer[] renderers = model.GetComponentsInChildren<Renderer>();
@@ -206,7 +267,7 @@ namespace Afterrust.EditorTools
                 placeholder.transform.position = spot + new Vector3(0f, 1.1f, 0f);
                 placeholder.transform.localScale = new Vector3(0.55f, 0.9f, 0.55f);
                 ApplyMaterial(placeholder, traderPaint);
-                Debug.LogWarning("[Afterrust] Character model is not imported yet. GLB requires glTFast package, then rebuild scene. Check Assets/Arts/Characters/Scavenger.");
+                Debug.LogWarning("[Afterrust] Character import not found. Verify Git LFS, FBX import and Assets/Arts/Characters/Scavenger.");
             }
         }
 
