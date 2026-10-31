@@ -103,6 +103,7 @@ namespace Afterrust.QA
         private static void Capture(ScreenshotPlan plan)
         {
             Camera source = Camera.main;
+            if (source == null) source = FindFirstObjectByType<Camera>();
             if (source == null)
             {
                 Debug.LogWarning("[Afterrust QA] No MainCamera available. No screenshots taken.");
