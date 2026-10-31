@@ -1,9 +1,9 @@
 {
-    "capturedAtUtc": "2026-10-31T19:06:09.1132847Z",
+    "capturedAtUtc": "2026-10-31T20:03:51.8227940Z",
     "unityVersion": "6000.3.27f2",
     "scene": "AfterrustPrototype",
     "planAsset": "Assets/Resources/qa_screenshot_plan.json",
-    "imageCount": 4,
+    "imageCount": 5,
     "images": [
         {
             "file": "01_spawn_and_vehicle.png",
@@ -57,6 +57,20 @@
             },
             "rotation": {
                 "x": 32.0,
+                "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "05_character_test.png",
+            "description": "Scavenger humanoid model test pedestal (Meshy FBX or placeholder)",
+            "position": {
+                "x": 8.0,
+                "y": 2.0,
+                "z": 2.5
+            },
+            "rotation": {
+                "x": 5.0,
                 "y": 0.0,
                 "z": 0.0
             }
