@@ -133,10 +133,60 @@ namespace Afterrust.EditorTools
                 ApplyMaterial(ruin, i % 3 == 0 ? rust : ruinMetal);
             }
 
+            CreateCharacterTestSpot(darkMetal, traderPaint);
+
             EditorSceneManager.SaveScene(SceneManager.GetActiveScene(), ScenePath);
             EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(ScenePath, true) };
             Selection.activeGameObject = player;
             Debug.Log("[Afterrust] Industrial prototype rebuilt with dark materials and balanced lighting. Press Play.");
+        }
+
+        private const string CharacterModelPath = "Assets/Art/Characters/Scavenger/Scavenger.fbx";
+
+        private static void CreateCharacterTestSpot(Material darkMetal, Material traderPaint)
+        {
+            Vector3 spot = new Vector3(8f, 0f, 8f);
+            GameObject baseObject = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            baseObject.name = "Character Preview Platform";
+            baseObject.transform.position = spot + new Vector3(0f, 0.1f, 0f);
+            baseObject.transform.localScale = new Vector3(1.5f, 0.1f, 1.5f);
+            ApplyMaterial(baseObject, darkMetal);
+
+            GameObject source = AssetDatabase.LoadAssetAtPath<GameObject>(CharacterModelPath);
+            if (source != null)
+            {
+                GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(source);
+                model.name = "Meshy Scavenger - Imported FBX";
+                model.transform.position = spot + new Vector3(0f, 0.2f, 0f);
+                model.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                Renderer[] renderers = model.GetComponentsInChildren<Renderer>();
+                if (renderers.Length > 0)
+                {
+                    Bounds bounds = renderers[0].bounds;
+                    for (int i = 1; i < renderers.Length; i++)
+                        bounds.Encapsulate(renderers[i].bounds);
+                    if (bounds.size.y > 0.01f)
+                    {
+                        float factor = 1.75f / bounds.size.y;
+                        model.transform.localScale *= factor;
+                        renderers = model.GetComponentsInChildren<Renderer>();
+                        bounds = renderers[0].bounds;
+                        for (int i = 1; i < renderers.Length; i++)
+                            bounds.Encapsulate(renderers[i].bounds);
+                        model.transform.position += Vector3.up * ((spot.y + 0.2f) - bounds.min.y);
+                    }
+                }
+                Debug.Log("[Afterrust] Meshy scavenger FBX installed at character test spot.");
+            }
+            else
+            {
+                GameObject placeholder = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                placeholder.name = "Scavenger Placeholder - Replace with Meshy FBX";
+                placeholder.transform.position = spot + new Vector3(0f, 1.1f, 0f);
+                placeholder.transform.localScale = new Vector3(0.55f, 0.9f, 0.55f);
+                ApplyMaterial(placeholder, traderPaint);
+                Debug.Log("[Afterrust] Character placeholder active; place Scavenger.fbx in Assets/Art/Characters/Scavenger and rebuild scene.");
+            }
         }
 
         private static void ApplyMaterial(GameObject obj, Material material)
