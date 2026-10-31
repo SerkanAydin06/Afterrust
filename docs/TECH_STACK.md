@@ -1,9 +1,9 @@
 # Afterrust — Teknik Yığın (2026-10-31)
 ## Seçilen motor
-- Unity 6.3 LTS (6000.3.x), C#.
+- Unity 6.3 LTS (6000.3.27f2), C#.
 - İlk hedef platform: Windows 64-bit PC.
 - İlk oyun: birinci şahıs tek oyuncu; ağ/çok oyunculu sistem kapsam dışı.
-- Render pipeline: URP (öneri); motor sürümü kurulduğunda tam patch versiyonu `ProjectSettings/ProjectVersion.txt` ile sabitlenir.
+- Render pipeline: URP (öneri); motor sürümü `ProjectSettings/ProjectVersion.txt` içinde 6000.3.27f2 olarak sabitlenmiştir.
 - Unity Input System, CharacterController tabanlı ilk prototip; fizik tabanlı sökülebilir parçalara özel collider/rigidbody.
 - ScriptableObject veri tanımları: ItemDefinition, SalvageableDefinition, PartDefinition, ToolDefinition.
 - JSON save sürümleme ve testler; UI Toolkit veya uGUI seçimi prototip sırasında gerekçeyle yapılır.
