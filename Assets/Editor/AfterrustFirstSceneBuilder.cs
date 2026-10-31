@@ -239,34 +239,61 @@ namespace Afterrust.EditorTools
                         renderer.sharedMaterials = materials;
                     }
                 }
-                // Imported FBX pivot may be far from the visible mesh. Always align
-                // the actual rendered bounds, rather than assuming the FBX origin is at its feet.
+                // Meshy FBX may import with Z-up or X-up coordinates. Fix orientation
+                // before calculating height; a bounds-only position fix cannot make it upright.
+                Transform displayRoot = new GameObject("Scavenger Display Alignment").transform;
+                displayRoot.position = Vector3.zero;
+                model.transform.SetParent(displayRoot, true);
                 model.transform.position = Vector3.zero;
-                model.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-                if (TryGetCharacterBounds(model, out Bounds bounds))
+
+                Quaternion[] rotations =
                 {
-                    float sourceHeight = bounds.size.y;
-                    if (sourceHeight > 0.001f)
+                    Quaternion.Euler(0f, 180f, 0f),
+                    Quaternion.Euler(90f, 180f, 0f),
+                    Quaternion.Euler(-90f, 180f, 0f),
+                    Quaternion.Euler(0f, 180f, 90f),
+                    Quaternion.Euler(0f, 180f, -90f)
+                };
+
+                float bestScore = float.NegativeInfinity;
+                int bestIndex = 0;
+                for (int i = 0; i < rotations.Length; i++)
+                {
+                    model.transform.rotation = rotations[i];
+                    if (!TryGetCharacterBounds(model, out Bounds candidate)) continue;
+                    float horizontal = Mathf.Max(candidate.size.x, candidate.size.z, 0.001f);
+                    // Human standing orientation normally has a considerably taller silhouette.
+                    float score = candidate.size.y / horizontal;
+                    if (score > bestScore)
                     {
-                        float factor = Mathf.Clamp(1.75f / sourceHeight, 0.00001f, 100000f);
-                        model.transform.localScale *= factor;
-                        if (TryGetCharacterBounds(model, out bounds))
-                        {
-                            Vector3 move = new Vector3(
-                                spot.x - bounds.center.x,
-                                spot.y + 0.2f - bounds.min.y,
-                                spot.z - bounds.center.z);
-                            model.transform.position += move;
-                            Debug.Log("[Afterrust] Meshy character aligned by visible geometry bounds. " +
-                                "Height: " + bounds.size.y.ToString("F2") + " m, " +
-                                "world position: " + model.transform.position);
-                        }
+                        bestScore = score;
+                        bestIndex = i;
+                    }
+                }
+
+                model.transform.rotation = rotations[bestIndex];
+                if (TryGetCharacterBounds(model, out Bounds bounds) && bounds.size.y > 0.001f)
+                {
+                    float factor = Mathf.Clamp(1.75f / bounds.size.y, 0.00001f, 100000f);
+                    displayRoot.localScale = Vector3.one * factor;
+
+                    if (TryGetCharacterBounds(model, out bounds))
+                    {
+                        // Align both the rendered horizontal center and the lowest foot vertices.
+                        displayRoot.position += new Vector3(
+                            spot.x - bounds.center.x,
+                            spot.y + 0.2f - bounds.min.y,
+                            spot.z - bounds.center.z);
+                        Debug.Log("[Afterrust] Character aligned. rotationIndex=" + bestIndex +
+                            ", silhouetteRatio=" + bestScore.ToString("F2") +
+                            ", renderedHeight=" + bounds.size.y.ToString("F2") +
+                            " m, renderedCenter=" + bounds.center);
                     }
                 }
                 else
                 {
-                    model.transform.position = spot + new Vector3(0f, 0.2f, 0f);
-                    Debug.LogWarning("[Afterrust] Meshy character has no visible renderers; cannot calculate bounds.");
+                    displayRoot.position = spot + new Vector3(0f, 0.2f, 0f);
+                    Debug.LogWarning("[Afterrust] Scavenger FBX has no valid renderer bounds.");
                 }
             }
             else
