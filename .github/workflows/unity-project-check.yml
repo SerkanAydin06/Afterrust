@@ -1,0 +1,33 @@
+name: Unity project structure
+on:
+  push:
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+      - '.github/workflows/unity-project-check.yml'
+  pull_request:
+    paths:
+      - 'Assets/**'
+      - 'Packages/**'
+      - 'ProjectSettings/**'
+      - '.github/workflows/unity-project-check.yml'
+permissions:
+  contents: read
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify minimal Unity project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m json.tool Packages/manifest.json >/dev/null
+          grep -q '6000.3.' ProjectSettings/ProjectVersion.txt
+          test -s Assets/Editor/AfterrustFirstSceneBuilder.cs
+          test -s Assets/Scripts/Player/AfterrustFirstPersonController.cs
+          test -s Assets/Scripts/Gameplay/SalvageablePart.cs
+          test -s Assets/Scripts/Gameplay/AfterrustInteraction.cs
+          test -s Assets/Scripts/Gameplay/AfterrustInventory.cs
+          echo "Structure validated; Unity compilation requires a licensed runner."
