@@ -63,6 +63,21 @@
         "z": 0
       },
       "fieldOfView": 65
+    },
+    {
+      "id": "05_character_test",
+      "description": "Scavenger humanoid model test pedestal (Meshy FBX or placeholder)",
+      "position": {
+        "x": 8,
+        "y": 2,
+        "z": 2.5
+      },
+      "rotation": {
+        "x": 5,
+        "y": 0,
+        "z": 0
+      },
+      "fieldOfView": 55
     }
   ]
 }
