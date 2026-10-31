@@ -1,0 +1,42 @@
+name: "AI gelistirme gorevi"
+description: "Afterrust icin olculebilir, sinirli bir is paketi"
+title: "[AI] "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: "Hedef"
+      description: "Neyi degistirecegiz?"
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: "Kapsam ve ilgili dosyalar"
+      description: "Ajan once yalnizca ilgili kod ve belgelere baksin."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: "Kabul kriterleri"
+      description: "Madde madde dogrulanabilir testler."
+    validations:
+      required: true
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: "Gorev zorlugu"
+      options:
+        - Basit
+        - Orta
+        - Karmasik
+    validations:
+      required: true
+  - type: textarea
+    id: budget
+    attributes:
+      label: "Token/API butcesi ve deneme siniri"
+      description: "Gereksiz model cagrilarini engelle; kesin miktar yoksa ust sinir oner."
+    validations:
+      required: false
