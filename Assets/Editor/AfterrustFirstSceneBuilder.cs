@@ -239,26 +239,35 @@ namespace Afterrust.EditorTools
                         renderer.sharedMaterials = materials;
                     }
                 }
-                model.transform.position = spot + new Vector3(0f, 0.2f, 0f);
+                // Imported FBX pivot may be far from the visible mesh. Always align
+                // the actual rendered bounds, rather than assuming the FBX origin is at its feet.
+                model.transform.position = Vector3.zero;
                 model.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-                Renderer[] renderers = model.GetComponentsInChildren<Renderer>();
-                if (renderers.Length > 0)
+                if (TryGetCharacterBounds(model, out Bounds bounds))
                 {
-                    Bounds bounds = renderers[0].bounds;
-                    for (int i = 1; i < renderers.Length; i++)
-                        bounds.Encapsulate(renderers[i].bounds);
-                    if (bounds.size.y > 0.01f)
+                    float sourceHeight = bounds.size.y;
+                    if (sourceHeight > 0.001f)
                     {
-                        float factor = 1.75f / bounds.size.y;
+                        float factor = Mathf.Clamp(1.75f / sourceHeight, 0.00001f, 100000f);
                         model.transform.localScale *= factor;
-                        renderers = model.GetComponentsInChildren<Renderer>();
-                        bounds = renderers[0].bounds;
-                        for (int i = 1; i < renderers.Length; i++)
-                            bounds.Encapsulate(renderers[i].bounds);
-                        model.transform.position += Vector3.up * ((spot.y + 0.2f) - bounds.min.y);
+                        if (TryGetCharacterBounds(model, out bounds))
+                        {
+                            Vector3 move = new Vector3(
+                                spot.x - bounds.center.x,
+                                spot.y + 0.2f - bounds.min.y,
+                                spot.z - bounds.center.z);
+                            model.transform.position += move;
+                            Debug.Log("[Afterrust] Meshy character aligned by visible geometry bounds. " +
+                                "Height: " + bounds.size.y.ToString("F2") + " m, " +
+                                "world position: " + model.transform.position);
+                        }
                     }
                 }
-                Debug.Log("[Afterrust] Meshy scavenger model placed at character test spot.");
+                else
+                {
+                    model.transform.position = spot + new Vector3(0f, 0.2f, 0f);
+                    Debug.LogWarning("[Afterrust] Meshy character has no visible renderers; cannot calculate bounds.");
+                }
             }
             else
             {
@@ -269,6 +278,27 @@ namespace Afterrust.EditorTools
                 ApplyMaterial(placeholder, traderPaint);
                 Debug.LogWarning("[Afterrust] Character import not found. Verify Git LFS, FBX import and Assets/Arts/Characters/Scavenger.");
             }
+        }
+
+        private static bool TryGetCharacterBounds(GameObject model, out Bounds bounds)
+        {
+            Renderer[] renderers = model.GetComponentsInChildren<Renderer>(true);
+            bounds = new Bounds();
+            bool found = false;
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] == null) continue;
+                if (!found)
+                {
+                    bounds = renderers[i].bounds;
+                    found = true;
+                }
+                else
+                {
+                    bounds.Encapsulate(renderers[i].bounds);
+                }
+            }
+            return found;
         }
 
         private static void ApplyMaterial(GameObject obj, Material material)
