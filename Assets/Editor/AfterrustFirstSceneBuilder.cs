@@ -69,6 +69,7 @@ namespace Afterrust.EditorTools
 
             GameObject cameraGo = new GameObject("First Person Camera");
             cameraGo.transform.SetParent(player.transform, false);
+            cameraGo.tag = "MainCamera";
             cameraGo.transform.localPosition = new Vector3(0f, 1.55f, 0f);
             Camera cam = cameraGo.AddComponent<Camera>();
             cam.nearClipPlane = 0.05f;
