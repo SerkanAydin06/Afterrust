@@ -53,7 +53,7 @@ namespace Afterrust.EditorTools
             return changed;
         }
 
-        /// <summary>Loop locomotion clips and bake root motion into the pose (in-place walk).</summary>
+        /// <summary>Loop locomotion clips; keep facing/height in pose, drop forward travel (in-place walk).</summary>
         public static bool ApplyClipSettings(ModelImporter importer)
         {
             ModelImporterClipAnimation[] clips = importer.clipAnimations;
@@ -67,12 +67,14 @@ namespace Afterrust.EditorTools
                 bool locomotion = n.Contains("walk") || n.Contains("idle") || n.Contains("run");
                 if (!locomotion) continue;
                 if (!clip.loopTime || !clip.lockRootRotation || !clip.lockRootHeightY ||
-                    !clip.lockRootPositionXZ) changed = true;
+                    clip.lockRootPositionXZ) changed = true;
                 clip.loopTime = true;
                 clip.loopPose = true;
                 clip.lockRootRotation = true;
                 clip.lockRootHeightY = true;
-                clip.lockRootPositionXZ = true;
+                // XZ stays root motion; with applyRootMotion off it is discarded, so
+                // non-in-place clips (e.g. Mixamo "Walking") play in place without snapping back.
+                clip.lockRootPositionXZ = false;
                 clip.keepOriginalOrientation = true;
                 clip.keepOriginalPositionY = true;
                 clip.keepOriginalPositionXZ = true;
