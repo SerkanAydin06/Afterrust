@@ -16,7 +16,8 @@ namespace Afterrust
         AlreadyTaken,
         MissingTool,
         Blocked,
-        InventoryFull
+        InventoryFull,
+        NoInventory
     }
 
     /// <summary>
@@ -59,7 +60,7 @@ namespace Afterrust
         public SalvageResult TrySalvageDetailed(AfterrustInventory inventory)
         {
             if (wasSalvaged) return SalvageResult.AlreadyTaken;
-            if (inventory == null) return SalvageResult.InventoryFull;
+            if (inventory == null) return SalvageResult.NoInventory;
             if (!PrerequisitesComplete) return SalvageResult.Blocked;
             if (!inventory.HasTool(EffectiveTool)) return SalvageResult.MissingTool;
             if (!inventory.TryAdd(partId, displayName, massKg, SaleValue, condition))

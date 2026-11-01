@@ -2,7 +2,7 @@
 
 **Çalışma adı:** Afterrust  
 **Tür:** Birinci şahıs 3D • Post-collapse hurdacılık • Hayatta kalma • Ticaret • Üs geliştirme  
-**Durum:** Tasarım ve prototip planlama; oyun henüz geliştirilmedi.
+**Durum:** Oynanabilir ilk FPS hurdacılık prototipi (Unity 6.3 LTS); söküm, envanter, ticaret ve NPC devriye testi mevcut.
 
 ## Oyun
 Medeniyetin çökmesinin ardından eski dünyanın makineleri hayatta kalanların en değerli kaynakları hâline gelmiştir. Oyuncu küçük bir tamirhaneden başlayıp araçları ve makineleri sökerek, onararak, geri dönüştürerek ve ticaret yaparak kendi hurdacılık işletmesini büyütür.
