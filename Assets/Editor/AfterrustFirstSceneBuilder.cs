@@ -151,6 +151,7 @@ namespace Afterrust.EditorTools
             for (int i = 0; i < guids.Length; i++)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+                if (path.Contains("/Rigged/")) continue; // handled by ScavengerWalkSetup
                 bool isFbx = path.EndsWith(".fbx", System.StringComparison.OrdinalIgnoreCase);
                 bool isGlb = path.EndsWith(".glb", System.StringComparison.OrdinalIgnoreCase);
                 if (!isFbx && !isGlb) continue;
@@ -170,6 +171,7 @@ namespace Afterrust.EditorTools
             for (int i = 0; i < guids.Length; i++)
             {
                 string path = AssetDatabase.GUIDToAssetPath(guids[i]);
+                if (path.Contains("/Rigged/")) continue;
                 string filename = System.IO.Path.GetFileNameWithoutExtension(path).ToLowerInvariant();
                 if (filename.EndsWith("_normal"))
                 {

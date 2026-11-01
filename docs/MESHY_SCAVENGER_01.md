@@ -27,3 +27,12 @@
 
 ## İlerideki üretim hedefi
 Gerçekçi, mat dokulu, yıpranmış iş kıyafetleri, alet kemeri ve sırt çantası olan bir hurdacı NPC. İlk görsel testten sonra ağırlıklar/rigging bozuksa ayrıca düzeltilir.
+
+## Yürüyen karakter (rig + animasyon)
+"Lastik gibi uzama" genelde Unity'de animasyonun **Generic** alınmasından kaynaklanır: başka iskeletin kemik konum anahtarları uzuvları uzatır. **Humanoid** retargeting bunu engeller.
+
+1. Meshy'de karakteri riglerken yüksek poligonlu modeli değil, önce **Remesh ile ~20–30k üçgen** sürümünü rigle (ağırlıklar daha temiz olur); A/T pozu, kollar gövdeye değmemeli.
+2. Rigli FBX'i ve yürüme (varsa idle) animasyon FBX'lerini `Assets/Arts/Characters/Scavenger/Rigged/` klasörüne koy. Dosya veya klip adında `walk` / `idle` geçmeli.
+3. Bu klasördeki FBX'ler otomatik **Humanoid**, yürüme/idle klipleri döngülü ve yerinde (root motion pozda) içe aktarılır.
+4. **Afterrust > Setup Walking Scavenger (Rigged)**: statik modeli gizler, rigli karakteri 1,75 m ölçekle zemine koyar, Idle/Walk Animator Controller kurar ve `ScavengerPatrol`'a bağlar. Ctrl+S, Play.
+5. Meshy önizlemesinde de uzama varsa sorun rig ağırlıklarındadır: düşük poligonla yeniden rigle veya Mixamo auto-rigger dene.
