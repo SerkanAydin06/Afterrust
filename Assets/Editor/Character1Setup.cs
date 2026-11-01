@@ -10,12 +10,18 @@ namespace Afterrust.EditorTools
     /// <summary>
     /// Adds the Mixamo character (character1/Ch21_nonPBR.fbx) to the open scene as a
     /// walking NPC. It has no own walk clip, so the shared Humanoid Idle/Walk controller
-    /// of the scavenger is retargeted onto it. Re-running replaces the previous instance.
+    /// Walk clip: character1/Walking.fbx (Mixamo, with skin); idle: the scavenger's Humanoid
+    /// Idle retargeted. Falls back to the shared controller when Walking.fbx is missing.
+    /// Re-running replaces the previous instance.
     /// </summary>
     public static class Character1Setup
     {
         private const string ModelPath = "Assets/Arts/Characters/character1/Ch21_nonPBR.fbx";
         private const string RigFbxPath = ScavengerWalkSetup.RiggedFolder + "/Scavenger_Rigged.fbx";
+        private const string WalkFbxPath = "Assets/Arts/Characters/character1/Walking.fbx";
+        private const string ControllerPath = "Assets/Arts/Characters/character1/Character1Locomotion.controller";
+        // Mixamo "Walking" travels ~1.55 m per 0.97 s cycle; matching speed avoids foot sliding.
+        private const float MixamoWalkSpeed = 1.55f;
         private const string RootName = "Character1 (Mixamo Ch21)";
         private const float TargetHeight = 1.78f;
 
@@ -50,7 +56,8 @@ namespace Afterrust.EditorTools
             if (avatar == null || !avatar.isValid || !avatar.isHuman)
                 Debug.LogWarning("[Afterrust] Character1 Humanoid avatar invalid. FBX > Rig > Configure.");
 
-            AnimatorController controller = LoadOrBuildController();
+            bool usesMixamoWalk;
+            AnimatorController controller = LoadOrBuildController(out usesMixamoWalk);
             if (controller == null) return;
 
             Transform old = ScavengerWalkSetup.FindInScene(RootName);
@@ -85,6 +92,7 @@ namespace Afterrust.EditorTools
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
 
             ScavengerPatrol patrol = root.AddComponent<ScavengerPatrol>();
+            if (usesMixamoWalk) patrol.moveSpeed = MixamoWalkSpeed;
             patrol.relativeWaypoints = (Vector3[])Waypoints.Clone();
             patrol.animator = animator;
 
@@ -93,27 +101,46 @@ namespace Afterrust.EditorTools
             Debug.Log("[Afterrust] Character1 added at " + Spot + " with Idle/Walk patrol. Save scene (Ctrl+S) and press Play.");
         }
 
-        private static AnimatorController LoadOrBuildController()
+        private static AnimatorController LoadOrBuildController(out bool usesMixamoWalk)
         {
-            AnimatorController controller =
-                AssetDatabase.LoadAssetAtPath<AnimatorController>(ScavengerWalkSetup.ControllerPath);
-            if (controller != null) return controller;
-
-            AnimationClip walk = null, idle = null;
-            foreach (Object asset in AssetDatabase.LoadAllAssetsAtPath(RigFbxPath))
+            usesMixamoWalk = false;
+            AnimationClip idle = FindClip(RigFbxPath, "idle");
+            ModelImporter walkImporter = AssetImporter.GetAtPath(WalkFbxPath) as ModelImporter;
+            if (walkImporter != null)
             {
-                AnimationClip clip = asset as AnimationClip;
-                if (clip == null || clip.name.StartsWith("__preview__")) continue;
-                string n = clip.name.ToLowerInvariant();
-                if (n.Contains("walk")) walk = clip;
-                else if (n.Contains("idle")) idle = clip;
+                bool changed = RiggedCharacterImport.ApplyModelSettings(walkImporter);
+                changed |= RiggedCharacterImport.ApplyClipSettings(walkImporter);
+                if (changed) walkImporter.SaveAndReimport();
+                AnimationClip mixamoWalk = FindClip(WalkFbxPath, null);
+                if (mixamoWalk != null)
+                {
+                    usesMixamoWalk = true;
+                    return ScavengerWalkSetup.BuildController(mixamoWalk, idle, MixamoWalkSpeed, ControllerPath);
+                }
             }
+
+            AnimatorController shared =
+                AssetDatabase.LoadAssetAtPath<AnimatorController>(ScavengerWalkSetup.ControllerPath);
+            if (shared != null) return shared;
+            AnimationClip walk = FindClip(RigFbxPath, "walk");
             if (walk == null)
             {
-                Debug.LogError("[Afterrust] Walk clip not found. Run Afterrust > Setup Walking Scavenger (Rigged) first.");
+                Debug.LogError("[Afterrust] Walk clip not found (character1/Walking.fbx or scavenger rig).");
                 return null;
             }
             return ScavengerWalkSetup.BuildController(walk, idle, 1.2f);
+        }
+
+        /// <param name="keyword">null = first real clip in the file.</param>
+        private static AnimationClip FindClip(string path, string keyword)
+        {
+            foreach (Object asset in AssetDatabase.LoadAllAssetsAtPath(path))
+            {
+                AnimationClip clip = asset as AnimationClip;
+                if (clip == null || clip.name.StartsWith("__preview__")) continue;
+                if (keyword == null || clip.name.ToLowerInvariant().Contains(keyword)) return clip;
+            }
+            return null;
         }
     }
 }

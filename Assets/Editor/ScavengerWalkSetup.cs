@@ -180,9 +180,14 @@ namespace Afterrust.EditorTools
 
         internal static AnimatorController BuildController(AnimationClip walk, AnimationClip idle, float walkSpeed)
         {
-            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) != null)
-                AssetDatabase.DeleteAsset(ControllerPath);
-            AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(ControllerPath);
+            return BuildController(walk, idle, walkSpeed, ControllerPath);
+        }
+
+        internal static AnimatorController BuildController(AnimationClip walk, AnimationClip idle, float walkSpeed, string path)
+        {
+            if (AssetDatabase.LoadAssetAtPath<AnimatorController>(path) != null)
+                AssetDatabase.DeleteAsset(path);
+            AnimatorController controller = AnimatorController.CreateAnimatorControllerAtPath(path);
             controller.AddParameter("Speed", AnimatorControllerParameterType.Float);
             controller.CreateBlendTreeInController("Locomotion", out BlendTree tree, 0);
             tree.blendType = BlendTreeType.Simple1D;
