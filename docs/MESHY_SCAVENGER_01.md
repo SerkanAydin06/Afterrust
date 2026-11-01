@@ -27,3 +27,12 @@
 
 ## İlerideki üretim hedefi
 Gerçekçi, mat dokulu, yıpranmış iş kıyafetleri, alet kemeri ve sırt çantası olan bir hurdacı NPC. İlk görsel testten sonra ağırlıklar/rigging bozuksa ayrıca düzeltilir.
+
+## Yürüyen karakter (rig + animasyon)
+Meshy otomatik rig'i bu modelde Meshy önizlemesinde bile uzuvları lastik gibi uzatıyordu (ağırlık sorunu; mesh temiz: ~31k üçgen, tek parça, A-poz).
+Çözüm: aynı mesh Blender'da yeniden riglendi → `Assets/Arts/Characters/Scavenger/Rigged/Scavenger_Rigged.fbx` (Humanoid uyumlu iskelet + `Walk` ve `Idle` klipleri). Betikler: `tools/blender/`, kontrol görselleri: `QA/Rig/`.
+
+1. GitHub Desktop: Pull.
+2. Unity: **Afterrust > Setup Walking Scavenger (Rigged)** → statik model gizlenir, rigli karakter zemine konur, Idle/Walk Animator kurulur, `ScavengerPatrol`'a bağlanır.
+3. Ctrl+S, Play. Console'da "Humanoid avatar is not valid" uyarısı varsa FBX > Rig > Configure ile kemik eşleşmesini kontrol et.
+4. `Rigged/` klasöründeki FBX'ler otomatik **Humanoid** alınır; Meshy/Mixamo'dan başka yürüme animasyonları da (adında `walk`/`idle`) bu klasöre konup aynı karaktere uygulanabilir.

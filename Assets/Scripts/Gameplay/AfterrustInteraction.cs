@@ -12,6 +12,7 @@ namespace Afterrust
 
         private SalvageablePart target;
         private bool nearTrader;
+        private GUIStyle hudStyle;
         private string feedback = "Terk edilmis sanayide ilk hurda seferine hos geldin.";
 
         private void Awake()
@@ -64,6 +65,9 @@ namespace Afterrust
                     case SalvageResult.InventoryFull:
                         feedback = "Canta dolu veya kapasite yetersiz.";
                         break;
+                    case SalvageResult.NoInventory:
+                        feedback = "Envanter bulunamadi.";
+                        break;
                     default:
                         feedback = "Bu parca zaten sokulmus.";
                         break;
@@ -75,8 +79,12 @@ namespace Afterrust
 
         private void OnGUI()
         {
-            GUIStyle style = new GUIStyle(GUI.skin.label) { fontSize = 18, alignment = TextAnchor.MiddleCenter };
-            style.normal.textColor = Color.white;
+            if (hudStyle == null)
+            {
+                hudStyle = new GUIStyle(GUI.skin.label) { fontSize = 18, alignment = TextAnchor.MiddleCenter };
+                hudStyle.normal.textColor = Color.white;
+            }
+            GUIStyle style = hudStyle;
             GUI.Label(new Rect(Screen.width / 2f - 15f, Screen.height / 2f - 15f, 30f, 30f), "+", style);
             string hint = target != null ? "E - Sok: " + target.displayName + " (%" + target.condition + ", " +
                     target.EffectiveTool + (target.PrerequisitesComplete ? "" : ", once baglantilari sok") + ")"
