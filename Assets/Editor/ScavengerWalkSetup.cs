@@ -16,7 +16,7 @@ namespace Afterrust.EditorTools
     public static class ScavengerWalkSetup
     {
         public const string RiggedFolder = "Assets/Arts/Characters/Scavenger/Rigged";
-        private const string ControllerPath = RiggedFolder + "/ScavengerLocomotion.controller";
+        internal const string ControllerPath = RiggedFolder + "/ScavengerLocomotion.controller";
         private const string RiggedInstanceName = "Meshy Scavenger - Rigged";
         private const string StaticModelName = "Meshy Scavenger - Imported Model";
         private const float TargetHeight = 1.75f;
@@ -178,7 +178,7 @@ namespace Afterrust.EditorTools
             return null;
         }
 
-        private static AnimatorController BuildController(AnimationClip walk, AnimationClip idle, float walkSpeed)
+        internal static AnimatorController BuildController(AnimationClip walk, AnimationClip idle, float walkSpeed)
         {
             if (AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath) != null)
                 AssetDatabase.DeleteAsset(ControllerPath);
@@ -202,7 +202,7 @@ namespace Afterrust.EditorTools
         }
 
         /// <summary>Character forward from the humanoid hip mapping (left->right hip, cross up).</summary>
-        private static Vector3 EstimateForward(Transform model, ModelImporter importer)
+        internal static Vector3 EstimateForward(Transform model, ModelImporter importer)
         {
             string leftName = null, rightName = null;
             foreach (HumanBone bone in importer.humanDescription.human)
@@ -217,7 +217,7 @@ namespace Afterrust.EditorTools
             return Vector3.Cross(side, Vector3.up).normalized;
         }
 
-        private static bool TryGetBounds(GameObject go, out Bounds bounds)
+        internal static bool TryGetBounds(GameObject go, out Bounds bounds)
         {
             bounds = new Bounds();
             bool found = false;
@@ -229,7 +229,7 @@ namespace Afterrust.EditorTools
             return found;
         }
 
-        private static Transform FindInScene(string name)
+        internal static Transform FindInScene(string name)
         {
             foreach (GameObject root in SceneManager.GetActiveScene().GetRootGameObjects())
             {
@@ -239,7 +239,7 @@ namespace Afterrust.EditorTools
             return null;
         }
 
-        private static Transform FindChild(Transform node, string name)
+        internal static Transform FindChild(Transform node, string name)
         {
             if (node.name == name) return node;
             for (int i = 0; i < node.childCount; i++)
