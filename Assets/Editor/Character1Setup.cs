@@ -60,44 +60,9 @@ namespace Afterrust.EditorTools
             AnimatorController controller = LoadOrBuildController(out usesMixamoWalk);
             if (controller == null) return;
 
-            Transform old = ScavengerWalkSetup.FindInScene(RootName);
-            if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
-
-            GameObject root = new GameObject(RootName);
-            Undo.RegisterCreatedObjectUndo(root, "Add Character1");
-            root.transform.position = Spot;
-
-            GameObject model = (GameObject)PrefabUtility.InstantiatePrefab(
-                AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath));
-            model.transform.SetParent(root.transform, false);
-            model.transform.localPosition = Vector3.zero;
-            model.transform.localRotation = Quaternion.identity;
-
-            if (ScavengerWalkSetup.TryGetBounds(model, out Bounds b) && b.size.y > 0.001f)
-                model.transform.localScale *= TargetHeight / b.size.y;
-
-            Vector3 forward = ScavengerWalkSetup.EstimateForward(model.transform, importer);
-            if (forward.sqrMagnitude > 0.001f)
-                model.transform.rotation = Quaternion.FromToRotation(forward, root.transform.forward) *
-                                           model.transform.rotation;
-
-            if (ScavengerWalkSetup.TryGetBounds(model, out b))
-                model.transform.position += new Vector3(Spot.x - b.center.x, -b.min.y, Spot.z - b.center.z);
-
-            Animator animator = model.GetComponent<Animator>();
-            if (animator == null) animator = model.AddComponent<Animator>();
-            if (avatar != null) animator.avatar = avatar;
-            animator.runtimeAnimatorController = controller;
-            animator.applyRootMotion = false;
-            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-
-            ScavengerPatrol patrol = root.AddComponent<ScavengerPatrol>();
-            if (usesMixamoWalk) patrol.moveSpeed = MixamoWalkSpeed;
-            patrol.relativeWaypoints = (Vector3[])Waypoints.Clone();
-            patrol.animator = animator;
-
+            GameObject root = WalkingNpcSetup.AddWalker(ModelPath, importer, avatar, controller, RootName, Spot,
+                Waypoints, usesMixamoWalk ? MixamoWalkSpeed : 1.2f, TargetHeight);
             Selection.activeGameObject = root;
-            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             Debug.Log("[Afterrust] Character1 added at " + Spot + " with Idle/Walk patrol. Save scene (Ctrl+S) and press Play.");
         }
 
@@ -132,7 +97,7 @@ namespace Afterrust.EditorTools
         }
 
         /// <param name="keyword">null = first real clip in the file.</param>
-        private static AnimationClip FindClip(string path, string keyword)
+        internal static AnimationClip FindClip(string path, string keyword)
         {
             foreach (Object asset in AssetDatabase.LoadAllAssetsAtPath(path))
             {
