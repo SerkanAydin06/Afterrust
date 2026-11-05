@@ -1,51 +1,50 @@
-# Afterrust — Oyun Tasarım Belgesi v1.0
+# Afterrust — Oyun Tasarım Belgesi v2.0 (hayatta kalma)
 ## Tanım
-Dünyanın medeniyet altyapısı enerji, tedarik zinciri, kıtlık ve savaş krizleriyle çökmüştür. Az sayıda insan küçük yerleşimlerde yaşamaktadır. Oyuncu küçük bir tamirhaneden başlayarak eski dünyanın makinelerini söküp onararak hayatta kalır; ticaretle kendi hurdalık işletmesini büyütür.
+Enerji, tedarik zinciri ve savaş krizleriyle çöken bir dünyada nüfusun büyük kısmı yok olmuştur. Oyuncu, harap bir tamir atölyesine sığınmış tek bir hayatta kalandır. Yaşamak için yiyecek ve su bulmalı, terk edilmiş yerleri yağmalamalı, bulduklarından ihtiyaç duyduğunu üretmeli ve kendini/sığınağını geliştirerek daha tehlikeli bölgelere açılmalıdır.
 
 ## Temel ilkeler
-1. Hurdaların gerçek kullanım, satış veya geri dönüşüm değeri olmalı.
-2. Söküm alet/bağlantı/kondisyon odaklı; her vida için ayrı fizik simülasyonu yapılmaz.
-3. Oyuncunun tamir ve ticaret tercihleri üs ile yerleşimleri etkiler.
-4. Tehlikeler öngörülebilir, hazırlanarak azaltılabilir.
-5. İlerleme küçük el aletlerinden endüstriyel kurtarmaya gider.
+1. **Her şeyin bir bedeli var:** zaman açlık ve susuzluk demektir; koşmak dayanıklılık, taşımak ağırlık ister.
+2. **Yağma anlamlı:** her kap bir kez aranır, içerik rastgele ama bağlama uygun (alet kutusunda bant/tel, rafta konserve).
+3. **Üretim ihtiyaçtan doğar:** bandaj, temiz su, alet ve çanta gibi çıktılar hayatta kalmayı doğrudan uzatır.
+4. **Gelişim kalıcıdır:** daha büyük çanta, yeni aletler, tezgâh ve sığınak yükseltmeleri yeni bölgeleri mümkün kılar.
+5. **Ölüm gerçek bir sonuçtur:** prototipte sahne yeniden başlar; ileride eşya kaybı ve kurtarma.
+6. Zombi/fantastik yaratık yok; tehlike insanlar, çevre ve kıtlıktır.
 
-## Oynanış
-Keşif hedefi ve hazırlık → alanı bul → tehdidi değerlendir → parçayı sök veya cihazı onar → taşı → hurdalıkta tamir/geri dönüşüm/satış → kazançla ilerle.
+## Ana döngü
+Uyan → ihtiyaçlarını kontrol et (açlık, susuzluk, sağlık) → yakın çevreyi ara/yağmala → sığınağa dön → üret (bandaj, temiz su, alet, çanta) → tüket/iyileş → daha uzağa keşfe çık.
 
-## Söküm kuralları
-- Basit nesneler doğrudan toplanır.
-- Araç ve makine parçalarında gereken alet, kondisyon (0–100), malzeme, ağırlık, söküm bağlantıları, hasar riski, onarım ve değer bulunur.
-- Büyük ekipmanlar ileride vinç/araç/özel sistem ister.
-- Örnek araba: akü, alternatör, radyatör, kablo, tekerlek, motor bloğu.
-- Sağlam kurtarma, yıkıcı geri dönüşüm ve bütünüyle taşıma farklı sonuç verir.
+## Yaşamsal değerler (prototip)
+- **Sağlık:** açlık veya susuzluk sıfırda azalır; ikisi de iyiyken yavaşça yenilenir; bandajla artar; 0 = ölüm.
+- **Açlık:** ~25 dakikada biter; konserve ve krakerle dolar.
+- **Susuzluk:** ~15 dakikada biter; temiz su veya (hastalık riskiyle) kirli suyla dolar.
+- **Dayanıklılık:** koşma ve zıplama harcar, dinlenince dolar.
+- Sonraki: yorgunluk/uyku, vücut ısısı, hastalık, yaralanma türleri.
 
-## Hayatta kalma
-Açlık, susuzluk, yorgunluk, yaralanma, hastalık, sıcaklık, yük. Elektrik, kimyasal, basınç ve bina çökmesi çevresel riskleri. Çatışma yardımcı mekanik; yağmacılar, rakip hurdacılar ve vahşi hayvanlar. Kaçış ve pazarlık mümkün.
+## Yağma
+Kaplar (karton kutu, alet kutusu, varil, sandık, konteyner) basılı tutarak aranır; her kabın kendi ganimet tablosu vardır. Çanta doluysa kalan eşyalar kapta kalır. Söküm (akü, alternatör, kablo) ve hurda yığınları malzeme kaynağıdır.
+
+## Üretim (tezgâh)
+- Bandaj = 2 bez
+- Suyu süz: kirli su + kömür + bez = temiz su
+- Kablo kesici = metal hurda + bant (söküm için alet)
+- Büyük sırt çantası = 4 bez + 2 bant + 1 tel (taşıma kapasitesi +15 kg, bir kez)
+- Alternatör geri dönüşümü = alternatör → 3 bakır tel
+Sonraki: yağmur toplayıcı, ocak/ateş, tuzak, silah/savunma, sığınak yükseltmeleri.
+
+## Su ve yiyecek kaynakları
+Yağmur varili kirli su verir (bekleme süresiyle yeniden dolar). Yiyecek yalnızca yağmayla bulunur (sonra: avcılık/tuzak, bahçe).
+
+## Ticaret
+Tüccar tezgâhı ikincil: söküm parçaları ve hurda satılır, kredi ile alet alınır. Yiyecek/su satılmaz.
 
 ## Dünya
-Kesintisiz açık dünya uzun vadeli hedef. Bölgesel yükleme, uzak ayrıntı azaltma ve performans bütçesi. Tasarım bölgeleri: Eski Mahalle, Otoyol Mezarlığı, Sanayi, Hastane, Alışveriş Merkezi, Askerî Tesis, Şehir Merkezi, Baraj. İlk prototip küçük bir sanayi alanı ve tamirhane çevresi.
+Başlangıç: çitle çevrili avlu ve harap tamir atölyesi (sığınak). Sonra çevre bölgeler: Eski Mahalle, Otoyol Mezarlığı, Sanayi, Hastane, Alışveriş Merkezi, Askerî Tesis. Uzun vade: kesintisiz açık dünya.
 
-## Ekonomi / yerleşimler
-Yerleşimlere özgü talep, sınırlı stok, fiyat ve itibar. Tamir siparişleri yerleşim üretimini etkileyebilir. Örnek isimler: Kül Pazarı, Demir Ocak, Yeşil Sığınak, Eski Gar, Beyaz İstasyon (öneri).
-
-## Üs
-Küçük tamirhane → tamir tezgâhı → enerji/su → depolama → geri dönüşüm makineleri → garaj/vinç. Modüler yerleşim.
-
-## Lojistik
-Sırt çantası ve el arabası → römork → kamyonet → kurtarıcı kamyon/vinç. Kütle, hacim ve taşıma sınırları; yakıt/onarım ileriki aşamada.
-
-## İlerleme
-1. Hayatta kal, tamirhaneyi çalıştır.
-2. İlk ticaret, alet ve tezgâh edin.
-3. Araç restore et, büyük yükler kurtar.
-4. Yerleşimlerle anlaşmalar, işçi ve sanayi kurtarma.
-5. Eski altyapının bir bölümünü yeniden çalıştır.
-
-## Kayıt ve zorluk
-Otomatik kayıt, sonradan kurtarılabilen kayıp eşya. Rahat / Hayatta Kalma / Acımasız zorluk seçenekleri sonraki aşama.
+## Tehlikeler (sonraki aşamalar)
+Yağmacılar ve diğer hayatta kalanlar, vahşi hayvanlar, çevresel riskler (kimyasal, çökme), hava koşulları ve gece. Kaçış, saklanma ve pazarlık seçenekleri.
 
 ## Görsel-işitsel dil
-Soğuk beton, pas, soluk yeşil, tozlu sarı, aşınmış çelik; kullanılmış dünya. Metal, alet, motor ve çevresel sesler özenli.
+Soğuk beton, pas, soluk yeşil, tozlu sarı; kullanılmış ve terk edilmiş dünya. Sıcak altın saat ışığı ile umut/kasvet karşıtlığı.
 
-## Başarı ölçütü
-İlk prototipte aracı/makineyi bul → uygun aletle parça sök → taşı → onar veya sat → ekipman yükselt → kayıt/yükleme döngüsü sorunsuz tamamlanmalı.
+## Prototip başarı ölçütü
+Aç ve susuz kalmadan önce avluyu yağmala → tezgâhta bandaj ve temiz su üret → çantayı büyüt → kablo kesiciyi üretip alternatörü sök → geri dönüştür; açlık/susuzluk sıfırlanırsa öl ve yeniden başla.

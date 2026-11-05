@@ -1,13 +1,15 @@
 # Afterrust
 
 **Çalışma adı:** Afterrust  
-**Tür:** Birinci şahıs 3D • Post-collapse hurdacılık • Hayatta kalma • Ticaret • Üs geliştirme  
-**Durum:** Oynanabilir ilk FPS hurdacılık prototipi (Unity 6.3 LTS); söküm, envanter, ticaret ve NPC devriye testi mevcut.
+**Tür:** Birinci şahıs 3D • Distopik hayatta kalma • Yağma • Üretim • Kendini ve sığınağı geliştirme  
+**Durum:** Oynanabilir hayatta kalma prototipi (Unity 6.3 LTS): yaşamsal değerler, yağma, üretim, söküm, sığınak (harap atölye).
 
 ## Oyun
-Medeniyetin çökmesinin ardından eski dünyanın makineleri hayatta kalanların en değerli kaynakları hâline gelmiştir. Oyuncu küçük bir tamirhaneden başlayıp araçları ve makineleri sökerek, onararak, geri dönüştürerek ve ticaret yaparak kendi hurdacılık işletmesini büyütür.
+Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan kalmıştır. Oyuncu harap bir tamir atölyesine sığınmış tek başına bir insandır: açlık ve susuzlukla mücadele eder, terk edilmiş yerleri yağmalar, bulduklarından ihtiyaç duyduğunu üretir, kendini ve sığınağını geliştirerek daha uzağa açılır.
 
-**Onaylanan oyun yönü:** Dengeli ve ayrıntılı hurdacılık; dengeli hayatta kalma/çatışma; nihai hedef kesintisiz açık dünya. İlk prototip küçük ve yoğun bir bölgede temel döngüyü kanıtlar.
+**Onaylanan oyun yönü (2026-11-05):** distopik hayatta kalma — yaşamsal ihtiyaçlar → yağma → üretim → gelişim. Söküm malzeme kaynağıdır; ticaret ikincildir. Nihai hedef kesintisiz açık dünya.
+
+**Kontroller:** WASD yürü, Shift koş, Space zıpla, E etkileşim (kapları aramak için basılı tut), F tüccardan alet al, Tab envanter, 1 ye, 2 iç, 3 bandaj, Esc paneli kapat, R öldükten sonra yeniden başla.
 
 ## Dokümantasyon
 - [Karar günlüğü](docs/DECISIONS.md) — kesin ve öneri durumundaki kararlar

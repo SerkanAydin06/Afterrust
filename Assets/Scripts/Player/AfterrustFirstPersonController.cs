@@ -20,6 +20,8 @@ namespace Afterrust
         public float sprintFovBoost = 6f;
 
         private CharacterController controller;
+        private SurvivorVitals vitals;
+        private bool uiMode;
         private float pitch;
         private float verticalSpeed;
         private bool cursorLocked = true;
@@ -31,6 +33,7 @@ namespace Afterrust
         private void Awake()
         {
             controller = GetComponent<CharacterController>();
+            vitals = GetComponent<SurvivorVitals>();
             if (viewCamera == null) viewCamera = GetComponentInChildren<Camera>();
             if (viewCamera != null)
             {
@@ -43,6 +46,15 @@ namespace Afterrust
         private void OnApplicationFocus(bool focused)
         {
             if (!focused) SetCursorLocked(false);
+            else if (!uiMode) SetCursorLocked(true);
+        }
+
+        /// <summary>UI panels/death screen: free cursor, no movement input or look.</summary>
+        public void SetUiMode(bool on)
+        {
+            if (uiMode == on) return;
+            uiMode = on;
+            SetCursorLocked(!on);
         }
 
         private void SetCursorLocked(bool locked)
@@ -57,15 +69,25 @@ namespace Afterrust
             Keyboard keyboard = Keyboard.current;
             if (keyboard == null || controller == null) return;
 
-            if (keyboard.escapeKey.wasPressedThisFrame) SetCursorLocked(false);
-            if (!cursorLocked && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-                SetCursorLocked(true);
+            bool inputBlocked = uiMode || (vitals != null && vitals.IsDead);
+            if (!inputBlocked)
+            {
+                if (keyboard.escapeKey.wasPressedThisFrame) SetCursorLocked(false);
+                if (!cursorLocked && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+                    SetCursorLocked(true);
+            }
 
-            float x = (keyboard.dKey.isPressed ? 1f : 0f) - (keyboard.aKey.isPressed ? 1f : 0f);
-            float z = (keyboard.wKey.isPressed ? 1f : 0f) - (keyboard.sKey.isPressed ? 1f : 0f);
+            float x = 0f, z = 0f;
+            if (!inputBlocked)
+            {
+                x = (keyboard.dKey.isPressed ? 1f : 0f) - (keyboard.aKey.isPressed ? 1f : 0f);
+                z = (keyboard.wKey.isPressed ? 1f : 0f) - (keyboard.sKey.isPressed ? 1f : 0f);
+            }
             Vector3 planar = Vector3.ClampMagnitude(new Vector3(x, 0f, z), 1f);
-            bool sprinting = keyboard.leftShiftKey.isPressed && planar.sqrMagnitude > 0.01f;
-            float speed = sprinting ? sprintSpeed : walkSpeed;
+            bool wantsSprint = !inputBlocked && keyboard.leftShiftKey.isPressed && z > 0.1f;
+            bool sprinting = wantsSprint && (vitals == null || vitals.stamina > 1f);
+            if (vitals != null) vitals.sprinting = sprinting && controller.isGrounded;
+            float speed = (sprinting ? sprintSpeed : walkSpeed) * (vitals != null ? vitals.MovementMultiplier : 1f);
             Vector3 targetVelocity = transform.TransformDirection(planar) * speed;
             // Ease in/out instead of instant start/stop; less control in the air.
             float accel = controller.isGrounded ? acceleration : acceleration * 0.3f;
@@ -73,14 +95,15 @@ namespace Afterrust
             Vector3 movement = planarVelocity;
 
             if (controller.isGrounded && verticalSpeed < 0f) verticalSpeed = -2f;
-            if (controller.isGrounded && keyboard.spaceKey.wasPressedThisFrame)
+            if (!inputBlocked && controller.isGrounded && keyboard.spaceKey.wasPressedThisFrame &&
+                (vitals == null || vitals.TryUseStamina(vitals.jumpStaminaCost)))
                 verticalSpeed = Mathf.Sqrt(jumpHeight * -2f * gravity);
             verticalSpeed += gravity * Time.deltaTime;
             movement.y = verticalSpeed;
             controller.Move(movement * Time.deltaTime);
             UpdateCameraFeel(sprinting);
 
-            if (!cursorLocked || Mouse.current == null || viewCamera == null) return;
+            if (inputBlocked || !cursorLocked || Mouse.current == null || viewCamera == null) return;
             Vector2 look = Mouse.current.delta.ReadValue() * mouseSensitivity;
             transform.Rotate(0f, look.x, 0f);
             pitch = Mathf.Clamp(pitch - look.y, -85f, 85f);

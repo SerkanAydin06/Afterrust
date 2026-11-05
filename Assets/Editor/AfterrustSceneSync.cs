@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 1;
+        private const int Latest = 2;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -66,6 +66,11 @@ namespace Afterrust.EditorTools
                 Step("Neutral figure", NeutralFigureSetup.Add);
                 Step("Remove hidden legacy models", RemoveHiddenLegacy);
                 Step("Lighting and post-processing", ScrapyardAtmosphereSetup.ApplyGoldenHour);
+            }
+
+            if (current < 2)
+            {
+                Step("Survival systems (vitals, HUD, loot, workbench, rain barrel)", SurvivalSetup.Apply);
             }
 
             if (!allStepsSucceeded)
