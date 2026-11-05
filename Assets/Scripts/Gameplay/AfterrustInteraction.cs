@@ -3,101 +3,100 @@ using UnityEngine.InputSystem;
 
 namespace Afterrust
 {
+    /// <summary>
+    /// Looks at IInteractable objects (loot, salvage, workbench, water, trader) and handles
+    /// E (press or hold), F (buy at trader), quick-use keys and Tab. Drawing is done by SurvivalHud.
+    /// </summary>
     public sealed class AfterrustInteraction : MonoBehaviour
     {
         public Camera viewCamera;
-        public float maxDistance = 3.5f;
+        public float maxDistance = 3.2f;
         public LayerMask interactableLayers = ~0;
         public AfterrustInventory inventory;
+        public SurvivorVitals vitals;
+        public SurvivalHud hud;
 
-        private SalvageablePart target;
-        private bool nearTrader;
-        private GUIStyle hudStyle;
-        private string feedback = "Terk edilmis sanayide ilk hurda seferine hos geldin.";
+        public IInteractable Target { get; private set; }
+        public string Prompt { get; private set; }
+        public float HoldProgress { get; private set; }
+        public string Feedback { get; private set; } = "Hayatta kal: yiyecek, su ve malzeme bul.";
+        public float FeedbackTime { get; private set; }
+
+        private IInteractable holdTarget;
+        private float holdTimer;
 
         private void Awake()
         {
             if (viewCamera == null) viewCamera = GetComponentInChildren<Camera>();
             if (inventory == null) inventory = GetComponent<AfterrustInventory>();
+            if (vitals == null) vitals = GetComponent<SurvivorVitals>();
+            if (hud == null) hud = GetComponent<SurvivalHud>();
+        }
+
+        public void Notify(string message)
+        {
+            if (string.IsNullOrEmpty(message)) return;
+            Feedback = message;
+            FeedbackTime = Time.time;
         }
 
         private void Update()
         {
-            target = null;
-            nearTrader = false;
-            if (viewCamera != null && Physics.Raycast(viewCamera.transform.position,
-                viewCamera.transform.forward, out RaycastHit hit, maxDistance, interactableLayers))
-            {
-                target = hit.collider.GetComponentInParent<SalvageablePart>();
-                nearTrader = hit.collider.GetComponentInParent<AfterrustTrader>() != null;
-            }
+            Keyboard kb = Keyboard.current;
+            Target = null;
+            Prompt = null;
 
-            if (Keyboard.current == null) return;
-            if (nearTrader && Keyboard.current.fKey.wasPressedThisFrame)
+            bool blocked = (vitals != null && vitals.IsDead) ||
+                           (hud != null && (hud.IsPanelOpen || hud.PanelChangedFrame == Time.frameCount));
+            if (blocked || kb == null)
             {
-                if (inventory == null) feedback = "Envanter bulunamadi.";
-                else if (inventory.hasWireCutter) feedback = "Kablo kesici zaten sende.";
-                else if (inventory.credits < 60) feedback = "Kablo kesici icin 60 kredi gerekiyor.";
-                else
-                {
-                    inventory.credits -= 60;
-                    inventory.hasWireCutter = true;
-                    feedback = "Kablo kesici alindi. Alternator kablosunu sokebilirsin.";
-                }
+                ResetHold();
                 return;
             }
 
-            if (!Keyboard.current.eKey.wasPressedThisFrame) return;
-            if (target != null)
+            if (kb.digit1Key.wasPressedThisFrame) Notify(inventory?.ConsumeBest(ItemCategory.Food, vitals));
+            if (kb.digit2Key.wasPressedThisFrame) Notify(inventory?.ConsumeBest(ItemCategory.Drink, vitals));
+            if (kb.digit3Key.wasPressedThisFrame) Notify(inventory?.ConsumeBest(ItemCategory.Medical, vitals));
+
+            if (viewCamera != null && Physics.Raycast(viewCamera.transform.position, viewCamera.transform.forward,
+                    out RaycastHit hit, maxDistance, interactableLayers, QueryTriggerInteraction.Ignore))
             {
-                SalvageResult result = target.TrySalvageDetailed(inventory);
-                switch (result)
+                Target = hit.collider.GetComponentInParent<IInteractable>();
+            }
+            if (Target != null) Prompt = Target.GetPrompt(this);
+
+            if (Target is AfterrustTrader trader && kb.fKey.wasPressedThisFrame)
+                Notify(trader.BuyWireCutter(inventory));
+
+            if (Target == null || Target != holdTarget) ResetHold();
+            if (Target == null) return;
+
+            float needed = Target.HoldSeconds;
+            if (needed <= 0f)
+            {
+                if (kb.eKey.wasPressedThisFrame) Notify(Target.Interact(this));
+                return;
+            }
+
+            if (kb.eKey.isPressed)
+            {
+                holdTarget = Target;
+                holdTimer += Time.deltaTime;
+                HoldProgress = Mathf.Clamp01(holdTimer / needed);
+                if (holdTimer >= needed)
                 {
-                    case SalvageResult.Success:
-                        feedback = "Sokuldu: " + target.displayName + " (deger " + target.SaleValue + " K)";
-                        break;
-                    case SalvageResult.MissingTool:
-                        feedback = "Gerekli alet: " + target.EffectiveTool;
-                        break;
-                    case SalvageResult.Blocked:
-                        feedback = "Once diger bagli parcalari sokmelisin.";
-                        break;
-                    case SalvageResult.InventoryFull:
-                        feedback = "Canta dolu veya kapasite yetersiz.";
-                        break;
-                    case SalvageResult.NoInventory:
-                        feedback = "Envanter bulunamadi.";
-                        break;
-                    default:
-                        feedback = "Bu parca zaten sokulmus.";
-                        break;
+                    Notify(Target.Interact(this));
+                    ResetHold();
                 }
             }
-            else if (nearTrader && inventory != null)
-                feedback = "Satis tamamlandi: +" + inventory.SellAll() + " K";
+            else ResetHold();
         }
 
-        private void OnGUI()
+        private void ResetHold()
         {
-            if (hudStyle == null)
-            {
-                hudStyle = new GUIStyle(GUI.skin.label) { fontSize = 18, alignment = TextAnchor.MiddleCenter };
-                hudStyle.normal.textColor = Color.white;
-            }
-            GUIStyle style = hudStyle;
-            GUI.Label(new Rect(Screen.width / 2f - 15f, Screen.height / 2f - 15f, 30f, 30f), "+", style);
-            string hint = target != null ? "E - Sok: " + target.displayName + " (%" + target.condition + ", " +
-                    target.EffectiveTool + (target.PrerequisitesComplete ? "" : ", once baglantilari sok") + ")"
-                : nearTrader ? "E - Hurdalari sat | F - Kablo kesici satin al (60 K)" : "WASD hareket | Fare bakis | Shift kos | Space zipla | ESC fare serbest";
-            GUI.Label(new Rect(0f, Screen.height - 100f, Screen.width, 28f), hint, style);
-            GUI.Label(new Rect(0f, Screen.height - 64f, Screen.width, 30f), feedback, style);
-            if (inventory != null)
-            {
-                GUI.Label(new Rect(12f, 12f, 460f, 27f), "Yuk: " +
-                    inventory.CurrentMassKg.ToString("0.0") + "/" + inventory.capacityKg +
-                    " kg    Kredi: " + inventory.credits, GUI.skin.box);
-            }
+            holdTarget = null;
+            holdTimer = 0f;
+            HoldProgress = 0f;
         }
     }
-
 }

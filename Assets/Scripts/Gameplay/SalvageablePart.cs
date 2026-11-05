@@ -24,7 +24,7 @@ namespace Afterrust
     /// A single removable component of a machine. Dependencies are other components
     /// in the same scene which must be removed first.
     /// </summary>
-    public sealed class SalvageablePart : MonoBehaviour
+    public sealed class SalvageablePart : MonoBehaviour, IInteractable
     {
         public string partId = "scrap-metal";
         public string displayName = "Pasli Metal";
@@ -74,6 +74,40 @@ namespace Afterrust
         public bool TrySalvage(AfterrustInventory inventory)
         {
             return TrySalvageDetailed(inventory) == SalvageResult.Success;
+        }
+
+        // ---- IInteractable: dismantling takes a moment.
+        public float HoldSeconds => 0.8f;
+
+        public string GetPrompt(AfterrustInteraction player)
+        {
+            return "E (basılı tut) - Sök: " + displayName + " (%" + condition + ", " + ToolName(EffectiveTool) +
+                   (PrerequisitesComplete ? ")" : ", önce bağlantıları sök)");
+        }
+
+        public string Interact(AfterrustInteraction player)
+        {
+            AfterrustInventory inv = player != null ? player.inventory : null;
+            switch (TrySalvageDetailed(inv))
+            {
+                case SalvageResult.Success: return "Söküldü: " + displayName + " (değer " + SaleValue + " K)";
+                case SalvageResult.MissingTool: return "Gerekli alet: " + ToolName(EffectiveTool);
+                case SalvageResult.Blocked: return "Önce bağlı parçaları sökmelisin.";
+                case SalvageResult.InventoryFull: return "Çanta dolu veya kapasite yetersiz.";
+                case SalvageResult.NoInventory: return "Envanter bulunamadı.";
+                default: return "Bu parça zaten sökülmüş.";
+            }
+        }
+
+        public static string ToolName(SalvageTool tool)
+        {
+            switch (tool)
+            {
+                case SalvageTool.Wrench: return "anahtar";
+                case SalvageTool.Screwdriver: return "tornavida";
+                case SalvageTool.WireCutter: return "kablo kesici";
+                default: return "alet gerekmez";
+            }
         }
     }
 
