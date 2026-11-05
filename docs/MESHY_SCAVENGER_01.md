@@ -16,7 +16,7 @@
 1. GitHub Desktop'ta **Pull origin**.
 2. Unity'ye dönüp paketlerin yüklenmesini ve projenin derlenmesini bekle.
 3. Project panelinden `Assets/Arts/Characters/Scavenger` içindeki GLB'nin Unity tarafından model varlığı olarak tanındığını kontrol et.
-4. **Afterrust > Create or Rebuild Prototype Scene** (mevcut sahneyi yeniden yazar), ardından Play.
+4. Sahne otomatik güncellenir; Play.
 5. `QA/Screenshots/latest/05_character_test.png` görselini GitHub'a gönder.
 
 ## Kontrol kriterleri
@@ -33,6 +33,6 @@ Meshy otomatik rig'i bu modelde Meshy önizlemesinde bile uzuvları lastik gibi 
 Çözüm: aynı mesh Blender'da yeniden riglendi → `Assets/Arts/Characters/Scavenger/Rigged/Scavenger_Rigged.fbx` (Humanoid uyumlu iskelet + `Walk` ve `Idle` klipleri). Betikler: `tools/blender/`, kontrol görselleri: `QA/Rig/`.
 
 1. GitHub Desktop: Pull.
-2. Unity: **Afterrust > Setup Walking Scavenger (Rigged)** → statik model gizlenir, rigli karakter zemine konur, Idle/Walk Animator kurulur, `ScavengerPatrol`'a bağlanır.
+2. Unity açılınca sahne otomatik güncellenir (`AfterrustSceneSync`) → statik model gizlenir, rigli karakter zemine konur, Idle/Walk Animator kurulur, `ScavengerPatrol`'a bağlanır.
 3. Ctrl+S, Play. Console'da "Humanoid avatar is not valid" uyarısı varsa FBX > Rig > Configure ile kemik eşleşmesini kontrol et.
 4. `Rigged/` klasöründeki FBX'ler otomatik **Humanoid** alınır; Meshy/Mixamo'dan başka yürüme animasyonları da (adında `walk`/`idle`) bu klasöre konup aynı karaktere uygulanabilir.

@@ -6,20 +6,22 @@
 - Üretilen modeli otomatik kabul etme: ölçek, fizik, bağlantı, performans ve oyun içi ekran görüntüsüyle doğrula.
 - Önce prototip geometrisi, sonra ihtiyaç netleşince yüksek kaliteli asset; gereksiz yeniden üretimden kaçın.
 
-## Modüler hurdalık çevresi (prosedürel dokular)
-- Dokular: `Assets/Arts/Environment/Textures/` — `ground_dirt`, `concrete_slab`, `concrete_wall`, `corrugated_rust`, `rusty_steel` (albedo + OpenGL normal, 1024 px, dikişsiz). Özgün, kodla üretildi: `python3 tools/textures/generate_scrapyard_textures.py Assets/Arts/Environment/Textures 1024`. Lisans sorunu yok.
-- Unity: **Afterrust > Build Scrapyard Environment** → malzemeler (`Materials/`), metre-UV modüler mesh'ler (`Meshes/`), prefablar (`Prefabs/`: beton zemin 4×4, beton duvar 4×3, kolon, oluklu sac çit 4×2,4, çelik direk) ve yerleşim (beton çalışma alanı, kapılı çevre çiti, atölye köşesi). Mevcut zemin ve harabe blokları yalnız yeni malzemeyle kaplanır; karakter/araç/oyun nesnelerine dokunulmaz. Tekrar çalıştırmak sadece `Scrapyard Environment` kökünü yeniler.
-- Ağ izni verilirse aynı dosya adlarıyla ambientCG/Poly Haven (CC0) dokuları konup araç yeniden çalıştırılarak değiştirilebilir.
-- Önizleme (Blender): `QA/Environment/`.
+## Sahne otomatik güncellenir (menü yok)
+- `Assets/Editor/AfterrustSceneSync.cs`: Unity açılınca / Pull sonrası betikler yeniden yüklenince / sahne açılınca `AfterrustPrototype.unity` sahnesinin sürümüne (`[Scene Build Info]` nesnesi) bakar; eksik adımları bir kez uygular ve sahneyi kaydeder. Kullanıcının menü çalıştırması gerekmez.
+- Yeni içerik eklerken: `Latest` sürümünü artır, yeni `if (current < N)` bloğuna adımı ekle. Adımlar tekrar çalıştırılabilir (aynı adlı kökü silip yeniden kurar).
+- Sürüm 1: avlu ve çit (`ScrapyardEnvironmentBuilder`), tamir atölyesi (`RepairShopBuilder`), yürüyen NPC'ler (scavenger, Character1, Neutral Figure; malzemeler FBX'e gömülü dokular yerine çıkarılmış dokulardan), eski kutu/silindir nesnelerin kaldırılması, Golden Hour ışığı + post-processing.
 
-## Işık ve atmosfer
-- **Afterrust > Lighting > Golden Hour (default)**: alçak sıcak akşam güneşi (yumuşak gölge), prosedürel gökyüzü (`Materials/SKY_Scrapyard.mat`), üç tonlu ortam ışığı, tozlu üstel sis, kameralar gökyüzüne geçer, atölye duvarlarında ve kapı direklerinde 5 sıcak lamba (`Scrapyard Lamps`).
-- **Afterrust > Lighting > Overcast**: gri, kasvetli, yoğun sis; lambalar daha belirgin.
-- Yalnız RenderSettings, `Sun`, kameralar ve `Scrapyard Lamps` değişir. `Create or Rebuild Prototype Scene` eski ışığı geri yükler; ardından preset tekrar uygulanmalı.
-- Önizleme (Blender, yaklaşık): `QA/Environment/preview_golden_hour.jpg`.
+## Tamir atölyesi
+- 8,5 × 6 m, ön tarafı oyuncuya bakan küçük harap dükkân: boyası dökülmüş briket duvarlar (sol ön köşe yıkık, sağda tahta çakılı kırık pencere), bir levhası eksik oluklu sac çatı (motor sehpasına güneş düşer), yarı açık kepenk, "TAMİR ATÖLYESİ" tabelası.
+- İç: tezgâh + alet panosu, raf, motor sehpası (sökülebilir alternatör ve kablosu), sandık üstünde akü ve kıskacı, tüccar tezgâhı (`Trade Post - E to Sell`, E ile sat / F ile kablo kesici).
+- Dış: lastik yığını, variller, palet yığını, hurda yığını (`Loose Metal`), konteynerler, sarkan titrek ampul ve duvar lambaları.
+- Oyun nesneleri (sökülebilir parçalar, tüccar) bileşen ve verilerini korur; yalnız görünümleri değişti.
 
-## Profesyonel görüntü kurulumu
-- Tek tık: **Afterrust > Apply Pro Visual Setup** → çevre yoksa kurar, Golden Hour ışığı + post-processing uygular, oyuncu kamerası FOV 72.
-- Post-processing (Post Processing Stack v2, `com.unity.postprocessing` 3.4.0): ACES HDR renk düzenleme, bloom, MSVO ortam gölgelemesi, vignette, hafif film greni. Profiller: `Assets/Arts/Environment/PostProcessing/PP_GoldenHour.asset`, `PP_Overcast.asset`; global hacim `Post Process Volume` (`PostProcessing` katmanı). Her ışık preset'i kendi profilini uygular.
-- Proje ayarları: **Linear** renk uzayı, GPU skinning açık, yalnız yeni Input System, Very High/Ultra'da MSAA 4x, Ultra gölge mesafesi 90 m (küçük alan için daha keskin gölge).
-- Oyuncu: yumuşak hızlanma/yavaşlama, hafif kafa sallanması, koşarken +6° FOV. QA ekran görüntüleri artık oyuncu kamerasıyla (post-processing dahil) alınır.
+## Dokular
+- Prosedürel, dikişsiz, özgün: `Assets/Arts/Environment/Textures/` (toprak, beton zemin/duvar, briket, oluklu sac, paslı çelik, ahşap, lastik, boyalı metal, alet panosu, döküm metal, tabela). Üretici: `python3 tools/textures/generate_scrapyard_textures.py Assets/Arts/Environment/Textures 1024`.
+- Karakter dokuları FBX'ten çıkarıldı: `Characters/character1/Textures/`, `Characters/1/Textures/`.
+
+## Işık ve post-processing
+- Golden Hour (varsayılan): alçak sıcak güneş, prosedürel gökyüzü, üç tonlu ortam ışığı, tozlu sis; Overcast alternatifi `ScrapyardAtmosphereSetup.ApplyOvercast` ile.
+- Post Processing v2: ACES HDR renk, bloom, MSVO AO, vignette, hafif gren. Linear renk uzayı, MSAA 4x.
+- Önizlemeler (Blender, yaklaşık): `QA/Environment/`.

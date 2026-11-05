@@ -154,9 +154,145 @@ def rusty_steel():
     save("rusty_steel", c, h, 4.0)
 
 
+def concrete_block():
+    """2 m tile: cinder block wall (40x20 cm, running bond) with peeling pale paint and grime."""
+    y, x = np.mgrid[0:N, 0:N]
+    bh = N // 10                      # 10 rows of 20 cm
+    bw = N // 5                       # 5 blocks of 40 cm
+    row = y // bh
+    xs = (x + (row % 2) * (bw // 2)) % N
+    my = np.minimum(y % bh, bh - 1 - y % bh)
+    mx = np.minimum(xs % bw, bw - 1 - xs % bw)
+    mortar = smooth(4, 1, np.minimum(my, mx))
+    block_id = (row * 7 + xs // bw * 13) % 17 / 17.0
+    pores = fbm(0.5)
+    base = fbm(2.0)
+    paint_mask = smooth(0.30, 0.36, fbm(2.6, highpass=1.5)) * (1 - mortar * 0.6)
+    grime = smooth(0.5, 0.9, fbm(1.8, aniso=(0.06, 1.0)))
+    block_c = lerp(col(112, 110, 104), col(140, 137, 130), base * 0.7 + block_id * 0.3)
+    block_c = block_c * (0.9 + 0.2 * pores[..., None])
+    paint_c = lerp(col(176, 178, 160), col(196, 196, 180), base)
+    c = lerp(block_c, paint_c, paint_mask)
+    c = c * (1 - 0.35 * mortar[..., None])
+    c = c * (1 - 0.3 * grime[..., None])
+    edge = np.abs(np.roll(paint_mask, 1, 0) - paint_mask) + np.abs(np.roll(paint_mask, 1, 1) - paint_mask)
+    h = -mortar * 1.5 + pores * 0.4 + paint_mask * 0.3 + base * 0.2
+    save("concrete_block", c * (1 - 0.4 * np.clip(edge * 4, 0, 1))[..., None], h, 5.0)
+
+
+def wood_planks():
+    """1 m tile: worn planks 20 cm wide, grain along V."""
+    y, x = np.mgrid[0:N, 0:N]
+    pw = N // 5
+    plank = x // pw
+    grain = fbm(1.6, aniso=(1.0, 0.05))
+    rings = 0.5 + 0.5 * np.sin((grain * 90 + plank * 3.1) * np.pi)
+    tone = (plank * 37 % 11) / 11.0
+    seam = smooth(3, 0, np.minimum(x % pw, pw - 1 - x % pw))
+    wear = smooth(0.55, 0.8, fbm(2.2))
+    c = lerp(col(92, 66, 44), col(138, 104, 70), 0.55 * rings + 0.25 * tone + 0.2 * grain)
+    c = lerp(c, col(120, 112, 100), wear * 0.45)      # sun-bleached grey
+    c = c * (1 - 0.6 * seam[..., None])
+    h = rings * 0.3 + grain * 0.5 - seam * 2.0
+    save("wood_planks", c, h, 4.0)
+
+
+def rubber_tire():
+    """Tire: U around the wheel (1 = full turn), V across the tread; tread blocks + scuffs."""
+    y, x = np.mgrid[0:N, 0:N]
+    blocks = 48
+    bx = (x * blocks // N) % 2
+    across = np.abs(y / N - 0.5) * 2
+    tread_zone = smooth(0.62, 0.55, across)
+    groove = tread_zone * ((np.minimum(x % (N // blocks), N // blocks - 1 - x % (N // blocks)) < 2) |
+                           (np.abs(across - 0.25) < 0.02)).astype(float)
+    dust = smooth(0.55, 0.85, fbm(2.0))
+    c = lerp(col(24, 24, 24), col(36, 35, 34), fbm(0.8))
+    c = lerp(c, col(78, 70, 60), dust * 0.5)
+    c = c * (1 - 0.5 * groove[..., None])
+    h = -groove * 2.0 + bx * tread_zone * 0.2 + fbm(0.8) * 0.2
+    save("rubber_tire", c, h, 6.0)
+
+
+def chipped_paint():
+    """1 m tile, near-white paint (tint with material color) chipped to rust, light scratches."""
+    chips = smooth(0.62, 0.66, fbm(1.4, highpass=3.0))
+    scratches = smooth(0.8, 0.95, fbm(1.2, aniso=(1.0, 0.03)))
+    grime = fbm(2.2)
+    paint = lerp(col(205, 205, 200), col(228, 228, 222), grime)
+    rust = lerp(col(92, 52, 32), col(130, 76, 44), fbm(1.4))
+    c = lerp(paint, rust, np.clip(chips + scratches * 0.5, 0, 1))
+    c = c * (1 - 0.18 * smooth(0.5, 0.9, grime)[..., None])
+    h = (1 - chips) * 0.6 - scratches * 0.3 + grime * 0.1
+    save("chipped_paint", c, h, 4.0)
+
+
+def pegboard():
+    """1 m tile hardboard with 2.5 cm hole grid."""
+    y, x = np.mgrid[0:N, 0:N]
+    step = N // 40
+    hx, hy = (x % step) - step / 2, (y % step) - step / 2
+    hole = smooth(4.5, 3.0, np.hypot(hx, hy))
+    base = fbm(1.4)
+    c = lerp(col(118, 88, 58), col(142, 110, 76), base)
+    c = c * (1 - 0.85 * hole[..., None])
+    save("pegboard", c, base * 0.2 - hole * 2.0, 4.0)
+
+
+def cast_metal():
+    """1 m tile: rough cast iron / aluminium with oil grime (engine block)."""
+    rough = fbm(0.7)
+    grime = smooth(0.45, 0.85, fbm(2.2))
+    c = lerp(col(92, 94, 96), col(122, 124, 126), rough)
+    c = lerp(c, col(40, 36, 30), grime * 0.7)
+    save("cast_metal", c, rough * 0.6 + grime * 0.2, 5.0)
+
+
+def shop_sign():
+    """2048x512 hand-painted sign on rusty sheet: TAMİR ATÖLYESİ."""
+    from PIL import ImageDraw, ImageFont, ImageFilter
+    W, H = 2048, 512
+    global N
+    keep = N
+    N = 512
+    rust = fbm(2.2)
+    N = keep
+    rust = np.array(Image.fromarray((rust * 255).astype(np.uint8)).resize((W, H))) / 255.0
+    plate = lerp(col(180, 172, 150), col(205, 198, 176), rust)
+    rust_mask = smooth(0.62, 0.8, rust)
+    plate = lerp(plate, col(110, 60, 34), rust_mask)
+    img = Image.fromarray((np.clip(plate, 0, 1) * 255).astype(np.uint8))
+    d = ImageDraw.Draw(img)
+    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 175)
+    text = "TAMİR ATÖLYESİ"
+    bbox = d.textbbox((0, 0), text, font=font)
+    tx = (W - (bbox[2] - bbox[0])) // 2
+    ty = (H - (bbox[3] - bbox[1])) // 2 - bbox[1]
+    layer = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(layer).text((tx, ty), text, font=font, fill=255)
+    layer = layer.filter(ImageFilter.GaussianBlur(1.2))
+    mask = np.array(layer) / 255.0 * (1 - 0.75 * rust_mask)
+    mask = mask * (0.75 + 0.25 * (rust > 0.35))
+    arr = np.array(img) / 255.0
+    arr = lerp(arr, col(150, 30, 24), mask)
+    border = np.zeros((H, W))
+    border[:22, :] = border[-22:, :] = 1
+    border[:, :22] = border[:, -22:] = 1
+    arr = lerp(arr, col(40, 34, 30), border * 0.8)
+    Image.fromarray((np.clip(arr, 0, 1) * 255).astype(np.uint8)).save(f"{OUT}/shop_sign_albedo.jpg", quality=90)
+    print("saved shop_sign")
+
+
 if __name__ == "__main__":
     ground_dirt()
     concrete_slab()
     concrete_wall()
     corrugated_rust()
     rusty_steel()
+    concrete_block()
+    wood_planks()
+    rubber_tire()
+    chipped_paint()
+    pegboard()
+    cast_metal()
+    shop_sign()

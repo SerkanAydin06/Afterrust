@@ -30,7 +30,6 @@ namespace Afterrust.EditorTools
             new Vector3(0f, 0f, 2.5f)
         };
 
-        [MenuItem("Afterrust/Add Neutral Figure (Meshy + Mixamo, walking)")]
         public static void Add()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -64,6 +63,9 @@ namespace Afterrust.EditorTools
 
             GameObject root = WalkingNpcSetup.AddWalker(ModelPath, importer, avatar, controller, RootName, Spot,
                 Waypoints, WalkSpeed, TargetHeight);
+            Material skin = MaterialKit.Character("Assets/Arts/Characters/1/Materials", "M_NeutralFigure",
+                "Assets/Arts/Characters/1/Textures/NeutralFigure_albedo.jpg", null, false, 0.2f);
+            WalkingNpcSetup.ApplyMaterials(root.transform.GetChild(0).gameObject, (mat, rend) => skin);
             Selection.activeGameObject = root;
             Debug.Log("[Afterrust] Neutral Figure added at " + Spot + ". Save scene (Ctrl+S) and press Play.");
         }

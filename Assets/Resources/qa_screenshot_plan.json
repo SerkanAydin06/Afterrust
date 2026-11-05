@@ -1,113 +1,98 @@
 {
-  "enabled": true,
-  "width": 1280,
-  "height": 720,
-  "delaySeconds": 2,
-  "views": [
-    {
-      "id": "01_spawn_and_vehicle",
-      "description": "Player start: prototype car and salvage work area",
-      "position": {
-        "x": 0,
-        "y": 2.75,
-        "z": -9
-      },
-      "rotation": {
-        "x": 7,
-        "y": 0,
-        "z": 0
-      },
-      "fieldOfView": 65
-    },
-    {
-      "id": "02_car_connections",
-      "description": "Closer view of car battery clamp, battery, alternator cable and alternator",
-      "position": {
-        "x": 0,
-        "y": 2.1,
-        "z": -3.3
-      },
-      "rotation": {
-        "x": 19,
-        "y": 0,
-        "z": 0
-      },
-      "fieldOfView": 67
-    },
-    {
-      "id": "03_trade_post",
-      "description": "Trade post for sale and wire-cutter purchase",
-      "position": {
-        "x": 5,
-        "y": 2,
-        "z": -5
-      },
-      "rotation": {
-        "x": 4,
-        "y": 0,
-        "z": 0
-      },
-      "fieldOfView": 65
-    },
-    {
-      "id": "04_industrial_overview",
-      "description": "Industrial graybox overview for visual composition",
-      "position": {
-        "x": 0,
-        "y": 17,
-        "z": -20
-      },
-      "rotation": {
-        "x": 32,
-        "y": 0,
-        "z": 0
-      },
-      "fieldOfView": 65
-    },
-    {
-      "id": "05_character_test",
-      "description": "Front-level diagnosis of imported scavenger on centered pedestal",
-      "position": {
-        "x": 8,
-        "y": 1.4,
-        "z": 4
-      },
-      "rotation": {
-        "x": 0,
-        "y": 0,
-        "z": 0
-      },
-      "fieldOfView": 55
-    },
-    {
-      "id": "06_character_side",
-      "description": "Side view to inspect FBX rotation, height, and feet alignment",
-      "position": {
-        "x": 12,
-        "y": 1.4,
-        "z": 8
-      },
-      "rotation": {
-        "x": 0,
-        "y": 270,
-        "z": 0
-      },
-      "fieldOfView": 55
-    },
-    {
-      "id": "07_character_overview",
-      "description": "High-angle inspection of pedestal and character placement",
-      "position": {
-        "x": 8,
-        "y": 4.5,
-        "z": 2
-      },
-      "rotation": {
-        "x": 26,
-        "y": 0,
-        "z": 0
-      },
-      "fieldOfView": 58
-    }
-  ]
+    "enabled": true,
+    "width": 1280,
+    "height": 720,
+    "delaySeconds": 2,
+    "views": [
+        {
+            "id": "01_spawn_shop_front",
+            "description": "Player start: forecourt and repair shop front with sign",
+            "position": {
+                "x": 0,
+                "y": 1.75,
+                "z": -9
+            },
+            "rotation": {
+                "x": 4,
+                "y": 0,
+                "z": 0
+            },
+            "fieldOfView": 65
+        },
+        {
+            "id": "02_shop_interior",
+            "description": "Inside the shop: workbench, pegboard, engine stand, roof hole",
+            "position": {
+                "x": 3.3,
+                "y": 1.7,
+                "z": 0.8
+            },
+            "rotation": {
+                "x": 14,
+                "y": -38,
+                "z": 0
+            },
+            "fieldOfView": 70
+        },
+        {
+            "id": "03_engine_salvage",
+            "description": "Engine stand with alternator/wire and battery/clamp on crate",
+            "position": {
+                "x": 1.4,
+                "y": 1.65,
+                "z": 1.6
+            },
+            "rotation": {
+                "x": 30,
+                "y": 22,
+                "z": 0
+            },
+            "fieldOfView": 60
+        },
+        {
+            "id": "04_trade_counter",
+            "description": "Trade counter inside left of the door",
+            "position": {
+                "x": -0.6,
+                "y": 1.7,
+                "z": 0.2
+            },
+            "rotation": {
+                "x": 12,
+                "y": -62,
+                "z": 0
+            },
+            "fieldOfView": 65
+        },
+        {
+            "id": "05_yard_overview",
+            "description": "Yard overview: shop, fence, containers, props",
+            "position": {
+                "x": -16,
+                "y": 11,
+                "z": -22
+            },
+            "rotation": {
+                "x": 28,
+                "y": 38,
+                "z": 0
+            },
+            "fieldOfView": 60
+        },
+        {
+            "id": "06_npcs",
+            "description": "Forecourt with walking NPCs",
+            "position": {
+                "x": 0,
+                "y": 3.5,
+                "z": -16
+            },
+            "rotation": {
+                "x": 10,
+                "y": 0,
+                "z": 0
+            },
+            "fieldOfView": 65
+        }
+    ]
 }
