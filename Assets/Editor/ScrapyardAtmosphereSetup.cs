@@ -70,19 +70,9 @@ namespace Afterrust.EditorTools
             lampIntensity = 1.6f
         };
 
-        [MenuItem("Afterrust/Lighting/Golden Hour (default)")]
         public static void ApplyGoldenHour() { Apply(GoldenHour); }
 
-        [MenuItem("Afterrust/Lighting/Overcast")]
         public static void ApplyOvercast() { Apply(Overcast); }
-
-        /// <summary>One click: environment (if missing) + golden hour lighting + post-processing.</summary>
-        [MenuItem("Afterrust/Apply Pro Visual Setup", false, 0)]
-        public static void ApplyProVisualSetup()
-        {
-            if (ScavengerWalkSetup.FindInScene("Scrapyard Environment") == null) ScrapyardEnvironmentBuilder.Build();
-            Apply(GoldenHour);
-        }
 
         private static void Apply(Preset p)
         {
@@ -193,7 +183,8 @@ namespace Afterrust.EditorTools
             return m;
         }
 
-        /// <summary>Warm wall lamps on the workshop walls and gate posts (no shadows, cheap).</summary>
+        /// <summary>Warm wall lamps on the shop front, above the workbench and on the gate posts, plus a
+        /// flickering pendant bulb inside the shop (the only lamp that casts shadows).</summary>
         private static void BuildLamps(float intensity)
         {
             Transform old = ScavengerWalkSetup.FindInScene(LampsRootName);
@@ -207,10 +198,10 @@ namespace Afterrust.EditorTools
             // position, facing direction (lamp sticks out of the wall along it)
             (Vector3 pos, Vector3 dir)[] lamps =
             {
-                (new Vector3(3f, 2.6f, 5.85f), Vector3.back),
-                (new Vector3(7f, 2.6f, 5.85f), Vector3.back),
-                (new Vector3(8.85f, 2.6f, 0f), Vector3.left),
-                (new Vector3(-4f, 2.8f, -19.9f), Vector3.forward),
+                (new Vector3(-3.2f, 2.5f, -0.13f), Vector3.back),     // shop front, left pier
+                (new Vector3(3.2f, 2.5f, -0.13f), Vector3.back),      // shop front, right pier
+                (new Vector3(-1.6f, 2.45f, 5.87f), Vector3.back),     // above the workbench
+                (new Vector3(-4f, 2.8f, -19.9f), Vector3.forward),    // gate posts
                 (new Vector3(4f, 2.8f, -19.9f), Vector3.forward)
             };
             foreach ((Vector3 pos, Vector3 dir) in lamps)
@@ -245,6 +236,41 @@ namespace Afterrust.EditorTools
                 light.color = new Color(1f, 0.72f, 0.42f);
                 light.shadows = LightShadows.None;
             }
+
+            // Bare pendant bulb hanging from the middle roof beam, flickering slightly.
+            GameObject pendant = new GameObject("Pendant Lamp");
+            pendant.transform.SetParent(root.transform, false);
+            pendant.transform.position = new Vector3(0.3f, 2.45f, 3f);
+            GameObject cord = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cord.name = "Cord";
+            Object.DestroyImmediate(cord.GetComponent<Collider>());
+            cord.transform.SetParent(pendant.transform, false);
+            cord.transform.localPosition = new Vector3(0f, 0.3f, 0f);
+            cord.transform.localScale = new Vector3(0.01f, 0.3f, 0.01f);
+            cord.GetComponent<Renderer>().sharedMaterial = housing;
+            GameObject shade = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            shade.name = "Shade";
+            Object.DestroyImmediate(shade.GetComponent<Collider>());
+            shade.transform.SetParent(pendant.transform, false);
+            shade.transform.localPosition = new Vector3(0f, 0.04f, 0f);
+            shade.transform.localScale = new Vector3(0.3f, 0.03f, 0.3f);
+            shade.GetComponent<Renderer>().sharedMaterial = housing;
+            GameObject bulbBall = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            bulbBall.name = "Bulb";
+            Object.DestroyImmediate(bulbBall.GetComponent<Collider>());
+            bulbBall.transform.SetParent(pendant.transform, false);
+            bulbBall.transform.localScale = Vector3.one * 0.08f;
+            bulbBall.GetComponent<Renderer>().sharedMaterial = bulb;
+            bulbBall.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+            Light pendantLight = new GameObject("Light").AddComponent<Light>();
+            pendantLight.transform.SetParent(pendant.transform, false);
+            pendantLight.transform.localPosition = new Vector3(0f, -0.1f, 0f);
+            pendantLight.type = LightType.Point;
+            pendantLight.range = 6.5f;
+            pendantLight.intensity = intensity * 1.3f;
+            pendantLight.color = new Color(1f, 0.7f, 0.4f);
+            pendantLight.shadows = LightShadows.Soft;
+            pendantLight.gameObject.AddComponent<LampFlicker>();
         }
     }
 }

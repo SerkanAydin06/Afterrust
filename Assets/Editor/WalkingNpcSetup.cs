@@ -53,6 +53,24 @@ namespace Afterrust.EditorTools
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             return root;
         }
+
+        /// <summary>
+        /// Replaces the FBX-embedded materials (often imported transparent or untextured from
+        /// Mixamo) with explicit Standard materials. pick(original material name, renderer name).
+        /// </summary>
+        internal static void ApplyMaterials(GameObject model, System.Func<string, string, Material> pick)
+        {
+            foreach (Renderer r in model.GetComponentsInChildren<Renderer>(true))
+            {
+                Material[] mats = r.sharedMaterials;
+                for (int i = 0; i < mats.Length; i++)
+                {
+                    Material m = pick(mats[i] != null ? mats[i].name : "", r.name);
+                    if (m != null) mats[i] = m;
+                }
+                r.sharedMaterials = mats;
+            }
+        }
     }
 }
 #endif

@@ -21,7 +21,6 @@ namespace Afterrust.EditorTools
         private const string StaticModelName = "Meshy Scavenger - Imported Model";
         private const float TargetHeight = 1.75f;
 
-        [MenuItem("Afterrust/Setup Walking Scavenger (Rigged)")]
         public static void Setup()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)

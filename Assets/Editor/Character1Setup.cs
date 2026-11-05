@@ -35,7 +35,6 @@ namespace Afterrust.EditorTools
             new Vector3(0f, 0f, 2.5f)
         };
 
-        [MenuItem("Afterrust/Add Character1 (Mixamo, walking)")]
         public static void Add()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -62,6 +61,13 @@ namespace Afterrust.EditorTools
 
             GameObject root = WalkingNpcSetup.AddWalker(ModelPath, importer, avatar, controller, RootName, Spot,
                 Waypoints, usesMixamoWalk ? MixamoWalkSpeed : 1.2f, TargetHeight);
+            const string dir = "Assets/Arts/Characters/character1";
+            Material body = MaterialKit.Character(dir + "/Materials", "M_Ch21_Body", dir + "/Textures/Ch21_body_albedo.jpg",
+                dir + "/Textures/Ch21_body_normal.jpg", false, 0.25f);
+            Material hair = MaterialKit.Character(dir + "/Materials", "M_Ch21_Hair", dir + "/Textures/Ch21_hair_albedo.png",
+                null, true, 0.3f);
+            WalkingNpcSetup.ApplyMaterials(root.transform.GetChild(0).gameObject, (mat, rend) =>
+                (mat + rend).ToLowerInvariant().Contains("hair") || rend.ToLowerInvariant().Contains("eyelas") ? hair : body);
             Selection.activeGameObject = root;
             Debug.Log("[Afterrust] Character1 added at " + Spot + " with Idle/Walk patrol. Save scene (Ctrl+S) and press Play.");
         }

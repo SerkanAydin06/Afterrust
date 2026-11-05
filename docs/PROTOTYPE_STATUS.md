@@ -17,7 +17,7 @@
 ## Kullanıcı doğrulama akışı
 1. GitHub Desktop ile Pull origin.
 2. Unity'de Play modundan çık.
-3. Afterrust > Create or Rebuild Prototype Scene (var olan sahneyi üzerine yazar; elle yaptığın düzenlemeleri korumak istiyorsan önce yedekle).
+3. (Artık gerekmez: sahne otomatik güncellenir) (var olan sahneyi üzerine yazar; elle yaptığın düzenlemeleri korumak istiyorsan önce yedekle).
 4. Play. E ile akü bağlantısını ve aküyü sök; metal hurdayı topla.
 5. Satıcıya E ile sat; F ile 60 kredilik kablo kesiciyi al.
 6. Araca dön; alternatör kablosunu ve alternatörü sırayla sök.
