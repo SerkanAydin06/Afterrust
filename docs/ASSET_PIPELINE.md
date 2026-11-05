@@ -17,3 +17,9 @@
 - **Afterrust > Lighting > Overcast**: gri, kasvetli, yoğun sis; lambalar daha belirgin.
 - Yalnız RenderSettings, `Sun`, kameralar ve `Scrapyard Lamps` değişir. `Create or Rebuild Prototype Scene` eski ışığı geri yükler; ardından preset tekrar uygulanmalı.
 - Önizleme (Blender, yaklaşık): `QA/Environment/preview_golden_hour.jpg`.
+
+## Profesyonel görüntü kurulumu
+- Tek tık: **Afterrust > Apply Pro Visual Setup** → çevre yoksa kurar, Golden Hour ışığı + post-processing uygular, oyuncu kamerası FOV 72.
+- Post-processing (Post Processing Stack v2, `com.unity.postprocessing` 3.4.0): ACES HDR renk düzenleme, bloom, MSVO ortam gölgelemesi, vignette, hafif film greni. Profiller: `Assets/Arts/Environment/PostProcessing/PP_GoldenHour.asset`, `PP_Overcast.asset`; global hacim `Post Process Volume` (`PostProcessing` katmanı). Her ışık preset'i kendi profilini uygular.
+- Proje ayarları: **Linear** renk uzayı, GPU skinning açık, yalnız yeni Input System, Very High/Ultra'da MSAA 4x, Ultra gölge mesafesi 90 m (küçük alan için daha keskin gölge).
+- Oyuncu: yumuşak hızlanma/yavaşlama, hafif kafa sallanması, koşarken +6° FOV. QA ekran görüntüleri artık oyuncu kamerasıyla (post-processing dahil) alınır.

@@ -114,11 +114,14 @@ namespace Afterrust.QA
             int height = Mathf.Clamp(plan.height, 180, 1080);
             string output = Path.GetFullPath(Path.Combine(Application.dataPath, "..", OutputFolder));
 
-            GameObject cameraObject = new GameObject("QA Temporary Capture Camera");
-            Camera shotCamera = cameraObject.AddComponent<Camera>();
-            shotCamera.CopyFrom(source);
-            shotCamera.enabled = false;
-            shotCamera.targetTexture = null;
+            // Render through the real player camera so post-processing (PostProcessLayer)
+            // and every camera setting match what the player sees; restored afterwards.
+            Camera shotCamera = source;
+            Transform shotTransform = shotCamera.transform;
+            Vector3 savedLocalPosition = shotTransform.localPosition;
+            Quaternion savedLocalRotation = shotTransform.localRotation;
+            float savedFov = shotCamera.fieldOfView;
+            RenderTexture savedTarget = shotCamera.targetTexture;
 
             RenderTexture renderTexture = null;
             Texture2D screenshot = null;
@@ -186,10 +189,15 @@ namespace Afterrust.QA
             finally
             {
                 RenderTexture.active = previous;
-                if (shotCamera != null) shotCamera.targetTexture = null;
+                if (shotCamera != null)
+                {
+                    shotCamera.targetTexture = savedTarget;
+                    shotCamera.fieldOfView = savedFov;
+                    shotTransform.localPosition = savedLocalPosition;
+                    shotTransform.localRotation = savedLocalRotation;
+                }
                 if (renderTexture != null) { renderTexture.Release(); Destroy(renderTexture); }
                 if (screenshot != null) Destroy(screenshot);
-                if (cameraObject != null) Destroy(cameraObject);
             }
         }
     }

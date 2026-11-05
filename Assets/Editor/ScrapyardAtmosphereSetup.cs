@@ -9,7 +9,8 @@ namespace Afterrust.EditorTools
 {
     /// <summary>
     /// Lighting and atmosphere presets for the scrapyard (built-in render pipeline):
-    /// procedural sky, sun, trilight ambient, distance fog, camera sky and warm workshop lamps.
+    /// procedural sky, sun, trilight ambient, distance fog, camera sky, warm workshop lamps and
+    /// the matching post-processing grade (see ScrapyardPostProcessSetup).
     /// Only RenderSettings, the "Sun", the player camera and the "Scrapyard Lamps" root are touched.
     /// </summary>
     public static class ScrapyardAtmosphereSetup
@@ -75,6 +76,14 @@ namespace Afterrust.EditorTools
         [MenuItem("Afterrust/Lighting/Overcast")]
         public static void ApplyOvercast() { Apply(Overcast); }
 
+        /// <summary>One click: environment (if missing) + golden hour lighting + post-processing.</summary>
+        [MenuItem("Afterrust/Apply Pro Visual Setup", false, 0)]
+        public static void ApplyProVisualSetup()
+        {
+            if (ScavengerWalkSetup.FindInScene("Scrapyard Environment") == null) ScrapyardEnvironmentBuilder.Build();
+            Apply(GoldenHour);
+        }
+
         private static void Apply(Preset p)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
@@ -127,9 +136,13 @@ namespace Afterrust.EditorTools
                 cam.clearFlags = CameraClearFlags.Skybox;
                 cam.farClipPlane = Mathf.Max(cam.farClipPlane, 300f);
                 cam.allowHDR = true;
+                cam.allowMSAA = true;
+                if (cam.name == "First Person Camera") cam.fieldOfView = 72f;
             }
 
             BuildLamps(p.lampIntensity);
+            ScrapyardPostProcessSetup.Apply(p.name == Overcast.name
+                ? ScrapyardPostProcessSetup.Overcast : ScrapyardPostProcessSetup.GoldenHour);
             DynamicGI.UpdateEnvironment();
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
             Debug.Log("[Afterrust] Lighting preset applied: " + p.name + ". Save scene (Ctrl+S).");
