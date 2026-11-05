@@ -11,3 +11,9 @@
 - Unity: **Afterrust > Build Scrapyard Environment** → malzemeler (`Materials/`), metre-UV modüler mesh'ler (`Meshes/`), prefablar (`Prefabs/`: beton zemin 4×4, beton duvar 4×3, kolon, oluklu sac çit 4×2,4, çelik direk) ve yerleşim (beton çalışma alanı, kapılı çevre çiti, atölye köşesi). Mevcut zemin ve harabe blokları yalnız yeni malzemeyle kaplanır; karakter/araç/oyun nesnelerine dokunulmaz. Tekrar çalıştırmak sadece `Scrapyard Environment` kökünü yeniler.
 - Ağ izni verilirse aynı dosya adlarıyla ambientCG/Poly Haven (CC0) dokuları konup araç yeniden çalıştırılarak değiştirilebilir.
 - Önizleme (Blender): `QA/Environment/`.
+
+## Işık ve atmosfer
+- **Afterrust > Lighting > Golden Hour (default)**: alçak sıcak akşam güneşi (yumuşak gölge), prosedürel gökyüzü (`Materials/SKY_Scrapyard.mat`), üç tonlu ortam ışığı, tozlu üstel sis, kameralar gökyüzüne geçer, atölye duvarlarında ve kapı direklerinde 5 sıcak lamba (`Scrapyard Lamps`).
+- **Afterrust > Lighting > Overcast**: gri, kasvetli, yoğun sis; lambalar daha belirgin.
+- Yalnız RenderSettings, `Sun`, kameralar ve `Scrapyard Lamps` değişir. `Create or Rebuild Prototype Scene` eski ışığı geri yükler; ardından preset tekrar uygulanmalı.
+- Önizleme (Blender, yaklaşık): `QA/Environment/preview_golden_hour.jpg`.
