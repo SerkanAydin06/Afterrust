@@ -51,15 +51,15 @@
         },
         {
             "id": "04_trade_stall",
-            "description": "Trade stall by the forecourt",
+            "description": "Safe yard: trader standing below the now-supported level canopy and four posts",
             "position": {
-                "x": 6,
-                "y": 1.9,
-                "z": -17
+                "x": 6.8,
+                "y": 2.1,
+                "z": -16.6
             },
             "rotation": {
-                "x": 4,
-                "y": 30,
+                "x": 8,
+                "y": 45,
                 "z": 0
             },
             "fieldOfView": 65
@@ -168,6 +168,21 @@
                 "z": 0
             },
             "fieldOfView": 78
+        },
+        {
+            "id": "12_safe_zone_gate",
+            "description": "Closed 8-metre double security gate at south fence opening, with welded panels and sign",
+            "position": {
+                "x": 0,
+                "y": 3.8,
+                "z": -11
+            },
+            "rotation": {
+                "x": 12,
+                "y": 180,
+                "z": 0
+            },
+            "fieldOfView": 72
         }
     ]
 }
