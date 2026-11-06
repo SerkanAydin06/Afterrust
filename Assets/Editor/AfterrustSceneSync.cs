@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 7;
+        private const int Latest = 8;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -125,6 +125,13 @@ namespace Afterrust.EditorTools
             {
                 Step("First expedition: roadside checkpoint, supplies and contamination", FirstExpeditionBuilder.Build);
                 Step("Survivor audio: footsteps, wind, rain and feedback", FirstExpeditionBuilder.EnableAudio);
+            }
+
+            if (current < 8)
+            {
+                // Existing v7 roofs are visual-only; add collision without rebuilding
+                // loot, door, stove or any persistent gameplay hierarchy.
+                Step("Weatherproof shelter and trade stall roofs", ShelterBuilder.EnsureRainColliders);
             }
 
             if (!allStepsSucceeded)
