@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 12;
+        private const int Latest = 13;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -167,6 +167,14 @@ namespace Afterrust.EditorTools
                 // The FPS monitor is rendered by the existing SurvivalHud.
                 Step("Remove safe-zone gate lettering and sign board",
                     ScrapyardEnvironmentBuilder.RemoveSafeZoneSign);
+            }
+
+            if (current < 13)
+            {
+                // Safe-zone interior pass: add one persistent chest without
+                // recreating the shelter, its loot containers, bed or trader.
+                Step("Shelter personal storage chest and interactable",
+                    ShelterStorageBuilder.EnsureStorage);
             }
 
             if (!allStepsSucceeded)

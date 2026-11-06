@@ -198,6 +198,21 @@
                 "z": 0
             },
             "fieldOfView": 52
+        },
+        {
+            "id": "14_shelter_storage",
+            "description": "V13 shelter: new personal storage chest against right interior wall; check walking clearance and lid",
+            "position": {
+                "x": 0.9,
+                "y": 1.85,
+                "z": 0.9
+            },
+            "rotation": {
+                "x": 30,
+                "y": 75,
+                "z": 0
+            },
+            "fieldOfView": 70
         }
     ],
     "captureAtFixedDaytime": true,

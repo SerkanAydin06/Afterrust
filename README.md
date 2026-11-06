@@ -42,3 +42,5 @@ Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan
 **V11 görsel/QA kontrolü:** Güncel Unity ekran görüntülerinde gece çok karanlık ve güvenli bölge giriş tabelası fazla büyük olduğu görüldü. Gece ortam ışığının alt sınırı yükseltildi, tüccar tezgâhına gece lambası eklendi ve tabela küçültüldü. QA ekran görüntüleri artık oyun kayıt saatinden bağımsız sabit gündüz 11:00'de çekilip hava/saat bilgisi geri yükleniyor. V9-v10 varil değişiminde sırası kayan ganimet konteynerleri için eski kayıt kimlikleri destekleniyor.
 
 **v12 güvenli avlu:** Giriş kapısındaki `GÜVENLİ BÖLGE` yazısı ve levhası tamamen kaldırıldı. Oyun HUD'ında sağ üstte canlı `FPS | ms` göstergesi varsayılan olarak açıktır; yarım saniyede bir güncellenir ve kapı/çevre performansını takip etmeye yardımcı olur.
+
+**v13 sığınak deposu:** Sığınağın sağ tarafında tek bir kapaklı sandık bulunur. `E` ile aç, iki sütunlu arayüzde `Koy` / `Al` ile eşyaları çantadan 120 kg kapasiteli depoya ve geri taşı. İçerik F5/F9 ve otomatik kayıtla saklanır. Eski kayıtlar yeni depoyla uyumludur; sandık ilk kullanımda boştur.

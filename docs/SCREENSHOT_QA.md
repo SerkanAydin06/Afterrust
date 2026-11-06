@@ -6,7 +6,7 @@ Unity Editor'da Play başlayınca `Assets/Resources/qa_screenshot_plan.json` yü
 `QA/Screenshots/latest/` içindeki PNG'ler ve `manifest.json` yeni Play'de yeniden oluşturulur; yalnızca bu klasördeki eski PNG'ler ve manifest silinir. Plan şu an **11** açı içerir: eski sığınak/avlu karelerine ek olarak v7 giriş rotası, yardım büfesi ve kimyasal konteyner/tehlike alanı.
 
 ## Önemli: GitHub'a gönderilen görsellerin güncelliği
-1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v12 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
+1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v13 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
 
 ## Yeni kamera noktaları
 `Assets/Resources/qa_screenshot_plan.json` dosyasındaki `views` dizisini düzenle:
@@ -55,3 +55,8 @@ Görüntünün doğru yeri gösterdiğini Play içinde kontrol et. Her yeni sahn
 - Güney kapısında `GÜVENLİ BÖLGE` yazısı ve tabela levhası görünmemeli. Kapı ve üst taşıyıcı kiriş yerinde kalmalı.
 - **FPS sayacı otomatik QA PNG'lerinde görünmez:** kamera çıktısı IMGUI çizimini kapsamaz. FPS'yi doğrudan Unity **Game** penceresinin sağ üst köşesinde, saat/hava durumunun altında kontrol et.
 - Yaklaşık 2 saniye durarak, ardından avluda yürüyüp koşarak FPS ve ms değerlerini ayrı not et. Kısa süreli düşüşleri daha sonra profiler ile araştır.
+
+## V13: İç mekân depolama alanı
+- `14_shelter_storage` açısı sığınağın sağ tarafına yerleştirilen sandığı, kapı geçiş açıklığını ve sandık kapağını göstermelidir.
+- Otomatik sistem **14 açı** çeker. Diğer bütün kareler olduğu gibi eski PNG'ler silinir ve yeni kareler yerlerine yazılır.
+- Depo UI'sı IMGUI ile çizildiğinden Camera.Render QA PNG'lerinde görünmez; Play/Game içinde `E` ile açıp **Koy**, **Al**, dolu kapasite ve F5/F9 kaydını manuel kontrol et.
