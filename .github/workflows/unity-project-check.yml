@@ -47,7 +47,8 @@ jobs:
           assert json.loads(Path("Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef").read_text())["name"] == "Afterrust.EditModeTests"
           assert "m_Name: Player" in Path("Assets/Scenes/AfterrustPrototype.unity").read_text()
           scene_sync = Path("Assets/Editor/AfterrustSceneSync.cs").read_text()
-          assert "private const int Latest = 15" in scene_sync
+          assert "private const int Latest = 16" in scene_sync
+          assert "ShelterInteriorLightingPass.Apply" in scene_sync
           assert "ShelterInteriorMaterialPass.Apply" in scene_sync
           assert "ShelterStorageBuilder.EnsureStorage" in scene_sync
           assert "ScrapyardEnvironmentBuilder.RemoveSafeZoneSign" in scene_sync
@@ -176,7 +177,22 @@ jobs:
           assert live_plan.is_file() and "AR-1501" in live_plan.read_text()
           assert "AR-1502" in live_plan.read_text() and "AR-1601" in live_plan.read_text()
           assert "docs/DEVELOPMENT_PLAN.md" in Path("AGENTS.md").read_text()
-          print("V15 interior-only shared material palette and living plan structure validated.")
+          lighting = Path("Assets/Editor/ShelterInteriorLightingPass.cs")
+          assert lighting.is_file() and Path(str(lighting) + ".meta").is_file()
+          light_source = lighting.read_text()
+          assert 'FindInScene("Scrapyard Lamps")' in light_source
+          assert 'workLight.type = LightType.Spot' in light_source
+          assert 'workLight.shadows = LightShadows.None' in light_source
+          assert 'pendantLight.shadows = LightShadows.Hard' in light_source
+          assert 'stove.fireLight.range = 3.8f' in light_source
+          assert 'stove.glowOff = matteStove' in light_source
+          assert 'new Light(' not in light_source
+          assert 'AddComponent<Light>' not in light_source
+          atmosphere = Path("Assets/Editor/ScrapyardAtmosphereSetup.cs").read_text()
+          assert "ShelterInteriorLightingPass.Apply();" in atmosphere
+          plan_text = live_plan.read_text()
+          assert '| AR-1502 | [~]' in plan_text
+          print("V15.2 focused shelter lighting, lower shadow cost and tracked plan validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:

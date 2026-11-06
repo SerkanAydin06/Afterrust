@@ -18,7 +18,7 @@
 | ID | Durum | Öncelik | Görev ve kabul ölçütü |
 |---|---|---|---|
 | AR-1501 | [~] | P2 | **İç mekân materyal geçişi:** yalnız sığınağın zemin/duvar/kapı, tezgâh, raf, yatak, masa, soba ve sandığına tutarlı kirli beton/ahşap/metal/kumaş materyalleri; normal haritalar ve paylaşılan asset. Dış mekan değişmez; collider, NPC, eşya ve kayıtlar korunur. Kodlandı; Unity gündüz/gece QA bekliyor. |
-| AR-1502 | [ ] | P2 | **İç aydınlatma:** sıcak/soğuk bölgeler, soba etkisi, gece okunabilirlik; en az ek ışık ve shadow maliyeti. |
+| AR-1502 | [~] | P2 | **İç aydınlatma:** mevcut tezgâh lambası odaklı sıcak spot/0 gölge, mevcut orta lamba hafif soğuk tonlu tek sert gölge, soba dar alanlı sıcak ışık. Yeni ışık yok, gölgeli ışık sayısı azaldı; gerçek gece/yağmur/FPS Unity QA bekliyor. |
 | AR-1503 | [ ] | P2 | **İç detay ve düzen:** raf, alet, kablo, kırık duvar geçişi; objeler oyuncu yolunu kapatmaz, mümkün olduğunca collider kullanılmaz. |
 | AR-1504 | [ ] | P1 | **Etkileşim nesneleri:** depo, yatak, soba, tezgâhın görsel okunabilirliği, tutarlı kullanım ipuçları; yeni sistemi yanlışlıkla tetiklemez. |
 | AR-1505 | [ ] | P1 | **v15 kalite kapısı:** Unity compile/Play, 02/08/14 QA görüntüleri, dururken/yürürken/yağmurda FPS-ms, F5/F9 depo ve kapı. Hata varsa önce düzelt. |
@@ -53,4 +53,6 @@
 
 `v15 sığınak → v16 güvenli avlu → v17 kullanım/UI → güvenli alan kalite kapısı → dış keşif ve daha büyük dünya`.
 
-**Son güncelleme kaydı:** 2026-11-07 — AR-1501 kodu başlatıldı. Başlangıç tetikleyicisi: kullanıcı sırayla, uzun açıklama olmadan, yapılanlar listesiyle geliştirme istedi.
+**Son güncelleme kaydı:** 2026-11-07 — AR-1502 kodlandı (sprint v15.2, teknik sahne sürümü 16). Gerçek Unity kalite kapısı ve performans ölçümü bekliyor. Sıradaki uygulanabilir iş: **AR-1503 iç detay ve yerleşim**, ancak Play'de derleme veya görsel hata tespit edilirse önce AR-Q001 / AR-1505 düzeltmeleri yapılacak.
+
+**Önceki kayıt:** 2026-11-07 — AR-1501 iç materyal geçişi kodlandı.

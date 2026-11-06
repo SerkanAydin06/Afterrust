@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 15;
+        private const int Latest = 16;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -183,6 +183,14 @@ namespace Afterrust.EditorTools
                 // colliders untouched. Only replace selected interior materials.
                 Step("V15 shelter interior surface materials",
                     ShelterInteriorMaterialPass.Apply);
+            }
+
+            if (current < 16)
+            {
+                // AR-1502 / sprint v15.2: retune only pre-existing interior
+                // fixtures. No scene rebuild, new lights or saved-object changes.
+                Step("V15.2 shelter lighting and stove material consistency",
+                    ShelterInteriorLightingPass.Apply);
             }
 
             if (!allStepsSucceeded)
