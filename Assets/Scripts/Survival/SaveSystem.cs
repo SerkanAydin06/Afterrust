@@ -262,6 +262,10 @@ namespace Afterrust
                 d.stoves.Add(new StoveState { id = PathOf(st.transform), burnSeconds = st.burnSecondsLeft });
             foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 d.doors.Add(new DoorState { id = PathOf(door.transform), open = door.isOpen });
+            // The perimeter gate is also a door state. No save-format bump is
+            // needed and pre-gate saves simply load with its default (closed).
+            foreach (SafeZoneGate gate in FindObjectsByType<SafeZoneGate>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                d.doors.Add(new DoorState { id = PathOf(gate.transform), open = gate.isOpen });
             DayNightWeather world = DayNightWeather.Instance;
             if (world != null)
             {
@@ -322,6 +326,8 @@ namespace Afterrust
             if (d.doors != null) foreach (DoorState ds in d.doors) doors[ds.id] = ds.open;
             foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 if (doors.TryGetValue(PathOf(door.transform), out bool open)) door.SetOpen(open, true);
+            foreach (SafeZoneGate gate in FindObjectsByType<SafeZoneGate>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (doors.TryGetValue(PathOf(gate.transform), out bool open)) gate.SetOpen(open, true);
 
             if (DayNightWeather.Instance != null)
                 DayNightWeather.Instance.Restore(d.timeOfDay, d.day, d.raining, d.weatherTimer);
