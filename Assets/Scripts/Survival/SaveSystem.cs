@@ -21,7 +21,13 @@ namespace Afterrust
         public sealed class ContainerState { public string id; public bool rolled; public List<string> contents = new List<string>(); }
 
         [Serializable]
-        public sealed class WaterState { public string id; public int units; }
+        public sealed class WaterState
+        {
+            public string id;
+            public int units;               // legacy integer portion count
+            public float fill01;            // fraction, including uncollectable partial rainwater
+            public bool hasContinuousFill;  // distinguishes zero fill from older saves
+        }
 
         [Serializable]
         public sealed class DoorState { public string id; public bool open; }
@@ -257,7 +263,13 @@ namespace Afterrust
             foreach (SalvageablePart p in FindObjectsByType<SalvageablePart>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 if (p.wasSalvaged) d.salvaged.Add(PathOf(p.transform));
             foreach (WaterSource w in FindObjectsByType<WaterSource>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                d.water.Add(new WaterState { id = PathOf(w.transform), units = w.Units });
+                d.water.Add(new WaterState
+                {
+                    id = PathOf(w.transform),
+                    units = w.Units,
+                    fill01 = w.Fill01,
+                    hasContinuousFill = true
+                });
             foreach (Stove st in FindObjectsByType<Stove>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 d.stoves.Add(new StoveState { id = PathOf(st.transform), burnSeconds = st.burnSecondsLeft });
             foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
@@ -312,10 +324,14 @@ namespace Afterrust
                 p.gameObject.SetActive(false);
             }
 
-            Dictionary<string, int> water = new Dictionary<string, int>();
-            foreach (WaterState w in d.water) water[w.id] = w.units;
+            Dictionary<string, WaterState> water = new Dictionary<string, WaterState>();
+            foreach (WaterState w in d.water) water[w.id] = w;
             foreach (WaterSource w in FindObjectsByType<WaterSource>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                if (water.TryGetValue(PathOf(w.transform), out int units)) w.Restore(units);
+                if (water.TryGetValue(PathOf(w.transform), out WaterState state))
+                {
+                    if (state.hasContinuousFill) w.Restore(state.fill01);
+                    else w.Restore(state.units);
+                }
 
             Dictionary<string, float> stoves = new Dictionary<string, float>();
             if (d.stoves != null) foreach (StoveState ss in d.stoves) stoves[ss.id] = ss.burnSeconds;
