@@ -1,9 +1,9 @@
 {
-    "capturedAtUtc": "2026-11-06T17:53:02.0900653Z",
+    "capturedAtUtc": "2026-11-06T18:52:50.1770978Z",
     "unityVersion": "6000.3.27f2",
     "scene": "AfterrustPrototype",
     "planAsset": "Assets/Resources/qa_screenshot_plan.json",
-    "imageCount": 11,
+    "imageCount": 13,
     "images": [
         {
             "file": "01_spawn_shelter_front.png",
@@ -49,15 +49,15 @@
         },
         {
             "file": "04_trade_stall.png",
-            "description": "Trade stall by the forecourt",
+            "description": "Safe yard: trader standing below the now-supported level canopy and four posts",
             "position": {
-                "x": 6.0,
-                "y": 1.899999976158142,
-                "z": -17.0
+                "x": 6.800000190734863,
+                "y": 2.0999999046325685,
+                "z": -16.600000381469728
             },
             "rotation": {
-                "x": 4.0,
-                "y": 30.0,
+                "x": 8.0,
+                "y": 45.0,
                 "z": 0.0
             }
         },
@@ -156,6 +156,34 @@
             "rotation": {
                 "x": 28.0,
                 "y": 180.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "12_safe_zone_gate.png",
+            "description": "Closed 8-metre double security gate at south fence opening, with welded panels and sign",
+            "position": {
+                "x": 0.0,
+                "y": 3.799999952316284,
+                "z": -11.0
+            },
+            "rotation": {
+                "x": 12.0,
+                "y": 180.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "13_open_rain_collector.png",
+            "description": "V10 safe yard single open-top water barrel with clearly visible hollow interior and rising water surface",
+            "position": {
+                "x": 3.299999952316284,
+                "y": 2.3499999046325685,
+                "z": -3.0
+            },
+            "rotation": {
+                "x": 40.0,
+                "y": 0.0,
                 "z": 0.0
             }
         }
