@@ -166,8 +166,7 @@ namespace Afterrust
         public bool Load()
         {
             // An interrupted write or malformed primary save must not destroy the playthrough.
-            if (TryLoadFile(FilePath, out SaveData data) ||
-                TryLoadFile(BackupFilePath, out data))
+            if (TryReadSave(FilePath, BackupFilePath, out SaveData data))
             {
                 try
                 {
@@ -180,6 +179,13 @@ namespace Afterrust
                 }
             }
             return false;
+        }
+
+        /// <summary>Read the primary save first, falling back to the last complete backup.</summary>
+        public static bool TryReadSave(string primaryPath, string backupPath, out SaveData data)
+        {
+            if (TryLoadFile(primaryPath, out data)) return true;
+            return TryLoadFile(backupPath, out data);
         }
 
         private static bool TryLoadFile(string path, out SaveData data)
