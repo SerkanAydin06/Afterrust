@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 11;
+        private const int Latest = 12;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -156,13 +156,17 @@ namespace Afterrust.EditorTools
 
             if (current < 11)
             {
-                // v10 generated scene has an oversized name plate and no trader lamp.
-                // Adjust only these small fixtures; do not regenerate the yard, the
-                // gate or any saved loot and water container hierarchies.
-                Step("Fit safe-zone lettering to entrance sign",
-                    ScrapyardEnvironmentBuilder.CorrectSafeZoneSign);
+                // Keep the existing gate and saved objects intact.
                 Step("Give the trader stall a night lamp",
                     ShelterBuilder.EnsureTraderNightLight);
+            }
+
+            if (current < 12)
+            {
+                // Remove the sign and its backing plate, not the gate/hinges/lintel.
+                // The FPS monitor is rendered by the existing SurvivalHud.
+                Step("Remove safe-zone gate lettering and sign board",
+                    ScrapyardEnvironmentBuilder.RemoveSafeZoneSign);
             }
 
             if (!allStepsSucceeded)
