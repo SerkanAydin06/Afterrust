@@ -26,6 +26,23 @@ namespace Afterrust.EditorTools
         static AfterrustSceneSync()
         {
             EditorSceneManager.sceneOpened += (scene, mode) => Schedule();
+            EditorApplication.playModeStateChanged += CheckBeforePlay;
+            Schedule();
+        }
+
+        // Stop Play before a stale scene can run: the delayed builder cannot safely
+        // modify scene objects once Unity is already entering Play mode.
+        private static void CheckBeforePlay(PlayModeStateChange change)
+        {
+            if (change != PlayModeStateChange.ExitingEditMode) return;
+            Scene scene = SceneManager.GetActiveScene();
+            if (!scene.IsValid() || scene.path != ScenePath) return;
+            SceneBuildInfo info = UnityEngine.Object.FindFirstObjectByType<SceneBuildInfo>(FindObjectsInactive.Include);
+            if (info != null && info.version >= Latest) return;
+
+            EditorApplication.isPlaying = false;
+            Debug.LogError("[Afterrust] Play cancelled: scene version is outdated or the scene update failed. " +
+                           "Wait for '[Afterrust] Scene updated' in Console, fix any errors, then press Play again.");
             Schedule();
         }
 
