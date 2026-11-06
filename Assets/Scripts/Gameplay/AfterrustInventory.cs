@@ -141,6 +141,7 @@ namespace Afterrust
             if (def == null || !def.IsConsumable || vitals == null || vitals.IsDead) return null;
             if (!TryRemove(id)) return null;
             vitals.Apply(def.hunger, def.thirst, def.health);
+            if (def.warmth != 0f) vitals.ApplyWarmth(def.warmth);
             if (def.id == "water_dirty") return "Kirli su içtin. Midesi bulanıyor (-10 sağlık).";
             return def.name + " kullanıldı.";
         }
@@ -151,7 +152,7 @@ namespace Afterrust
             string[] order;
             switch (category)
             {
-                case ItemCategory.Food: order = new[] { "canned_food", "crackers" }; break;
+                case ItemCategory.Food: order = new[] { "hot_meal", "canned_food", "crackers" }; break;
                 case ItemCategory.Drink: order = new[] { "water_clean", "water_dirty" }; break;
                 case ItemCategory.Medical: order = new[] { "bandage" }; break;
                 default: return null;

@@ -353,6 +353,22 @@ namespace Afterrust.EditorTools
                     Part(pallets, "Board", BoxB(1.2f, 0.02f, 0.14f), wood, new Vector3(0f, y + 0.1f, -0.43f + b * 0.215f),
                         new Vector3(0f, k * 3f, 0f), false);
             }
+            // Split logs stacked against the left wall outside (fuel for the stove).
+            Transform woodpile = Group(p, "Woodpile");
+            woodpile.localPosition = new Vector3(-4.75f, 0f, 0.6f);
+            System.Random logs = new System.Random(19);
+            for (int row = 0; row < 3; row++)
+            for (int i = 0; i < 5 - row; i++)
+            {
+                float z = -0.42f + i * 0.21f + row * 0.105f;
+                Part(woodpile, "Log", Cyl(0.1f, 0.9f, 10), wood,
+                    new Vector3(0.45f, 0.1f + row * 0.18f, z),
+                    new Vector3((float)(logs.NextDouble() - 0.5) * 4f, 0f, 90f), false);
+            }
+            BoxCollider woodCollider = woodpile.gameObject.AddComponent<BoxCollider>();
+            woodCollider.center = new Vector3(0f, 0.3f, 0f);
+            woodCollider.size = new Vector3(0.95f, 0.6f, 1.15f);
+
             BoxCollider palletCollider = pallets.gameObject.AddComponent<BoxCollider>();
             palletCollider.center = new Vector3(0f, 0.2f, 0f);
             palletCollider.size = new Vector3(1.25f, 0.4f, 1.05f);

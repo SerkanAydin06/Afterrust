@@ -11,8 +11,11 @@ namespace Afterrust
         public Ingredient(string id, int count) { this.id = id; this.count = count; }
     }
 
+    public enum CraftStation { Workbench, Stove }
+
     public sealed class Recipe
     {
+        public CraftStation station = CraftStation.Workbench;
         public string id;
         public string name;
         public string description;
@@ -59,8 +62,30 @@ namespace Afterrust
             {
                 id = "recycle_alternator", name = "Alternatörü geri dönüştür", description = "Alternatörden 3 bakır tel çıkarır.",
                 inputs = new[] { new Ingredient("alternator", 1) }, outputItem = "wire", outputCount = 3
+            },
+            // ---- stove (needs a lit fire)
+            new Recipe
+            {
+                station = CraftStation.Stove, id = "boil_water", name = "Suyu kaynat", description = "Kirli suyu güvenle içilir yapar.",
+                inputs = new[] { new Ingredient("water_dirty", 1) }, outputItem = "water_clean"
+            },
+            new Recipe
+            {
+                station = CraftStation.Stove, id = "hot_meal", name = "Konserveyi ısıt", description = "Sıcak yemek: daha tok tutar ve ısıtır.",
+                inputs = new[] { new Ingredient("canned_food", 1) }, outputItem = "hot_meal"
+            },
+            new Recipe
+            {
+                station = CraftStation.Stove, id = "make_charcoal", name = "Kömür yap", description = "2 odundan 1 kömür (süzgeç için).",
+                inputs = new[] { new Ingredient("wood", 2) }, outputItem = "charcoal"
             }
         };
+
+        public static IEnumerable<Recipe> For(CraftStation station)
+        {
+            foreach (Recipe r in Recipes)
+                if (r.station == station) yield return r;
+        }
 
         public static bool IsAvailable(Recipe r, AfterrustInventory inv)
         {

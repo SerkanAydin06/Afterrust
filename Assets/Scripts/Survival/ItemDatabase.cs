@@ -12,11 +12,12 @@ namespace Afterrust
         public readonly float massKg;
         public readonly int value;
         public readonly ItemCategory category;
-        public readonly float hunger, thirst, health;
+        public readonly float hunger, thirst, health, warmth;
 
         public ItemDef(string id, string name, float massKg, int value, ItemCategory category,
-            float hunger = 0f, float thirst = 0f, float health = 0f)
+            float hunger = 0f, float thirst = 0f, float health = 0f, float warmth = 0f)
         {
+            this.warmth = warmth;
             this.id = id;
             this.name = name;
             this.massKg = massKg;
@@ -40,6 +41,7 @@ namespace Afterrust
         {
             Add(new ItemDef("canned_food", "Konserve Yemek", 0.4f, 12, ItemCategory.Food, hunger: 35f));
             Add(new ItemDef("crackers", "Kraker", 0.15f, 5, ItemCategory.Food, hunger: 12f, thirst: -3f));
+            Add(new ItemDef("hot_meal", "Sıcak Yemek", 0.45f, 16, ItemCategory.Food, hunger: 45f, warmth: 20f));
             Add(new ItemDef("water_clean", "Temiz Su", 0.5f, 8, ItemCategory.Drink, thirst: 40f));
             Add(new ItemDef("water_dirty", "Kirli Su", 0.5f, 1, ItemCategory.Drink, thirst: 25f, health: -10f));
             Add(new ItemDef("bandage", "Bandaj", 0.05f, 6, ItemCategory.Medical, health: 25f));
@@ -47,6 +49,7 @@ namespace Afterrust
             Add(new ItemDef("duct_tape", "Bant", 0.2f, 4, ItemCategory.Material));
             Add(new ItemDef("wire", "Bakır Tel", 0.2f, 5, ItemCategory.Material));
             Add(new ItemDef("charcoal", "Kömür", 0.3f, 2, ItemCategory.Material));
+            Add(new ItemDef("wood", "Odun", 0.8f, 1, ItemCategory.Material));
             Add(new ItemDef("scrap", "Metal Hurda", 3f, 15, ItemCategory.Salvage));
             Add(new ItemDef("battery", "Araç Aküsü", 14f, 80, ItemCategory.Salvage));
             Add(new ItemDef("battery-clamp", "Akü Bağlantısı", 0.5f, 15, ItemCategory.Salvage));

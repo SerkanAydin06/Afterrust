@@ -12,6 +12,14 @@ namespace Afterrust
         [Range(0f, 100f)] public float hunger = 100f;
         [Range(0f, 100f)] public float thirst = 100f;
         [Range(0f, 100f)] public float stamina = 100f;
+        [Tooltip("Body warmth: falls in rain/night outdoors, rises under a roof or by a fire.")]
+        [Range(0f, 100f)] public float warmth = 70f;
+        [Tooltip("Rest: falls while awake, restored by sleeping.")]
+        [Range(0f, 100f)] public float energy = 100f;
+
+        [Header("Environment (set by ThermalSensor)")]
+        [Range(0f, 100f)] public float warmthTarget = 55f;
+        public bool sheltered;
 
         [Header("Rates")]
         [Tooltip("Hunger lost per minute (100 / 4 = 25 minutes).")]
@@ -26,6 +34,12 @@ namespace Afterrust
         public float staminaDrainPerSecond = 18f;
         public float staminaRegenPerSecond = 14f;
         public float jumpStaminaCost = 10f;
+        [Tooltip("Warmth change per minute towards the environment target.")]
+        public float warmthPerMinute = 8f;
+        [Tooltip("Energy lost per minute awake (100 / 4.5 = ~22 minutes, about one in-game day).")]
+        public float energyPerMinute = 4.5f;
+        public float coldDamagePerSecond = 0.2f;
+        public float exhaustionDamagePerSecond = 0.1f;
 
         public bool sprinting;
         public bool IsDead => health <= 0f;
@@ -42,25 +56,51 @@ namespace Afterrust
         {
             if (IsDead) return;
             float needScale = sprinting ? sprintNeedMultiplier : 1f;
-            hunger = Mathf.Max(0f, hunger - hungerPerMinute / 60f * dt * needScale);
+            float coldScale = IsCold ? 1.3f : 1f;   // shivering burns food
+            hunger = Mathf.Max(0f, hunger - hungerPerMinute / 60f * dt * needScale * coldScale);
             thirst = Mathf.Max(0f, thirst - thirstPerMinute / 60f * dt * needScale);
+            energy = Mathf.Max(0f, energy - energyPerMinute / 60f * dt * (sprinting ? 1.5f : 1f));
+            warmth = Mathf.MoveTowards(warmth, warmthTarget + (sprinting ? 5f : 0f), warmthPerMinute / 60f * dt);
 
             float damage = 0f;
             if (hunger <= 0f) damage += deprivationDamagePerSecond;
             if (thirst <= 0f) damage += deprivationDamagePerSecond;
+            if (warmth < 15f) damage += coldDamagePerSecond;
+            if (energy <= 0f) damage += exhaustionDamagePerSecond;
             if (damage > 0f) health -= damage * dt;
-            else if (hunger > 60f && thirst > 60f) health += regenPerSecond * dt;
+            else if (hunger > 60f && thirst > 60f && warmth > 40f) health += regenPerSecond * dt;
             health = Mathf.Clamp(health, 0f, Max);
 
+            float staminaCap = Tired ? 50f : Max;
+            float regen = staminaRegenPerSecond * (Tired ? 0.4f : 1f) * (IsCold ? 0.7f : 1f);
             stamina = sprinting
                 ? Mathf.Max(0f, stamina - staminaDrainPerSecond * dt)
-                : Mathf.Min(Max, stamina + staminaRegenPerSecond * dt);
+                : Mathf.Min(staminaCap, stamina + regen * dt);
+            if (stamina > staminaCap) stamina = staminaCap;
 
+            RaiseDeathIfNeeded();
+        }
+
+        public bool IsCold => warmth < 30f;
+        public bool Tired => energy < 15f;
+
+        private void RaiseDeathIfNeeded()
+        {
             if (IsDead && !deathRaised)
             {
                 deathRaised = true;
                 Died?.Invoke();
             }
+        }
+
+        public void ApplyWarmth(float dWarmth)
+        {
+            if (!IsDead) warmth = Mathf.Clamp(warmth + dWarmth, 0f, Max);
+        }
+
+        public void ApplyRest(float dEnergy)
+        {
+            if (!IsDead) energy = Mathf.Clamp(energy + dEnergy, 0f, Max);
         }
 
         public void Apply(float dHunger, float dThirst, float dHealth)
@@ -69,11 +109,7 @@ namespace Afterrust
             hunger = Mathf.Clamp(hunger + dHunger, 0f, Max);
             thirst = Mathf.Clamp(thirst + dThirst, 0f, Max);
             health = Mathf.Clamp(health + dHealth, 0f, Max);
-            if (IsDead && !deathRaised)
-            {
-                deathRaised = true;
-                Died?.Invoke();
-            }
+            RaiseDeathIfNeeded();
         }
 
         public bool TryUseStamina(float amount)

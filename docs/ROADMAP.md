@@ -12,8 +12,9 @@ Durum: P0 hayatta kalma döngüsü uygulanıyor.
 - [ ] Ses (adım, arama, üretim, ortam).
 
 ## P1: Derinlik
-- Uyku/yorgunluk, vücut ısısı (yağmur ve gece etkisi), hastalık ve yara türleri.
-- Ocak/ateş, yemek pişirme, yağmur toplayıcı, sığınak yükseltmeleri (kapı, depo, yatak).
+- [x] Uyku/enerji, vücut ısısı (yağmur, gece, çatı, soba), soba ile pişirme.
+- Hastalık ve yara türleri, ıslanma.
+- Yağmur toplayıcı, sığınak yükseltmeleri (kilit, depo sandığı, yalıtım).
 - uGUI tabanlı arayüz, eşya ikonları.
 - Meshy ile özgün eşya/kap modelleri.
 

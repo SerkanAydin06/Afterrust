@@ -308,6 +308,17 @@ def rain_streak():
     print("saved rain_streak")
 
 
+def smoke_puff():
+    """128x128 soft smoke puff (RGBA) for particles."""
+    noise = fbm(1.8, n=128)
+    y, x = np.mgrid[0:128, 0:128]
+    r = np.hypot(x - 63.5, y - 63.5) / 64.0
+    a = np.clip(1 - r, 0, 1) ** 1.6 * (0.6 + 0.4 * noise)
+    img = np.stack([np.full_like(a, 0.8), np.full_like(a, 0.8), np.full_like(a, 0.8), np.clip(a, 0, 1)], -1)
+    Image.fromarray((img * 255).astype(np.uint8), "RGBA").save(f"{OUT}/smoke_puff.png")
+    print("saved smoke_puff")
+
+
 if __name__ == "__main__":
     ground_dirt()
     concrete_slab()
@@ -323,3 +334,4 @@ if __name__ == "__main__":
     shop_sign()
     storm_clouds()
     rain_streak()
+    smoke_puff()

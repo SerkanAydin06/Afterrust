@@ -37,8 +37,11 @@ namespace Afterrust.EditorTools
             };
             LootEntry[] crate =
             {
-                new LootEntry("charcoal", 0.7f, 1, 2), new LootEntry("cloth", 0.4f, 1, 1)
+                new LootEntry("charcoal", 0.7f, 1, 2), new LootEntry("cloth", 0.4f, 1, 1),
+                new LootEntry("wood", 0.6f, 1, 2)
             };
+            LootEntry[] woodpile = { new LootEntry("wood", 1f, 5, 8) };
+            LootEntry[] pallets = { new LootEntry("wood", 1f, 3, 5) };
             LootEntry[] drum =
             {
                 new LootEntry("charcoal", 0.4f, 1, 2), new LootEntry("scrap", 0.3f, 1, 1),
@@ -49,7 +52,7 @@ namespace Afterrust.EditorTools
                 new LootEntry("canned_food", 0.6f, 1, 2), new LootEntry("water_clean", 0.6f, 1, 2),
                 new LootEntry("cloth", 0.7f, 1, 3), new LootEntry("duct_tape", 0.5f, 1, 1),
                 new LootEntry("wire", 0.4f, 1, 2), new LootEntry("bandage", 0.3f, 1, 1),
-                new LootEntry("crackers", 0.5f, 1, 2)
+                new LootEntry("crackers", 0.5f, 1, 2), new LootEntry("wood", 0.5f, 1, 3)
             };
 
             Transform rainBarrel = null;
@@ -63,6 +66,8 @@ namespace Afterrust.EditorTools
                     case "Box Under Bench B":
                     case "Box": Loot(t, "Karton Kutu", 1.2f, cardboard, 0, 0); break;
                     case "Battery Crate": Loot(t, "Tahta Sandık", 1.5f, crate, 0, 0); break;
+                    case "Woodpile": Loot(t, "Odun Yığını", 2.0f, woodpile, 0, 0); break;
+                    case "Pallet Stack": Loot(t, "Palet Yığını (sök)", 2.5f, pallets, 0, 0); break;
                     case "Shipping Container": Loot(t, "Konteyner", 2.5f, container, 5, 20); break;
                     case "Bench Top": if (t.GetComponent<Workbench>() == null) t.gameObject.AddComponent<Workbench>(); break;
                     case "Oil Drum":

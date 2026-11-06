@@ -15,7 +15,7 @@ namespace Afterrust
     /// </summary>
     public sealed class SaveSystem : MonoBehaviour
     {
-        public const int FormatVersion = 1;
+        public const int FormatVersion = 2;
 
         [Serializable]
         public sealed class ContainerState { public string id; public bool rolled; public List<string> contents = new List<string>(); }
@@ -27,13 +27,16 @@ namespace Afterrust
         public sealed class DoorState { public string id; public bool open; }
 
         [Serializable]
+        public sealed class StoveState { public string id; public float burnSeconds; }
+
+        [Serializable]
         public sealed class SaveData
         {
             public int version = FormatVersion;
             public string savedAt;
             public Vector3 position;
             public float yaw, pitch;
-            public float health, hunger, thirst, stamina;
+            public float health, hunger, thirst, stamina, warmth, energy;
             public List<AfterrustInventory.ItemStack> items = new List<AfterrustInventory.ItemStack>();
             public float capacityKg;
             public int credits;
@@ -42,6 +45,7 @@ namespace Afterrust
             public List<string> salvaged = new List<string>();
             public List<WaterState> water = new List<WaterState>();
             public List<DoorState> doors = new List<DoorState>();
+            public List<StoveState> stoves = new List<StoveState>();
             public float timeOfDay;
             public int day;
             public bool raining;
@@ -167,6 +171,7 @@ namespace Afterrust
             if (vitals != null)
             {
                 d.health = vitals.health; d.hunger = vitals.hunger; d.thirst = vitals.thirst; d.stamina = vitals.stamina;
+                d.warmth = vitals.warmth; d.energy = vitals.energy;
             }
             if (inventory != null)
             {
@@ -186,6 +191,8 @@ namespace Afterrust
                 if (p.wasSalvaged) d.salvaged.Add(PathOf(p.transform));
             foreach (WaterSource w in FindObjectsByType<WaterSource>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 d.water.Add(new WaterState { id = PathOf(w.transform), units = w.Units });
+            foreach (Stove st in FindObjectsByType<Stove>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                d.stoves.Add(new StoveState { id = PathOf(st.transform), burnSeconds = st.burnSecondsLeft });
             foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 d.doors.Add(new DoorState { id = PathOf(door.transform), open = door.isOpen });
             DayNightWeather world = DayNightWeather.Instance;
@@ -208,6 +215,7 @@ namespace Afterrust
             if (vitals != null)
             {
                 vitals.health = d.health; vitals.hunger = d.hunger; vitals.thirst = d.thirst; vitals.stamina = d.stamina;
+                vitals.warmth = d.warmth; vitals.energy = d.energy;
             }
             if (inventory != null)
             {
@@ -237,6 +245,11 @@ namespace Afterrust
             foreach (WaterState w in d.water) water[w.id] = w.units;
             foreach (WaterSource w in FindObjectsByType<WaterSource>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 if (water.TryGetValue(PathOf(w.transform), out int units)) w.Restore(units);
+
+            Dictionary<string, float> stoves = new Dictionary<string, float>();
+            if (d.stoves != null) foreach (StoveState ss in d.stoves) stoves[ss.id] = ss.burnSeconds;
+            foreach (Stove st in FindObjectsByType<Stove>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (stoves.TryGetValue(PathOf(st.transform), out float burn)) st.Restore(burn);
 
             Dictionary<string, bool> doors = new Dictionary<string, bool>();
             if (d.doors != null) foreach (DoorState ds in d.doors) doors[ds.id] = ds.open;

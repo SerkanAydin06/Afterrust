@@ -114,6 +114,27 @@ namespace Afterrust
             flash = 0f;
         }
 
+        /// <summary>Skips time (sleeping); returns the equivalent real seconds.</summary>
+        public float AdvanceHours(float hours)
+        {
+            float realSeconds = hours * dayLengthMinutes * 60f / 24f;
+            timeOfDay += hours;
+            while (timeOfDay >= 24f)
+            {
+                timeOfDay -= 24f;
+                day++;
+            }
+            weatherTimer -= realSeconds;
+            while (weatherTimer <= 0f)
+            {
+                raining = !raining;
+                Vector2 range = raining ? rainMinutes : dryMinutes;
+                weatherTimer += Random.Range(range.x, range.y) * 60f;
+            }
+            rainBlend = raining ? 1f : 0f;
+            return realSeconds;
+        }
+
         /// <summary>Restores time/weather from a save.</summary>
         public void Restore(float time, int savedDay, bool isRaining, float timer)
         {

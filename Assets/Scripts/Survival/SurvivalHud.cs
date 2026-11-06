@@ -20,6 +20,9 @@ namespace Afterrust
         private Panel panel = Panel.None;
         private Vector2 scroll;
         private int openedFrame = -1;
+        private CraftStation station = CraftStation.Workbench;
+        private Stove stove;
+        private SleepSystem sleep;
 
         private Texture2D white;
         private GUIStyle label, labelSmall, labelCenter, title, button, box, prompt, rightSmall;
@@ -38,10 +41,18 @@ namespace Afterrust
             if (inventory == null) inventory = GetComponent<AfterrustInventory>();
             if (vitals == null) vitals = GetComponent<SurvivorVitals>();
             if (controller == null) controller = GetComponent<AfterrustFirstPersonController>();
+            sleep = GetComponent<SleepSystem>();
         }
 
         public void ToggleInventory() { SetPanel(panel == Panel.Inventory ? Panel.None : Panel.Inventory); }
-        public void OpenCrafting() { SetPanel(Panel.Crafting); }
+        public void OpenCrafting() { OpenStation(CraftStation.Workbench, null); }
+
+        public void OpenStation(CraftStation station, Stove stove)
+        {
+            this.station = station;
+            this.stove = stove;
+            SetPanel(Panel.Crafting);
+        }
 
         private void SetPanel(Panel p)
         {
@@ -63,6 +74,7 @@ namespace Afterrust
                 else if (kb.nKey.wasPressedThisFrame) SaveSystem.NewGame();
                 return;
             }
+            if (sleep != null && sleep.Sleeping) return;
             if (Time.frameCount == openedFrame) return;   // opened this frame by the same key press
             if (kb.tabKey.wasPressedThisFrame)
             {
@@ -128,12 +140,18 @@ namespace Afterrust
             // Vitals (bottom-left)
             if (vitals != null)
             {
-                float y = sh - 108f;
-                Fill(new Rect(14f, y - 10f, 326f, 100f), new Color(0f, 0f, 0f, 0.35f));
+                float y = sh - 148f;
+                Fill(new Rect(14f, y - 10f, 326f, 140f), new Color(0f, 0f, 0f, 0.35f));
                 Bar(24f, y, "Sağlık", vitals.health, new Color(0.78f, 0.2f, 0.18f));
                 Bar(24f, y + 20f, "Açlık", vitals.hunger, new Color(0.85f, 0.55f, 0.18f));
                 Bar(24f, y + 40f, "Susuzluk", vitals.thirst, new Color(0.25f, 0.55f, 0.85f));
-                Bar(24f, y + 60f, "Dayanıklılık", vitals.stamina, new Color(0.45f, 0.72f, 0.35f));
+                Bar(24f, y + 60f, "Isı", vitals.warmth, new Color(0.9f, 0.42f, 0.25f));
+                Bar(24f, y + 80f, "Enerji", vitals.energy, new Color(0.6f, 0.5f, 0.8f));
+                Bar(24f, y + 100f, "Dayanıklılık", vitals.stamina, new Color(0.45f, 0.72f, 0.35f));
+                string status = vitals.IsCold ? "Üşüyorsun" : vitals.Tired ? "Çok yorgunsun" :
+                    vitals.warmthTarget > vitals.warmth + 5f ? "Isınıyorsun" : "";
+                if (vitals.sheltered) status += (status.Length > 0 ? "  •  " : "") + "Çatı altında";
+                if (status.Length > 0) GUI.Label(new Rect(24f, y - 32f, 320f, 20f), status, labelSmall);
             }
 
             // Weight / credits (top-left)
@@ -187,6 +205,13 @@ namespace Afterrust
                 }
             }
 
+            if (sleep != null && sleep.Fade > 0f)
+            {
+                Fill(new Rect(0, 0, sw, sh), new Color(0f, 0f, 0f, sleep.Fade));
+                if (sleep.Fade > 0.6f) GUI.Label(new Rect(0, sh * 0.45f, sw, 30f), "Uyuyorsun...", labelCenter);
+                return;
+            }
+
             if (panel == Panel.Inventory) DrawInventory(sw, sh);
             else if (panel == Panel.Crafting) DrawCrafting(sw, sh);
         }
@@ -233,10 +258,28 @@ namespace Afterrust
 
         private void DrawCrafting(float sw, float sh)
         {
-            Rect r = PanelRect(sw, sh, "Tezgâh", "E / Esc kapat");
+            bool atStove = station == CraftStation.Stove;
+            Rect r = PanelRect(sw, sh, atStove ? "Soba" : "Tezgâh", "E / Esc kapat");
             if (inventory == null) return;
-            Rect view = new Rect(r.x + 20f, r.y + 56f, r.width - 40f, r.height - 96f);
-            List<Recipe> recipes = Crafting.Recipes;
+            float top = r.y + 56f;
+
+            bool ready = !atStove || (stove != null && stove.IsLit);
+            if (atStove && stove != null)
+            {
+                GUI.Label(new Rect(r.x + 20f, top, 300f, 24f),
+                    stove.IsLit ? "Ateş yanıyor: " + stove.TimeLeftText + " kaldı" : "Soba sönük. Yakıt ekle:", label);
+                GUI.enabled = inventory.CountOf("wood") > 0;
+                if (GUI.Button(new Rect(r.xMax - 260f, top, 115f, 26f), "Odun (" + inventory.CountOf("wood") + ")", button))
+                    interaction?.Notify(stove.AddFuel(inventory, "wood"));
+                GUI.enabled = inventory.CountOf("charcoal") > 0;
+                if (GUI.Button(new Rect(r.xMax - 135f, top, 115f, 26f), "Kömür (" + inventory.CountOf("charcoal") + ")", button))
+                    interaction?.Notify(stove.AddFuel(inventory, "charcoal"));
+                GUI.enabled = true;
+                top += 36f;
+            }
+
+            List<Recipe> recipes = new List<Recipe>(Crafting.For(station));
+            Rect view = new Rect(r.x + 20f, top, r.width - 40f, r.yMax - 40f - top);
             Rect content = new Rect(0, 0, view.width - 20f, Mathf.Max(view.height, recipes.Count * 66f));
             scroll = GUI.BeginScrollView(view, scroll, content);
             for (int i = 0; i < recipes.Count; i++)
@@ -244,13 +287,14 @@ namespace Afterrust
                 Recipe rec = recipes[i];
                 float y = i * 66f;
                 bool available = Crafting.IsAvailable(rec, inventory);
-                bool can = available && Crafting.CanCraft(rec, inventory);
+                bool can = ready && available && Crafting.CanCraft(rec, inventory);
                 Fill(new Rect(0, y, content.width, 62f), new Color(1f, 1f, 1f, can ? 0.07f : 0.03f));
-                GUI.Label(new Rect(10f, y + 4f, 380f, 22f), "<b>" + rec.name + "</b>  <color=#9a958a>" + rec.description + "</color>", label);
+                GUI.Label(new Rect(10f, y + 4f, 420f, 22f), "<b>" + rec.name + "</b>  <color=#9a958a>" + rec.description + "</color>", label);
                 GUI.Label(new Rect(10f, y + 32f, 400f, 22f),
-                    available ? Crafting.Describe(rec, inventory) : "Zaten sahipsin.", labelSmall);
+                    !available ? "Zaten sahipsin." : !ready ? "Önce ateş yak.  " + Crafting.Describe(rec, inventory)
+                        : Crafting.Describe(rec, inventory), labelSmall);
                 GUI.enabled = can;
-                if (GUI.Button(new Rect(content.width - 100f, y + 17f, 90f, 28f), "Üret", button))
+                if (GUI.Button(new Rect(content.width - 100f, y + 17f, 90f, 28f), atStove ? "Pişir" : "Üret", button))
                     interaction?.Notify(Crafting.Craft(rec, inventory));
                 GUI.enabled = true;
             }

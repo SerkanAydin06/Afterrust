@@ -138,7 +138,7 @@ namespace Afterrust.EditorTools
             return m;
         }
 
-        private static Material ParticleMaterial(string name, string texturePath, Color tint)
+        internal static Material ParticleMaterial(string name, string texturePath, Color tint)
         {
             TextureImporter ti = AssetImporter.GetAtPath(texturePath) as TextureImporter;
             if (ti != null && (!ti.alphaIsTransparency || ti.wrapMode != TextureWrapMode.Repeat))
