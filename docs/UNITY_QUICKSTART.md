@@ -41,3 +41,9 @@
 - Play'de sığınağın zemin/duvar, tezgâh/raf, yatak, soba ve kişisel sandık yüzeylerini kontrol et; depo ve kapı `E` etkileşimleri, F5/F9 kayıtları etkilenmemeli.
 - 02/08/14 QA karelerini incele; gündüz ve gece sığınakta FPS/ms değerlerini not et. `Assets/Arts/Environment/Materials/M_V15_Interior_*.mat` varlıklarını ve güncel sahne/QA çıktısını gerekiyorsa commit/push et.
 - İşler ve eksikler `docs/DEVELOPMENT_PLAN.md` üzerinden sürdürülür.
+
+## v15.2 — sığınak ışığı (teknik sahne v16)
+- Pull sonrası Unity sahne güncellemesi `[Afterrust] Scene updated to version 16` mesajıyla tamamlanmalı. Yeni obje eklenmeden **mevcut** tezgâh/sarkıt/soba ışıkları ayarlanır.
+- Gece sığınakta yatak, tezgâh ve sandığın okunurluğuna bak; kapı açık ve kapalıyken ışık sızıntısı olup olmadığını kontrol et.
+- Sobaya yakıt ekleyerek ışık ve kapak parlaklığını kontrol et. Ateşi söndürdüğünde siyah metal kaplamaya dönmeli.
+- İçeride ve avluda FPS/ms değerlerini karşılaştır; Play'de hata, eksik ışık veya material kaybı varsa `docs/DEVELOPMENT_PLAN.md` AR-1502 tekrar açılacak.
