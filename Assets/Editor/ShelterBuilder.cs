@@ -55,6 +55,9 @@ namespace Afterrust.EditorTools
             // Keep the same interactive storage in both fresh scene builds and
             // incremental v13 upgrades; never create a duplicate chest.
             ShelterStorageBuilder.EnsureStorage();
+            // Fresh full builds must use the same scoped material pass as
+            // incremental scene upgrades. No extra geometry or lights.
+            ShelterInteriorMaterialPass.Apply();
 
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
