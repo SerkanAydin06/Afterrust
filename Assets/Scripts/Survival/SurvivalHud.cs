@@ -24,6 +24,7 @@ namespace Afterrust
         private Stove stove;
         private SleepSystem sleep;
         private AfterrustAudio audio;
+        private FirstExpeditionGuide expedition;
 
         private Texture2D white;
         private GUIStyle label, labelSmall, labelCenter, title, button, box, prompt, rightSmall;
@@ -44,6 +45,7 @@ namespace Afterrust
             if (controller == null) controller = GetComponent<AfterrustFirstPersonController>();
             sleep = GetComponent<SleepSystem>();
             audio = GetComponent<AfterrustAudio>();
+            expedition = GetComponent<FirstExpeditionGuide>();
         }
 
         public void ToggleInventory() { SetPanel(panel == Panel.Inventory ? Panel.None : Panel.Inventory); }
@@ -171,6 +173,15 @@ namespace Afterrust
             {
                 Fill(new Rect(sw - 214f, 14f, 200f, 30f), new Color(0f, 0f, 0f, 0.35f));
                 GUI.Label(new Rect(sw - 204f, 18f, 190f, 24f), world.ClockText + "   " + world.WeatherText, labelSmall);
+            }
+
+            // Compact first-excursion objective, no full-screen tutorial interruption.
+            if (expedition != null && sw >= 820f)
+            {
+                Rect objective = new Rect(sw * 0.5f - 250f, 14f, 500f, 30f);
+                Fill(objective, new Color(0f, 0f, 0f, 0.45f));
+                GUI.Label(new Rect(objective.x + 10f, objective.y + 5f, objective.width - 20f, 23f),
+                    expedition.ObjectiveText, labelSmall);
             }
 
             // Quick keys (bottom-right)
