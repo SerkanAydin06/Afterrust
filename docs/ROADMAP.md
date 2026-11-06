@@ -1,15 +1,16 @@
 # Afterrust — Yol Haritası (hayatta kalma yönü)
-Durum: P0 hayatta kalma döngüsü uygulanıyor.
+Durum: P0 hayatta kalma döngüsü + güvenli avlu v9 düzenlemesi.
 
 ## P0: Hayatta kalma dikey dilimi
 - [x] FPS hareket, etkileşim, avlu + kapılı harap sığınak, ışık/atmosfer.
+- [x] Güvenli avlu çevresini kapatan, çift kanatlı ve kaydedilebilen güney kapısı; tüccar çatı/direk hizalaması (v9).
 - [x] Yaşamsal değerler: sağlık, açlık, susuzluk, dayanıklılık; ölüm ve yeniden başlama.
 - [x] Eşya veritabanı, ağırlık tabanlı envanter, tüketme (1 ye, 2 iç, 3 bandaj).
 - [x] Aranabilir kaplar ve ganimet tabloları; yağmur varili.
 - [x] Tezgâhta üretim: bandaj, temiz su, kablo kesici, büyük çanta, geri dönüşüm.
 - [x] Kayıt/yükleme (F5/F9, otomatik kayıt, açılışta devam).
 - [x] Gün-gece döngüsü (24 dk = 1 gün), kasvetli kapalı hava, sağanak ve şimşek, fener. Yağmur damlaları sahne çatılarında sonlanıyor (v8).
-- [x] Prototip sesleri (adım, etkileşim, üretim, rüzgâr ve yağmur); kesintisiz prosedürel ses akışı, iç mekân filtreleme, çeşitli adım sesleri; dış ses dosyası opsiyonel.
+- [x] Prototip sesleri (adım, etkileşim, üretim, rüzgâr ve yağmur); kesintisiz prosedürel ses akışı, iç mekân filtreleme, çeşitli ve ayrı miks kontrollü düşük sesli adımlar; dış ses dosyası opsiyonel.
 - [ ] Profesyonel ses kayıtları, bölgesel 3D ortam sesleri ve miks ayarları.
 
 ## P1: Derinlik
