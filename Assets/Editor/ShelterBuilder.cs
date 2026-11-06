@@ -145,6 +145,12 @@ namespace Afterrust.EditorTools
                     new Vector3(-90f + slope, (float)(rnd.NextDouble() - 0.5) * 2f, (float)(rnd.NextDouble() - 0.5) * 1.5f),
                     false);
             }
+            // The visual corrugated sheets have no colliders. A continuous invisible
+            // sloped roof blocks rain (and overhead raycasts) without z-fighting.
+            AddRainBarrier(p, "Shelter Roof Weather Barrier",
+                new Vector3(0f, RoofTop(3f) + 0.03f, 3f),
+                new Vector3(Mathf.Atan2(RoofDrop, Depth) * Mathf.Rad2Deg, 0f, 0f),
+                new Vector3(8.7f, 0.12f, 6.4f));
             // A spare sheet leans against the right wall outside.
             GameObject leaning = Part(p, "Fallen Roof Sheet", roofSheet, sheet, new Vector3(4.75f, 0f, 4.4f), Vector3.zero);
             leaning.transform.rotation = Quaternion.AngleAxis(12f, Vector3.forward) * Quaternion.Euler(0f, 90f, 0f);
@@ -321,6 +327,47 @@ namespace Afterrust.EditorTools
                 Part(p, "Stall Post", BoxB(0.08f, 2.4f, 0.08f), steel, new Vector3(x, 0f, z));
             Mesh roofSheet = MeshKit.Corrugated("Corrugated_Roof_4_3x2_4", 4.3f, 2.4f, 56, 0.018f, 0f);
             Part(p, "Stall Roof", roofSheet, sheet, new Vector3(0f, 2.42f, 1.2f), new Vector3(-85f, 0f, 0f), false);
+            AddRainBarrier(p, "Trade Stall Weather Barrier", new Vector3(0f, 2.42f, 1.2f),
+                new Vector3(5f, 0f, 0f), new Vector3(4.3f, 0.12f, 2.4f));
+        }
+
+        /// <summary>
+        /// Migrate previously generated v7 scenes without rebuilding the shelter, which
+        /// would otherwise replace gameplay objects and invalidate parts of saved state.
+        /// </summary>
+        public static void EnsureRainColliders()
+        {
+            Transform shelter = ScavengerWalkSetup.FindInScene(RootName);
+            if (shelter == null)
+                throw new System.InvalidOperationException("Shelter root missing; cannot install roof rain blockers.");
+            Transform roof = shelter.Find("Roof");
+            Transform stall = shelter.Find("Trade Stall");
+            if (roof == null || stall == null)
+                throw new System.InvalidOperationException("Shelter roof/trade stall missing.");
+            AddRainBarrier(roof, "Shelter Roof Weather Barrier",
+                new Vector3(0f, RoofTop(3f) + 0.03f, 3f),
+                new Vector3(Mathf.Atan2(RoofDrop, Depth) * Mathf.Rad2Deg, 0f, 0f),
+                new Vector3(8.7f, 0.12f, 6.4f));
+            AddRainBarrier(stall, "Trade Stall Weather Barrier",
+                new Vector3(0f, 2.42f, 1.2f), new Vector3(5f, 0f, 0f),
+                new Vector3(4.3f, 0.12f, 2.4f));
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+
+        private static void AddRainBarrier(Transform parent, string name, Vector3 position,
+            Vector3 euler, Vector3 size)
+        {
+            Transform existing = parent.Find(name);
+            GameObject go = existing != null ? existing.gameObject : new GameObject(name);
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = position;
+            go.transform.localEulerAngles = euler;
+            BoxCollider collider = go.GetComponent<BoxCollider>();
+            if (collider == null) collider = go.AddComponent<BoxCollider>();
+            collider.center = Vector3.zero;
+            collider.size = size;
+            collider.isTrigger = false;
+            go.isStatic = true;
         }
 
         // ------------------------------------------------------------------ exterior
