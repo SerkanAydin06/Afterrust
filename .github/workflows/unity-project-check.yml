@@ -92,6 +92,8 @@ jobs:
           save = Path("Assets/Scripts/Survival/SaveSystem.cs").read_text()
           assert "foreach (SafeZoneGate gate" in save
           assert "footstepsVolume = 0.10f" in audio
+          assert "12_safe_zone_gate" in {view["id"] for view in plan["views"]}
+          assert len(plan["views"]) == 12
           print("V9 safe-yard gate, trader roof and footstep mix structure validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
