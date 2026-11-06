@@ -30,6 +30,13 @@ namespace Afterrust
         }
 
         [Serializable]
+        [Serializable]
+        public sealed class StorageState
+        {
+            public string id;
+            public List<AfterrustInventory.ItemStack> items = new List<AfterrustInventory.ItemStack>();
+        }
+
         public sealed class DoorState { public string id; public bool open; }
 
         [Serializable]
@@ -50,6 +57,8 @@ namespace Afterrust
             public List<ContainerState> containers = new List<ContainerState>();
             public List<string> salvaged = new List<string>();
             public List<WaterState> water = new List<WaterState>();
+            // Optional in pre-v13 v2 saves. Missing data means an empty new chest.
+            public List<StorageState> storages = new List<StorageState>();
             public List<DoorState> doors = new List<DoorState>();
             public List<StoveState> stoves = new List<StoveState>();
             public float timeOfDay;
@@ -270,6 +279,12 @@ namespace Afterrust
                     fill01 = w.Fill01,
                     hasContinuousFill = true
                 });
+            foreach (ShelterStorage storage in FindObjectsByType<ShelterStorage>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                d.storages.Add(new StorageState
+                {
+                    id = PathOf(storage.transform),
+                    items = storage.Snapshot()
+                });
             foreach (Stove st in FindObjectsByType<Stove>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 d.stoves.Add(new StoveState { id = PathOf(st.transform), burnSeconds = st.burnSecondsLeft });
             foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
@@ -344,6 +359,17 @@ namespace Afterrust
                     if (state.hasContinuousFill) w.Restore(state.fill01);
                     else w.Restore(state.units);
                 }
+
+            // Storage is added in v13 without a save-format bump. Older v2
+            // saves simply leave the freshly built chest empty.
+            Dictionary<string, StorageState> savedStorages = new Dictionary<string, StorageState>();
+            if (d.storages != null)
+                foreach (StorageState state in d.storages)
+                    if (state != null && !string.IsNullOrEmpty(state.id))
+                        savedStorages[state.id] = state;
+            foreach (ShelterStorage storage in FindObjectsByType<ShelterStorage>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (savedStorages.TryGetValue(PathOf(storage.transform), out StorageState state))
+                    storage.Restore(state.items);
 
             Dictionary<string, float> stoves = new Dictionary<string, float>();
             if (d.stoves != null) foreach (StoveState ss in d.stoves) stoves[ss.id] = ss.burnSeconds;
