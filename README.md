@@ -31,4 +31,4 @@ Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan
 - [Unity teknik kararları](docs/TECH_STACK.md)
 - [AI görev şablonu](.github/ISSUE_TEMPLATE/ai-task.yml)
 
-Not: İlk FPS/hurda prototip kodları depoya eklendi; Unity Editor içinde derleme ve çalışma testi henüz yapılmadı. GitHub Actions yalnız belge ve yapı doğruluyor, gerçek Unity derlemesi henüz etkin değil.
+**Doğrulama durumu:** Oyun kodunda hayatta kalma, yağma, üretim, sığınak, soba, uyku, kayıt ve hava sistemleri mevcut. Unity Editor derlemesi ve tüm EditMode testleri bu GitHub incelemesinde çalıştırılmadı. GitHub Actions varsayılan olarak belgeleri ve proje yapısını doğrular; lisanslı Unity EditMode işi isteğe bağlıdır (bkz. `docs/AI_AUTOMATION_SETUP.md`). Yeni sahne ve QA görüntüleri Editor'da üretildikten sonra ayrıca commit/push edilmelidir.
