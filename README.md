@@ -40,3 +40,5 @@ Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan
 **Güvenli avlu yağmur varili (sahne v10):** Üç eski varil kaldırıldı, tek dik, üstü açık ve içi görünen çelik varil eklendi. Boş başlar; yalnızca yağış sırasında dolar. Toplam 15 dakika aktif yağmur sonunda tam doluluğa ulaşır. Su yüzeyi görsel olarak yükselir, `E` ile bir şişe kirli su alındığında seviye düşer. Kısmi seviye F5/F9 kayıtlarına da yazılır.
 
 **V11 görsel/QA kontrolü:** Güncel Unity ekran görüntülerinde gece çok karanlık ve güvenli bölge giriş tabelası fazla büyük olduğu görüldü. Gece ortam ışığının alt sınırı yükseltildi, tüccar tezgâhına gece lambası eklendi ve tabela küçültüldü. QA ekran görüntüleri artık oyun kayıt saatinden bağımsız sabit gündüz 11:00'de çekilip hava/saat bilgisi geri yükleniyor. V9-v10 varil değişiminde sırası kayan ganimet konteynerleri için eski kayıt kimlikleri destekleniyor.
+
+**v12 güvenli avlu:** Giriş kapısındaki `GÜVENLİ BÖLGE` yazısı ve levhası tamamen kaldırıldı. Oyun HUD'ında sağ üstte canlı `FPS | ms` göstergesi varsayılan olarak açıktır; yarım saniyede bir güncellenir ve kapı/çevre performansını takip etmeye yardımcı olur.
