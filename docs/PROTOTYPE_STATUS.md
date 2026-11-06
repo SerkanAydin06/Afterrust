@@ -42,3 +42,9 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - Procedural prototip ses sistemi: adımlar, rüzgâr, yağmur, etkileşim, üretim ve tehlike uyarısı; sonradan kaliteli WAV/OGG klipler takılabilir.
 - Otomatik sahne güncelleme v7, üç yeni QA kamera açısı (toplam 11), yeni script GUID'leri ve temel regresyon testleri.
 - **Kod GitHub'a eklendi; Unity Editor'da derleme, sahne üretimi, gerçek oynanış, ses ve yeni PNG görüntüleri henüz doğrulanmadı.**
+
+## 6 Kasım — yağmur ve ses düzeltmesi (sahne v8)
+- Sığınağın kaplamalı çatı parçaları fiziken yağmuru engellemiyordu. Çatıya ve tüccar tentesine görünmez sürekli çarpışma yüzeyi eklendi. Eski v7 sahnesi, eşyaları/kapıları yeniden üretmeden v8'e taşınır.
+- Yağmur sistemi, her damlanın düşüş sütununa raycast yaparak çatı ve objelerin **üstünde** sonlanan ömür verir. Sığınaktan dışarı bakıldığında dışarıda yağmur görünmeye devam eder; damlalar çatının altına geçmez.
+- Rüzgâr/yağmur seslerinde aynı 2–3 saniyelik kaydın tekrar etmesi kaldırıldı; PCM akışı sürekli yeni ses üretir. İçeride yağmur/rüzgâr sesleri filtrelenir, adımlarda farklı ses ve perde varyasyonları vardır.
+- Yağmur ve sürekli ses üretimi için EditMode regresyon testleri eklendi. Görsel/işitsel çalışma ve performans hâlâ Unity Editor'da doğrulanmalıdır.
