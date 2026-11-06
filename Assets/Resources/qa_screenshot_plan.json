@@ -183,6 +183,21 @@
                 "z": 0
             },
             "fieldOfView": 72
+        },
+        {
+            "id": "13_open_rain_collector",
+            "description": "V10 safe yard single open-top water barrel with clearly visible hollow interior and rising water surface",
+            "position": {
+                "x": 3.3,
+                "y": 2.35,
+                "z": -3
+            },
+            "rotation": {
+                "x": 40,
+                "y": 0,
+                "z": 0
+            },
+            "fieldOfView": 52
         }
     ]
 }
