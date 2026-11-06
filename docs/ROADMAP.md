@@ -9,7 +9,8 @@ Durum: P0 hayatta kalma döngüsü uygulanıyor.
 - [x] Tezgâhta üretim: bandaj, temiz su, kablo kesici, büyük çanta, geri dönüşüm.
 - [x] Kayıt/yükleme (F5/F9, otomatik kayıt, açılışta devam).
 - [x] Gün-gece döngüsü (24 dk = 1 gün), kasvetli kapalı hava, sağanak ve şimşek, fener.
-- [ ] Ses (adım, arama, üretim, ortam).
+- [x] Prototip sesleri (adım, etkileşim, üretim, rüzgâr ve yağmur); özgün üretilmiş geçici sesler, dış ses dosyası opsiyonel.
+- [ ] Profesyonel ses kayıtları, bölgesel 3D ortam sesleri ve miks ayarları.
 
 ## P1: Derinlik
 - [x] Uyku/enerji, vücut ısısı (yağmur, gece, çatı, soba), soba ile pişirme.
@@ -19,7 +20,8 @@ Durum: P0 hayatta kalma döngüsü uygulanıyor.
 - Meshy ile özgün eşya/kap modelleri.
 
 ## P2: Dünya ve tehlike
-- Avlu dışı keşif bölgeleri, bölgesel yükleme.
+- [x] İlk yürünebilir avlu dışı keşif alanı: yardım büfesi, erzak konteyneri, kimyasal tehlike ve dönüş hedefi (sahne v7).
+- [ ] Daha fazla keşif bölgesi, bölgesel yükleme.
 - Yağmacı AI, saklanma/kaçış, savunma ve basit silahlar.
 - Diğer hayatta kalanlar, takas ve itibar.
 
@@ -32,4 +34,5 @@ Durum: P0 hayatta kalma döngüsü uygulanıyor.
 2. Kaplar bir kez aranır, ganimet ağırlık sınırına uyar.
 3. Tezgâhta tarif malzemeleri düşer, çıktı eklenir; çanta yükseltmesi kapasiteyi artırır.
 4. Kablo kesici üretilip alternatör kablosu sökülebilir.
-5. EditMode testleri geçer.
+5. EditMode testleri Unity Editor'da çalıştırılır ve geçer (henüz doğrulanmadı).
+6. İlk keşif: güney kapısından çık, büfeyi veya konteyneri ara, kimyasal bölgeden kaçınarak sığınağa dön.
