@@ -86,3 +86,10 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - F5/F9 ve otomatik kayıt için `SaveSystem.storages` alanı eklendi. Eski v2 kayıtlarında depo bilgisi olmadığında sandık boş başlar; kayıt biçimi sürümü değiştirilmedi.
 - `ShelterStorageTests` taşıma, dolu çanta/depo, kopyalama ve eski kayıt ayrıştırma kontrollerini içerir.
 - 14. QA kamera açısı eklendi: `14_shelter_storage`. Yeni PNG görüntüsü yalnız yerel Unity'de Play çalıştırıldığında oluşur ve GitHub'a ayrıca gönderilmelidir.
+
+## 7 Kasım — güvenli bölge tüccarı (v14, sahne sürümü 13)
+- Unity 6000.3.27f2 ile 6 Kasım 21:10 UTC'de üretilmiş **14** yeni QA ekran görüntüsünün manifestosu bulundu; `14_shelter_storage` dahil. PNG görüntü verisi bağlantı üzerinden açılamadığı için yeni deponun görünümü ve FPS doğrulanamadı.
+- Tüccardaki **E'ye basınca bütün hurdaların otomatik satılması** kaldırıldı. Artık **E** iki sütunlu ticaret ekranı açar; çantadaki hurdayı türüne göre **Sat** ile birer adet satarsın. Yiyecek/su/malzeme satılmaz.
+- Tüccarın satış ürünleri: temiz su (16 K), konserve yemek (24 K), bandaj (14 K), bez (6 K), kömür (6 K) ve tek sefer alınabilen kablo kesici (60 K). Satın alma kredi ve çanta kapasitesi kontrolünden sonra tamamlanır; başarısız işlemde kredi eksilmez.
+- Eski gizli `F` ile kablo kesici al kısayolu kaldırıldı; kablo kesici dahil tüm alışveriş işlemleri açık panel üzerinden.
+- Yeniden sahne kurma gerekmez: tüccarın konumu, sığınak sandığı ve mevcut kayıtlar korunur. `TraderMarketTests` tekli satış, stok, kredi, çanta kapasitesi ve iki kez alınamayan kablo kesiciyi kontrol eder. **Unity derleme/Play testi henüz yerel Editor'da doğrulanmadı.**

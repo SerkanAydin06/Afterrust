@@ -145,7 +145,20 @@ jobs:
           assert "List<StorageState> storages" in save
           assert "storage.Snapshot()" in save and "storage.Restore(state.items)" in save
           assert 'chest.localPosition = new Vector3(2.95f, 0f, 1.45f)' in storage_builder.read_text()
-          print("V13 interactive, saved, weight-limited safe-shelter storage structure validated.")
+          trader_source = Path("Assets/Scripts/Gameplay/AfterrustTrader.cs").read_text()
+          trader_tests = Path("Assets/Tests/EditMode/TraderMarketTests.cs")
+          assert trader_tests.is_file() and Path(str(trader_tests) + ".meta").is_file()
+          assert "OpenTrader(this)" in trader_source
+          assert "SellOne(AfterrustInventory" in trader_source
+          assert "Buy(AfterrustInventory" in trader_source
+          assert "TryAddItem(id) != 1" in trader_source
+          assert "DrawTrader(sw, sh)" in hud and "OpenTrader" in hud
+          assert "Panel { None, Inventory, Crafting, Storage, Trader }" in hud
+          interaction = Path("Assets/Scripts/Gameplay/AfterrustInteraction.cs").read_text()
+          assert "trader.BuyWireCutter" not in interaction
+          assert 'Tüccar — E: hurda sat' not in trader_source
+          assert len(plan["views"]) == 14
+          print("V14 safe-yard deliberate trading, atomic purchases and 14-view QA structure validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:

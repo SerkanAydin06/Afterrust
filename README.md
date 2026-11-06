@@ -44,3 +44,5 @@ Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan
 **v12 güvenli avlu:** Giriş kapısındaki `GÜVENLİ BÖLGE` yazısı ve levhası tamamen kaldırıldı. Oyun HUD'ında sağ üstte canlı `FPS | ms` göstergesi varsayılan olarak açıktır; yarım saniyede bir güncellenir ve kapı/çevre performansını takip etmeye yardımcı olur.
 
 **v13 sığınak deposu:** Sığınağın sağ tarafında tek bir kapaklı sandık bulunur. `E` ile aç, iki sütunlu arayüzde `Koy` / `Al` ile eşyaları çantadan 120 kg kapasiteli depoya ve geri taşı. İçerik F5/F9 ve otomatik kayıtla saklanır. Eski kayıtlar yeni depoyla uyumludur; sandık ilk kullanımda boştur.
+
+**v14 tüccar:** Tezgâha bakıp **E** basarak iki sütunlu ticaret ekranını aç. Hurdaları `Sat` ile **birer birer** sat; `Al` ile temiz su, konserve, bandaj, bez, kömür veya kablo kesici satın al. Eski `E` ile tüm hurdanın anında satılması ve `F` ile gizli satın alma kaldırıldı. Kredi/çanta kapasitesi ve eşya sayısı korunur; ticaret envanter üzerinden F5/F9 kaydedilir.

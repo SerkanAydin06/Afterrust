@@ -51,3 +51,10 @@ Durum: P0 hayatta kalma döngüsü + güvenli avlu v9 düzenlemesi.
 - [x] Depo içeriğinin F5/F9/otomatik kayıtla saklanması, eski kayıtla uyumluluk.
 - [ ] Gerçek Unity testleri: kapıdan geçiş, sandık paneli, eşyaların yerleşimi, sandık görseli, sabit/koşma/yağmur FPS.
 - [ ] Güvenli alanın kullanışlılığını tamamlamak: tüccar etkileşimi ve basit üretim/depo ergonomisi.
+
+## Güvenli bölge v14
+- [x] Tüccarda tek tuşla tüm hurdanın istenmeden satılması kaldırıldı.
+- [x] Kredi ve kapasite kontrolü olan açık alım/satım paneli; tekli hurda satışı, altı alış ürünü.
+- [x] Ticaret alışverişi envanter ve kredi sistemiyle entegre; yeni kayıt şeması gerekmiyor.
+- [ ] Unity Play'de tüccar UI / yeni depoyla birlikte etkileşim, F5/F9 ve gerçek FPS doğrulaması.
+- [ ] Sonraki güvenli alan önceliği: yatak, soba, iş tezgâhı ergonomisi ve görsel son dokunuşlar.
