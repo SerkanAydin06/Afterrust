@@ -119,7 +119,7 @@ namespace Afterrust.Tests
             Assert.IsTrue(SaveSystem.TryParseSaveJson(json, out SaveSystem.SaveData parsed));
             Assert.AreEqual(77f, parsed.health, 0.01f);
             Assert.IsFalse(SaveSystem.TryParseSaveJson("{invalid JSON", out _));
-            Assert.IsFalse(SaveSystem.TryParseSaveJson("{\\"version\\":1}", out _));
+            Assert.IsFalse(SaveSystem.TryParseSaveJson("{\"version\":1}", out _));
             Assert.IsFalse(SaveSystem.TryParseSaveJson("", out _));
         }
 
