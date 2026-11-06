@@ -9,7 +9,7 @@ namespace Afterrust
 
         public string GetPrompt(AfterrustInteraction player)
         {
-            return "E - Hurda sat | F - Kablo kesici al (" + WireCutterPrice + " K)";
+            return "Tüccar — E: hurda sat | F: kablo kesici al (" + WireCutterPrice + " K)";
         }
 
         public string Interact(AfterrustInteraction player)
