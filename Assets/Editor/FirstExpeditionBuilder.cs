@@ -53,10 +53,10 @@ namespace Afterrust.EditorTools
                 new Vector3(0.22f, 2.9f, 7.8f));
             Box(kiosk, "East wall", concrete, new Vector3(-7.1f, 1.45f, -33.5f),
                 new Vector3(0.22f, 2.9f, 7.8f));
-            Box(kiosk, "North wall left", concrete, new Vector3(-13.25f, 1.45f, -29.5f),
-                new Vector3(3.5f, 2.9f, 0.22f));
-            Box(kiosk, "North wall right", concrete, new Vector3(-8.75f, 1.45f, -29.5f),
-                new Vector3(3.5f, 2.9f, 0.22f));
+            Box(kiosk, "North wall left", concrete, new Vector3(-13.65f, 1.45f, -29.5f),
+                new Vector3(2.7f, 2.9f, 0.22f));
+            Box(kiosk, "North wall right", concrete, new Vector3(-8.35f, 1.45f, -29.5f),
+                new Vector3(2.7f, 2.9f, 0.22f));
             Box(kiosk, "Bent sheet roof", rust, new Vector3(-11f, 2.93f, -33.5f),
                 new Vector3(8.35f, 0.16f, 8.25f));
             Box(kiosk, "Counter", wood, new Vector3(-13.65f, 0.76f, -35.3f),
