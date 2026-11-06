@@ -203,6 +203,7 @@ namespace Afterrust
                 ParticleSystem.EmitParams particle = new ParticleSystem.EmitParams
                 {
                     position = spawn,
+                    velocity = Vector3.down * DropSpeed,
                     startLifetime = lifetime
                 };
                 rain.Emit(particle, 1);
