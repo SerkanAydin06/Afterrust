@@ -1,25 +1,22 @@
-# Afterrust — Unity 6.3 LTS ilk açılış
-## Unity Hub
-1. GitHub deposunu bilgisayara klonla (GitHub Desktop: File > Clone repository > SerkanAydin06/Afterrust).
-2. Unity Hub > Projects > Add project from disk > klonlanan `Afterrust` klasörünü seç.
-3. Unity 6.3 LTS editörünü seç. Projedeki `ProjectVersion.txt` ilk açılış için 6000.3.27f2 tabanını kullanır. Projenin sabitlenmiş sürümü 6000.3.27f2'dir; Unity Hub'da bunu seç.
-4. Package Manager bağımlılıkları indirdikten sonra script import/compilation bitmesini bekle.
-5. `Assets/Scenes/AfterrustPrototype.unity` sahnesini aç. Sahne her Pull sonrası otomatik güncellenir ve kaydedilir (menü yok; Console'da "[Afterrust] Scene updated" görünür).
-6. Play'e bas. WASD yürü; fareyle bak; Shift koş; Space zıpla; E hedef parçayı sök veya satış noktasına sat; ESC fareyi serbest bırak.
-7. Oluşturulan sahne ve .meta dosyaları GitHub'a eklenebilir.
+# Afterrust — Unity 6.3 LTS hızlı başlangıç
 
-## İlk durumda neler var?
-- Basit yer tutucu geometrili sanayi alanı.
-- İlk kişi hareket/kamera, raycast etkileşimi.
-- Üç hurda nesnesi: akü, alternatör, metal.
-- Basit ağırlık, durum ve kredi; E ile toplama ve satış.
-- Henüz ayrıntılı söküm, gerçek otomobil, survival, kayıt/yükleme, 3D assetler, araç sürüşü veya açık dünya bulunmuyor.
+1. GitHub'dan `SerkanAydin06/Afterrust` deposunu klonla veya güncelle.
+2. Unity Hub'da klasörü aç ve **6000.3.27f2** editörünü kullan (`ProjectSettings/ProjectVersion.txt`).
+3. Paketler ve C# derlemesi bitince `Assets/Scenes/AfterrustPrototype.unity` sahnesini aç.
+4. `AfterrustSceneSync` sahne sürümünü kontrol eder ve eksik yapım adımlarını otomatik uygular (mevcut hedef v6). Console'da **`[Afterrust] Scene updated to version 6 and saved.`** mesajını gör. Hata görürsen önce düzelt; sahne güncellenmeden Play engellenir.
+5. Play aç ve ana sistemleri doğrula: hareket, yağma, açlık/susuzluk, sığınak kapısı, tezgâh, soba, uyku, gece/yağmur, F5/F9 kayıt ve yükleme.
+6. `Window > General > Test Runner > EditMode` içindeki testleri çalıştır. Testlerin varlığı, çalıştırıldıklarını veya geçtiklerini tek başına kanıtlamaz.
+7. `QA/Screenshots/latest/` altında **bu sahne sürümüne ait** PNG'lerin üretildiğini kontrol et. Gerekli sahne, mesh, prefab, .meta ve QA değişikliklerini GitHub'a commit/push et.
 
-## Olası ilk açılış engelleri
-- Paket indirme için internet bağlantısı gerekir.
-- Unity Input System etkinleştirilsin uyarısı çıkarsa editörü yeniden başlat.
-- Bu kod Unity Editor içinde henüz derlenip test edilmedi; Console hataları GitHub issue'ya eklenmeli.
-- Windows build/Unity CI için lisans, kurulu modüller ve yetkili runner ayrıca gerekli.
+## Kontroller
+- **WASD** hareket; fareyle bak; **Shift** koş; **Space** zıpla.
+- **E** etkileşim; yağmalanabilir kapta basılı tut.
+- **Tab** envanter; **1** ye, **2** iç, **3** bandaj; **L** fener.
+- **F** tüccarda kablo kesici satın al; **F5** kaydet, **F9** yükle.
+- **Esc** paneli kapat; ölüm ekranında **R** son kayıttan devam, **N** yeni oyun.
 
-## Ekip notu
-`AGENTS.md` ve `docs/AI_EFFICIENCY.md` görevden önce okunur. Bütün görevler küçük ve test edilebilir PR'larla ilerler.
+## Bilinen sınırlar
+- GitHub Actions statik dosya kontrolü, Unity derlemesinin yerine geçmez. Opsiyonel GameCI EditMode işi lisans ve `UNITY_CI_ENABLED` değişkeni gerektirir.
+- GitHub'daki eski sahne / eski QA fotoğrafları yeni kodun Unity'de çalıştığını kanıtlamaz.
+- Prototip bir avlu ve sığınak etrafında; kesintisiz açık dünya, düşman AI, nihai UI ve kapsamlı ses sistemi henüz tamamlanmadı.
+- Kayıtlar `Application.persistentDataPath/afterrust_save.json` dosyasında tutulur; tamamlanmış önceki kayıt `.bak` olarak korunur.

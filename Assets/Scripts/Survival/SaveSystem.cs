@@ -65,7 +65,9 @@ namespace Afterrust
         private float nextAutosave;
 
         public static string FilePath => Path.Combine(Application.persistentDataPath, "afterrust_save.json");
-        public static bool HasSave => File.Exists(FilePath);
+        public static string BackupFilePath => FilePath + ".bak";
+        private static string TempFilePath => FilePath + ".tmp";
+        public static bool HasSave => File.Exists(FilePath) || File.Exists(BackupFilePath);
 
         private void Awake()
         {
@@ -124,38 +126,103 @@ namespace Afterrust
         /// <summary>Deletes the save and restarts the scene.</summary>
         public static void NewGame()
         {
-            try { if (HasSave) File.Delete(FilePath); }
-            catch (Exception e) { Debug.LogWarning("[Afterrust] Could not delete save: " + e.Message); }
+            try
+            {
+                // A new game must not silently resurrect an older backup.
+                if (File.Exists(FilePath)) File.Delete(FilePath);
+                if (File.Exists(BackupFilePath)) File.Delete(BackupFilePath);
+                if (File.Exists(TempFilePath)) File.Delete(TempFilePath);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[Afterrust] Could not clear save files; new game cancelled: " + e);
+                return;
+            }
+            loadAfterReload = false;
             newGameAfterReload = true;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
+        /// <summary>Write to a temporary file, then replace the save with a recoverable backup.</summary>
         public bool Save()
         {
             try
             {
-                File.WriteAllText(FilePath, JsonUtility.ToJson(Capture(), true), Encoding.UTF8);
+                File.WriteAllText(TempFilePath, JsonUtility.ToJson(Capture(), true), Encoding.UTF8);
+                if (File.Exists(FilePath))
+                    File.Replace(TempFilePath, FilePath, BackupFilePath);
+                else
+                    File.Move(TempFilePath, FilePath);
                 return true;
             }
             catch (Exception e)
             {
-                Debug.LogError("[Afterrust] Save failed: " + e);
+                // Never delete the existing save when replacement fails.
+                Debug.LogError("[Afterrust] Save failed; previous save was preserved if present: " + e);
                 return false;
             }
         }
 
         public bool Load()
         {
+            // An interrupted write or malformed primary save must not destroy the playthrough.
+            if (TryReadSave(FilePath, BackupFilePath, out SaveData data))
+            {
+                try
+                {
+                    Restore(data);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("[Afterrust] Save data could not be restored: " + e);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>Read the primary save first, falling back to the last complete backup.</summary>
+        public static bool TryReadSave(string primaryPath, string backupPath, out SaveData data)
+        {
+            if (TryLoadFile(primaryPath, out data)) return true;
+            return TryLoadFile(backupPath, out data);
+        }
+
+        private static bool TryLoadFile(string path, out SaveData data)
+        {
+            data = null;
+            if (!File.Exists(path)) return false;
             try
             {
-                SaveData data = JsonUtility.FromJson<SaveData>(File.ReadAllText(FilePath, Encoding.UTF8));
-                if (data == null || data.version != FormatVersion) return false;
-                Restore(data);
-                return true;
+                if (TryParseSaveJson(File.ReadAllText(path, Encoding.UTF8), out data))
+                    return true;
+                Debug.LogWarning("[Afterrust] Invalid/incompatible save data: " + path);
             }
             catch (Exception e)
             {
-                Debug.LogError("[Afterrust] Load failed: " + e);
+                Debug.LogWarning("[Afterrust] Could not read save " + path + ": " + e.Message);
+            }
+            data = null;
+            return false;
+        }
+
+        /// <summary>Validation used before changing any live world state (also unit-tested).</summary>
+        public static bool TryParseSaveJson(string json, out SaveData data)
+        {
+            data = null;
+            if (string.IsNullOrWhiteSpace(json)) return false;
+            try
+            {
+                SaveData parsed = JsonUtility.FromJson<SaveData>(json);
+                if (parsed == null || parsed.version != FormatVersion ||
+                    parsed.items == null || parsed.containers == null ||
+                    parsed.salvaged == null || parsed.water == null)
+                    return false;
+                data = parsed;
+                return true;
+            }
+            catch (Exception)
+            {
                 return false;
             }
         }
