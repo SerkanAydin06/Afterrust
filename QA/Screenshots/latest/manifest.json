@@ -1,9 +1,9 @@
 {
-    "capturedAtUtc": "2026-11-06T21:38:58.8405238Z",
+    "capturedAtUtc": "2026-11-06T22:02:52.7043331Z",
     "unityVersion": "6000.3.27f2",
     "scene": "AfterrustPrototype",
     "planAsset": "Assets/Resources/qa_screenshot_plan.json",
-    "capturedGameHour": 11.000133514404297,
+    "capturedGameHour": 11.000164985656739,
     "capturedRain": false,
     "lightingMode": "fixed-daylight",
     "imageCount": 14,
@@ -24,7 +24,7 @@
         },
         {
             "file": "02_shelter_interior.png",
-            "description": "Inside the shelter: bed, workbench, shelves, table",
+            "description": "V15 interior PBR QA: wall and floor tones, workbench/shelving material distinction and door clearance",
             "position": {
                 "x": 0.6000000238418579,
                 "y": 1.7000000476837159,
@@ -108,7 +108,7 @@
         },
         {
             "file": "08_stove_and_bed.png",
-            "description": "Survivor shelter: stove, sleeping area and warm fire lighting",
+            "description": "V15 interior PBR QA: bed textile, reused wood, blackened stove and night readability",
             "position": {
                 "x": 0.6000000238418579,
                 "y": 1.649999976158142,
@@ -192,7 +192,7 @@
         },
         {
             "file": "14_shelter_storage.png",
-            "description": "V13 shelter: new personal storage chest against right interior wall; check walking clearance and lid",
+            "description": "V15 interior PBR QA: chest timber and metal bands, right-side placement and floor/wall material contrast",
             "position": {
                 "x": 0.8999999761581421,
                 "y": 1.850000023841858,
