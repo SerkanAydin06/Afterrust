@@ -22,6 +22,7 @@ namespace Afterrust
         public string Feedback { get; private set; } = "Hayatta kal: yiyecek, su ve malzeme bul.";
         public float FeedbackTime { get; private set; }
 
+        private SleepSystem sleep;
         private IInteractable holdTarget;
         private float holdTimer;
 
@@ -31,6 +32,7 @@ namespace Afterrust
             if (inventory == null) inventory = GetComponent<AfterrustInventory>();
             if (vitals == null) vitals = GetComponent<SurvivorVitals>();
             if (hud == null) hud = GetComponent<SurvivalHud>();
+            sleep = GetComponent<SleepSystem>();
         }
 
         public void Notify(string message)
@@ -46,7 +48,7 @@ namespace Afterrust
             Target = null;
             Prompt = null;
 
-            bool blocked = (vitals != null && vitals.IsDead) ||
+            bool blocked = (vitals != null && vitals.IsDead) || (sleep != null && sleep.Sleeping) ||
                            (hud != null && (hud.IsPanelOpen || hud.PanelChangedFrame == Time.frameCount));
             if (blocked || kb == null)
             {

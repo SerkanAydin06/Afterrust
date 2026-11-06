@@ -18,7 +18,14 @@ Uyan → ihtiyaçlarını kontrol et (açlık, susuzluk, sağlık) → yakın ç
 - **Açlık:** ~25 dakikada biter; konserve ve krakerle dolar.
 - **Susuzluk:** ~15 dakikada biter; temiz su veya (hastalık riskiyle) kirli suyla dolar.
 - **Dayanıklılık:** koşma ve zıplama harcar, dinlenince dolar.
-- Sonraki: yorgunluk/uyku, vücut ısısı, hastalık, yaralanma türleri.
+- **Isı:** gece ve yağmurda açıkta düşer; çatı altında ve yanan sobanın yanında yükselir. 30 altı üşüme (açlık hızlanır, dayanıklılık yavaş dolar), 15 altı sağlık kaybı. Sıcak yemek ısıtır.
+- **Enerji:** uyanıkken ~22 dakikada biter; 15 altı yorgunluk (dayanıklılık en fazla 50), 0'da sağlık kaybı. Yatakta uyuyarak dolar.
+- Sonraki: hastalık, yaralanma türleri, ıslanma.
+
+## Soba ve uyku
+- Soba odun (4 dk) veya kömürle (6 dk) yanar; 5 m içini ısıtır, bacadan duman çıkar. Yanarken pişirme: suyu kaynat, konserveyi ısıt (sıcak yemek), odundan kömür yap.
+- Yatak: gece 07:00'ye kadar, gündüz (yorgunsan) 3 saat. Zaman ve soba ilerler; açlık/susuzluk biraz düşer, enerji dolar; uyanınca kayıt alınır. Çok aç/susuz ya da çok üşürken uyunamaz.
+- Odun: sığınak yanındaki odun yığını, palet yığını, sandık ve konteynerler.
 
 ## Yağma
 Kaplar (karton kutu, alet kutusu, varil, sandık, konteyner) basılı tutarak aranır; her kabın kendi ganimet tablosu vardır. Çanta doluysa kalan eşyalar kapta kalır. Söküm (akü, alternatör, kablo) ve hurda yığınları malzeme kaynağıdır.

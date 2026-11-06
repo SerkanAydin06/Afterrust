@@ -17,10 +17,11 @@ Distopik hayatta kalma (bkz. `DECISIONS.md`, `GAME_DESIGN.md` v2.0): yaşamsal i
 - Hava: sürekli kapalı ve kasvetli; koyu fırtına bulutları kayar, ara sıra sağanak (çatılara çarpıp kaybolan yağmur), sağanakta şimşek; yağmurda varil 4 kat hızlı dolar. Soğuk "Storm" renk düzenlemesi.
 - Duvar birleşimlerindeki titreme (üst üste binen aynı düzlemli yüzeyler) giderildi: duvarlar artık birbirine yalnız değiyor.
 - Sığınak: tamir atölyesi yerine kapısı açılıp kapanan sığınak (yatak, masa, soba); motor dışarıda hurda köşesinde, tüccar tenteli takas tezgâhında.
-- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 4).
+- Isı ve enerji değerleri; soba (odun/kömür, ısıtma, duman, pişirme: kaynat, ısıt, kömür yap); yatakta uyku (gece sabaha kadar, gündüz şekerleme, sonra otomatik kayıt); odun yığını ve palet yığını.
+- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 5).
 
 ## Test
-- EditMode: `SalvageRulesTests`, `SurvivalRulesTests`, `SaveAndWorldTests` (Window > General > Test Runner). Bu ortamda Unity yok; testler henüz çalıştırılmadı.
+- EditMode: `SalvageRulesTests`, `SurvivalRulesTests`, `SaveAndWorldTests`, `FireAndSleepTests` (Window > General > Test Runner). Bu ortamda Unity yok; testler henüz çalıştırılmadı.
 
 ## Sonraki
 Kayıt/yükleme, ses, gün-gece, uyku/sıcaklık, ocak/yemek pişirme, uGUI arayüz ve eşya ikonları, avlu dışı keşif bölgeleri, tehlikeler.

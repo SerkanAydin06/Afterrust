@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 4;
+        private const int Latest = 5;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -87,6 +87,13 @@ namespace Afterrust.EditorTools
                 // Repair shop becomes the survivor's shelter with an opening door.
                 Step("Shelter (door, bed, stove; engine and trade stall moved outside)", ShelterBuilder.Build);
                 Step("Survival systems", SurvivalSetup.Apply);
+            }
+
+            if (current < 5)
+            {
+                Step("Shelter (woodpile)", ShelterBuilder.Build);
+                Step("Survival systems", SurvivalSetup.Apply);
+                Step("Stove fire, sleeping, warmth and energy", FireSleepSetup.Apply);
             }
 
             if (!allStepsSucceeded)
