@@ -147,5 +147,36 @@ namespace Afterrust.Tests
             Assert.AreEqual(1, inv.CountOf("canned_food"));
             Assert.AreEqual(0, inv.CountOf("battery"));
         }
+
+        [Test]
+        public void Craft_MassDeltaMatchesActualLastStackRemoval()
+        {
+            Recipe recycle = RecipeById("recycle_alternator");
+            // Same id can have different mass; TryRemove removes the LAST matching stack.
+            Assert.IsTrue(inv.TryAdd("alternator", "Heavy alternator", 18f, 100));
+            Assert.IsTrue(inv.TryAdd("alternator", "Light alternator", 1.5f, 100));
+            float outputMass = ItemDatabase.Get("wire").massKg * recycle.outputCount;
+            Assert.AreEqual(outputMass - 1.5f, Crafting.MassDelta(recycle, inv), 0.0001f);
+
+            Assert.IsTrue(Crafting.CanCraft(recycle, inv));
+            Crafting.Craft(recycle, inv);
+            Assert.AreEqual(1, inv.CountOf("alternator"));
+            Assert.AreEqual(18f + outputMass, inv.CurrentMassKg, 0.0001f);
+        }
+
+        [Test]
+        public void Craft_UnknownOutputDoesNotConsumeInputs()
+        {
+            inv.TryAddItem("cloth");
+            Recipe invalid = new Recipe
+            {
+                id = "invalid", name = "Invalid",
+                inputs = new[] { new Ingredient("cloth", 1) }, outputItem = "not_in_database"
+            };
+            Assert.IsFalse(Crafting.CanCraft(invalid, inv));
+            Assert.AreEqual("Tarif hatalı.", Crafting.Craft(invalid, inv));
+            Assert.AreEqual(1, inv.CountOf("cloth"));
+        }
+
     }
 }
