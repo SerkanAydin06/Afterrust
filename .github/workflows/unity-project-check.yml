@@ -47,7 +47,8 @@ jobs:
           assert json.loads(Path("Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef").read_text())["name"] == "Afterrust.EditModeTests"
           assert "m_Name: Player" in Path("Assets/Scenes/AfterrustPrototype.unity").read_text()
           scene_sync = Path("Assets/Editor/AfterrustSceneSync.cs").read_text()
-          assert "private const int Latest = 7" in scene_sync
+          assert "private const int Latest = 8" in scene_sync
+          assert "ShelterBuilder.EnsureRainColliders" in scene_sync
           assert "FirstExpeditionBuilder.Build" in scene_sync
           assert "FirstExpeditionBuilder.EnableAudio" in scene_sync
 
@@ -68,7 +69,14 @@ jobs:
           assert "09_first_expedition" in {view["id"] for view in plan["views"]}
           assert "10_relief_kiosk" in {view["id"] for view in plan["views"]}
           assert "11_toxic_depot" in {view["id"] for view in plan["views"]}
-          print("V7 scene/audio assets and screenshot-plan structure validated.")
+          assert "AddRainBarrier" in Path("Assets/Editor/ShelterBuilder.cs").read_text()
+          weather = Path("Assets/Scripts/World/DayNightWeather.cs").read_text()
+          assert "EmitRoofAwareRain" in weather and "LifetimeToSurface" in weather
+          audio = Path("Assets/Scripts/Ambience/AfterrustAudio.cs").read_text()
+          assert "ContinuousAmbientNoise" in audio and "GenerateAmbient" in audio
+          assert Path("Assets/Tests/EditMode/RainAndAudioTests.cs").is_file()
+          assert Path("Assets/Tests/EditMode/RainAndAudioTests.cs.meta").is_file()
+          print("V8 roof-occluded rain and continuous audio structure validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:
