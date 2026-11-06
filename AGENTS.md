@@ -4,6 +4,13 @@
 ## Hedef
 Sahibi kod yazmadan, güvenli ve test edilebilir küçük iterasyonlarla oyunu yönlendirir.
 
+## Zorunlu canlı geliştirme listesi
+- **Her Afterrust oturumunda ilk açılacak dosya:** `docs/DEVELOPMENT_PLAN.md`.
+- Yeni bir ihtiyaç/bug görülürse aynı PR ile görev ekle, sırasını güncelle, tamamlananı işaretle. Bir sonraki uygulanabilir göreve sırayla geç.
+- Görev durumları: `[ ]` başlanmadı, `[~]` kodlandı ama Unity doğrulaması bekliyor, `[x]` gerçek Unity kabul kontrolünden geçti. Statik GitHub CI tek başına `[x]` için yeterli değildir.
+- `docs/ROADMAP.md` uzun vadeli kapsam; sürüm bazındaki gerçek ilerleme için canlı plan esas alınır. Kullanıcı kısa sonuç ister: yapılan iş, kalan test ve PR.
+- Bu düzen bir **oturum içi iş akışıdır**; bağımsız bir otomasyon başlatılmadıkça sohbet dışında kendiliğinden güncelleme yapıldığı iddia edilemez.
+
 ## İş disiplini
 - Her görev: hedef + kabul kriterleri + değiştirilmesi gereken minimum dosya + risk + test.
 - Önce mevcut kodu ara, çalışanın yerini yeniden yazma.
