@@ -47,7 +47,8 @@ jobs:
           assert json.loads(Path("Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef").read_text())["name"] == "Afterrust.EditModeTests"
           assert "m_Name: Player" in Path("Assets/Scenes/AfterrustPrototype.unity").read_text()
           scene_sync = Path("Assets/Editor/AfterrustSceneSync.cs").read_text()
-          assert "private const int Latest = 12" in scene_sync
+          assert "private const int Latest = 13" in scene_sync
+          assert "ShelterStorageBuilder.EnsureStorage" in scene_sync
           assert "ScrapyardEnvironmentBuilder.RemoveSafeZoneSign" in scene_sync
           assert "ShelterBuilder.EnsureTraderNightLight" in scene_sync
           assert "RainCollectorBuilder.Apply" in scene_sync
@@ -97,7 +98,8 @@ jobs:
           assert "footstepsVolume = 0.10f" in audio
           assert "12_safe_zone_gate" in {view["id"] for view in plan["views"]}
           assert "13_open_rain_collector" in {view["id"] for view in plan["views"]}
-          assert len(plan["views"]) == 13
+          assert "14_shelter_storage" in {view["id"] for view in plan["views"]}
+          assert len(plan["views"]) == 14
           rain_builder = Path("Assets/Editor/RainCollectorBuilder.cs")
           rain_tests = Path("Assets/Tests/EditMode/RainCollectorTests.cs")
           assert rain_builder.is_file() and Path(str(rain_builder) + ".meta").is_file()
@@ -128,7 +130,22 @@ jobs:
           assert "fpsSampleSeconds >= FpsRefreshSeconds" in fps_hud
           assert "fpsLabel" in fps_hud and '" ms"' in fps_hud
           assert 'new Rect(sw - 176f, 51f, 162f, 25f)' in fps_hud
-          print("V12 safe-zone sign removal and unobtrusive live FPS HUD structure validated.")
+          storage = Path("Assets/Scripts/Survival/ShelterStorage.cs")
+          storage_builder = Path("Assets/Editor/ShelterStorageBuilder.cs")
+          storage_tests = Path("Assets/Tests/EditMode/ShelterStorageTests.cs")
+          for path in (storage, storage_builder, storage_tests):
+              assert path.is_file() and path.stat().st_size > 0
+              assert Path(str(path) + ".meta").is_file()
+          storage_source = storage.read_text()
+          assert "StoreOne" in storage_source and "TakeOne" in storage_source
+          assert "Snapshot" in storage_source and "Restore" in storage_source
+          assert 'ShelterStorageBuilder.EnsureStorage();' in shelter
+          hud = Path("Assets/Scripts/Survival/SurvivalHud.cs").read_text()
+          assert "DrawStorageColumn" in hud and "OpenStorage" in hud
+          assert "List<StorageState> storages" in save
+          assert "storage.Snapshot()" in save and "storage.Restore(state.items)" in save
+          assert 'chest.localPosition = new Vector3(2.95f, 0f, 1.45f)' in storage_builder.read_text()
+          print("V13 interactive, saved, weight-limited safe-shelter storage structure validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:
