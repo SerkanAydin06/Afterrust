@@ -23,6 +23,7 @@ namespace Afterrust
         public float FeedbackTime { get; private set; }
 
         private SleepSystem sleep;
+        private AfterrustAudio audio;
         private IInteractable holdTarget;
         private float holdTimer;
 
@@ -33,6 +34,7 @@ namespace Afterrust
             if (vitals == null) vitals = GetComponent<SurvivorVitals>();
             if (hud == null) hud = GetComponent<SurvivalHud>();
             sleep = GetComponent<SleepSystem>();
+            audio = GetComponent<AfterrustAudio>();
         }
 
         public void Notify(string message)
@@ -68,7 +70,10 @@ namespace Afterrust
             if (Target != null) Prompt = Target.GetPrompt(this);
 
             if (Target is AfterrustTrader trader && kb.fKey.wasPressedThisFrame)
+            {
                 Notify(trader.BuyWireCutter(inventory));
+                audio?.PlayInteraction();
+            }
 
             if (Target == null || Target != holdTarget) ResetHold();
             if (Target == null) return;
@@ -76,7 +81,11 @@ namespace Afterrust
             float needed = Target.HoldSeconds;
             if (needed <= 0f)
             {
-                if (kb.eKey.wasPressedThisFrame) Notify(Target.Interact(this));
+                if (kb.eKey.wasPressedThisFrame)
+                {
+                    Notify(Target.Interact(this));
+                    audio?.PlayInteraction();
+                }
                 return;
             }
 
@@ -88,6 +97,7 @@ namespace Afterrust
                 if (holdTimer >= needed)
                 {
                     Notify(Target.Interact(this));
+                    audio?.PlayInteraction();
                     ResetHold();
                 }
             }

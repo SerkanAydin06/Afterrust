@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 6;
+        private const int Latest = 7;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -119,6 +119,12 @@ namespace Afterrust.EditorTools
                 Step("Distant ruins, power poles, water tower", WorldBackdropBuilder.Build);
                 Step("Shelter lamps cast shadows (no light leaks)", WorldBackdropBuilder.FixLampLeaks);
                 Step("Scavenger becomes the trader; extra NPCs removed", WorldBackdropBuilder.ScavengerBecomesTrader);
+            }
+
+            if (current < 7)
+            {
+                Step("First expedition: roadside checkpoint, supplies and contamination", FirstExpeditionBuilder.Build);
+                Step("Survivor audio: footsteps, wind, rain and feedback", FirstExpeditionBuilder.EnableAudio);
             }
 
             if (!allStepsSucceeded)

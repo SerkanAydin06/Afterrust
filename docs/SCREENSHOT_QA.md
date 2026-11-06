@@ -3,10 +3,10 @@
 ## Çalışma
 Unity Editor'da Play başlayınca `Assets/Resources/qa_screenshot_plan.json` yüklenir. Plan varsayılan olarak açık; 2 saniye sonra belirtilen noktalardan PNG'ler alınır. Yakalama **oyuncu kamerasını geçici olarak yeniden konumlandırır**, sonra önceki yerel pozisyonunu/rotasyonunu, görüş açısını ve hedef dokusunu geri yükler. Oyun dünyasındaki oyuncunun konumu değiştirilmez.
 
-`QA/Screenshots/latest/` içindeki PNG'ler ve `manifest.json` yeni Play'de yeniden oluşturulur; yalnızca bu klasördeki eski PNG'ler ve manifest silinir. Plan şu an **8** açı içerir: sığınak önü/içi, hurda köşesi, ticaret tezgâhı, avlu, uzak harabeler, yeni tüccar ve soba/yatak.
+`QA/Screenshots/latest/` içindeki PNG'ler ve `manifest.json` yeni Play'de yeniden oluşturulur; yalnızca bu klasördeki eski PNG'ler ve manifest silinir. Plan şu an **11** açı içerir: eski sığınak/avlu karelerine ek olarak v7 giriş rotası, yardım büfesi ve kimyasal konteyner/tehlike alanı.
 
 ## Önemli: GitHub'a gönderilen görsellerin güncelliği
-1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v6 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
+1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v7 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
 
 ## Yeni kamera noktaları
 `Assets/Resources/qa_screenshot_plan.json` dosyasındaki `views` dizisini düzenle:
