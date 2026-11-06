@@ -23,9 +23,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in README.md AGENTS.md docs/DECISIONS.md docs/GAME_DESIGN.md docs/ROADMAP.md docs/AI_EFFICIENCY.md docs/TECH_STACK.md docs/AI_AUTOMATION_SETUP.md; do
+          for f in README.md AGENTS.md docs/DEVELOPMENT_PLAN.md docs/DECISIONS.md docs/GAME_DESIGN.md docs/ROADMAP.md docs/AI_EFFICIENCY.md docs/TECH_STACK.md docs/AI_AUTOMATION_SETUP.md; do
             test -s "$f" || { echo "Missing or empty: $f"; exit 1; }
           done
+          grep -q 'docs/DEVELOPMENT_PLAN.md' README.md
+          grep -q 'docs/DEVELOPMENT_PLAN.md' AGENTS.md
+          grep -q 'AR-1501' docs/DEVELOPMENT_PLAN.md
           grep -qi 'Afterrust' README.md
           grep -qi 'Unity 6.3 LTS' docs/TECH_STACK.md
           echo "Project documentation checks passed."

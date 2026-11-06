@@ -1,4 +1,6 @@
 # Afterrust — Yol Haritası (hayatta kalma yönü)
+
+**Güncel iş sırası ve tamamlanma durumu:** [Canlı Yapım Planı](DEVELOPMENT_PLAN.md). Bu belge uzun vadeli kapsam içindir.
 Durum: P0 hayatta kalma döngüsü + güvenli avlu v9 düzenlemesi.
 
 ## P0: Hayatta kalma dikey dilimi

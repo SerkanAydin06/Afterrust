@@ -35,3 +35,9 @@
 4. Çanta doluyken satın almaya çalış: eşya ve kredi değişmemeli.
 5. Kablo kesici bir kez satın alınabilmeli; ikinci kez satın alma butonu pasif olmalı.
 6. **E/Esc** ile paneli kapat; FPS göstergesi sağ üstte devam etmeli. F5/F9 ile alım/satımın saklandığını kontrol et.
+
+## v15.1 — otomatik malzeme geçişi
+- GitHub Pull sonrası `Assets/Scenes/AfterrustPrototype.unity` açıldığında `[Afterrust] Scene updated to version 15` bildirimi bekle. Sadece iç mekân render materyalleri değişmeli.
+- Play'de sığınağın zemin/duvar, tezgâh/raf, yatak, soba ve kişisel sandık yüzeylerini kontrol et; depo ve kapı `E` etkileşimleri, F5/F9 kayıtları etkilenmemeli.
+- 02/08/14 QA karelerini incele; gündüz ve gece sığınakta FPS/ms değerlerini not et. `Assets/Arts/Environment/Materials/M_V15_Interior_*.mat` varlıklarını ve güncel sahne/QA çıktısını gerekiyorsa commit/push et.
+- İşler ve eksikler `docs/DEVELOPMENT_PLAN.md` üzerinden sürdürülür.

@@ -65,3 +65,10 @@ Görüntünün doğru yeri gösterdiğini Play içinde kontrol et. Her yeni sahn
 - Güncel `manifest.json` 14 Unity görüntüsü içerir; Play sırasında sabit gündüz koşulunda üretildiler. Bu, yeni `v14` ticaret panelinin çalıştığının kanıtı **değildir**.
 - Ticaret ekranı ve FPS sayacı IMGUI ile çizildiği için kamera tabanlı QA PNG'lerine girmez. Gerçek oyun **Game** penceresinden `E` ile açılıp iki sütun, tekli satış, satın alma ve Esc/E kapatma kontrol edilmeli.
 - Bu aşamada yeni otomatik kamera açısı eklenmedi: tüccarın fiziksel modeli değişmedi, mevcut `04_trade_stall` ve `07_scavenger_trader` açıları kullanılabilir.
+
+## v15.1 — sığınak içi materyal kontrolü
+- `02_shelter_interior`: beton duvar/zemin, iç giriş, ahşap tezgâh ve metal rafların ayrıştığını kontrol et.
+- `08_stove_and_bed`: yatak kumaşları ve sobanın kararmış metalini hem gündüz hem gerçek gecede denetle.
+- `14_shelter_storage`: sandık ahşabı/metal şeritler; kapı geçişi, collider ve yakın duvarla fiziksel örtüşme kontrolü.
+- Yeni yüzeyler mevcut `concrete_*`, `wood_planks`, `rusty_steel`, `cast_metal`, `pegboard` texture/normal setleriyle üretilir. Dış avlu yüzeyleri değişmemeli; FPS ve draw call bilgisi gerçek Unity testinden gelmeli.
+- Mevcut üç QA açısı yeniden kullanıldı; kamera sayısı 14 olarak korunuyor. Yerel Play ve GitHub push olmadan görsellerin güncellendiği varsayılmaz.
