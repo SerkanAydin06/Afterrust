@@ -30,4 +30,52 @@ jobs:
           test -s Assets/Scripts/Gameplay/SalvageablePart.cs
           test -s Assets/Scripts/Gameplay/AfterrustInteraction.cs
           test -s Assets/Scripts/Gameplay/AfterrustInventory.cs
-          echo "Structure validated; Unity compilation requires a licensed runner."
+          test -s Assets/Scripts/Survival/SaveSystem.cs
+          test -s Assets/Scripts/Survival/Crafting.cs
+          test -s Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef
+          test -s Assets/Editor/AfterrustSceneSync.cs
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          plan = json.loads(Path("Assets/Resources/qa_screenshot_plan.json").read_text())
+          assert plan["enabled"] is True
+          assert 3 <= len(plan["views"]) <= 12
+          assert len({v["id"] for v in plan["views"]}) == len(plan["views"])
+          assert all(25 <= v["fieldOfView"] <= 100 for v in plan["views"])
+          assert all(v.get("position") and v.get("rotation") for v in plan["views"])
+          assert json.loads(Path("Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef").read_text())["name"] == "Afterrust.EditModeTests"
+          assert "m_Name: Player" in Path("Assets/Scenes/AfterrustPrototype.unity").read_text()
+          assert "Latest = 6" in Path("Assets/Editor/AfterrustSceneSync.cs").read_text()
+          print("Scene and screenshot-plan structure validated.")
+          PY
+          echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
+  unity-editmode:
+    # Activate after adding an appropriate Unity license in repository Secrets.
+    # Repository variable UNITY_CI_ENABLED=true opts in without breaking unconfigured forks.
+    if: ${{ vars.UNITY_CI_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Run Unity 6.3 EditMode tests
+        id: unity-tests
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          projectPath: .
+          unityVersion: 6000.3.27f2
+          testMode: editmode
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Unity test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: afterrust-editmode-tests
+          path: ${{ steps.unity-tests.outputs.artifactsPath }}
+          retention-days: 14
