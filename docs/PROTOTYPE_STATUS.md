@@ -64,3 +64,11 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - Tamamlanmamış su miktarı (örneğin %20 doluluk) kayıt/yüklemede de saklanır; format v2 korunur. Eski varillerin kaydı yeni tek varile aktarılmaz, bu nedenle yeni varil başlangıçta boş kalır.
 - Varil ağzı üstten açık fiziksel mesh ile oluşturuldu; yağmur parçacıklarının açık ağza düşebilmesi için gizli kapak collider'ı yok.
 - V9 -> V10 geçişi çit, tüccar ve sığınağı yeniden kurmadan yalnız dış varilleri değiştirir. Unity Editor'da gerçek yağış, su seviyesi ve performans doğrulanmalıdır.
+
+## 6 Kasım — gerçek Unity QA görüntüleri üzerine kontrol ve düzeltme (v11)
+- 6 Kasım 2026 saat 18:52 UTC'de Unity **6000.3.27f2** ile 13 yeni ekran görüntüsü alınmış ve GitHub'a gönderilmiş. Bunlar gece kaydında çekilmiş görünüyor: avlu ve tüccar tezgâhı aşırı karanlık, gate tabelası aşırı büyük, yağmur varilinin içi seçilemiyor.
+- Gece ay/ortam ışığının alt sınırı kontrollü yükseltildi; tüccar tezgâhına gün-gece sistemine bağlı düşük maliyetli tek lamba eklendi.
+- Güvenli bölge kapısındaki `GÜVENLİ BÖLGE` yazısı fiziksel tabelaya sığacak şekilde küçültüldü.
+- QA planı artık gündüz 11:00'de sabit koşulla görüntü üretiyor ve eski oyun saati/hava durumunu çekimden hemen sonra geri yüklemeyi hedefliyor; manifestoya gerçek çekim saati/hava bilgisi eklendi. Bu, *gündüz görsel incelemesine* yöneliktir ve gece QA'nın yerine geçmez.
+- V10'da üç eski varilin silinmesiyle değişen `Yard Props` kardeş sıralarının v9 ganimet kayıtlarını bozabilmesi için eski yol kimliklerini okuyabilen uyumluluk eklemesi yapıldı.
+- Unity EditMode testleri ve yeni görseller Editor'da bir kez daha doğrulanmalı; GitHub statik testleri C# derleme kanıtı değildir.
