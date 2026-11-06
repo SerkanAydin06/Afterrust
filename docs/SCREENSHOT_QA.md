@@ -6,7 +6,7 @@ Unity Editor'da Play başlayınca `Assets/Resources/qa_screenshot_plan.json` yü
 `QA/Screenshots/latest/` içindeki PNG'ler ve `manifest.json` yeni Play'de yeniden oluşturulur; yalnızca bu klasördeki eski PNG'ler ve manifest silinir. Plan şu an **11** açı içerir: eski sığınak/avlu karelerine ek olarak v7 giriş rotası, yardım büfesi ve kimyasal konteyner/tehlike alanı.
 
 ## Önemli: GitHub'a gönderilen görsellerin güncelliği
-1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v11 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
+1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v12 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
 
 ## Yeni kamera noktaları
 `Assets/Resources/qa_screenshot_plan.json` dosyasındaki `views` dizisini düzenle:
@@ -50,3 +50,8 @@ Görüntünün doğru yeri gösterdiğini Play içinde kontrol et. Her yeni sahn
 - Planın `captureAtFixedDaytime=true`, `captureHour=11` alanları QA çekimini sabah/öğle aydınlığına sabitler. Çekim bitince gerçek oyun saati, hava ve yağış zamanlayıcısı geri yüklenir.
 - `manifest.json` yeni çekimde `capturedGameHour`, `capturedRain`, `lightingMode` bilgilerini içerir.
 - Gece görsel kontrolü ayrıca Play'de yapılmalı; gündüz QA gece karanlığını test etmez. Eski PNG'ler, Play ve commit edilene kadar eski gece görüntüleridir.
+
+## v12: Kapı tabelası / FPS kontrolü
+- Güney kapısında `GÜVENLİ BÖLGE` yazısı ve tabela levhası görünmemeli. Kapı ve üst taşıyıcı kiriş yerinde kalmalı.
+- **FPS sayacı otomatik QA PNG'lerinde görünmez:** kamera çıktısı IMGUI çizimini kapsamaz. FPS'yi doğrudan Unity **Game** penceresinin sağ üst köşesinde, saat/hava durumunun altında kontrol et.
+- Yaklaşık 2 saniye durarak, ardından avluda yürüyüp koşarak FPS ve ms değerlerini ayrı not et. Kısa süreli düşüşleri daha sonra profiler ile araştır.

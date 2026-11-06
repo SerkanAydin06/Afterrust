@@ -26,6 +26,13 @@ namespace Afterrust
         private AfterrustAudio audio;
         private FirstExpeditionGuide expedition;
 
+        // Unscaled frame-time sampling: the number stays meaningful when the
+        // survival day/night system or any gameplay time scale changes.
+        private float fpsSampleSeconds;
+        private int fpsSampleFrames;
+        private string fpsLabel = "FPS --";
+        private const float FpsRefreshSeconds = 0.5f;
+
         private Texture2D white;
         private GUIStyle label, labelSmall, labelCenter, title, button, box, prompt, rightSmall;
         private static readonly Color Ink = new Color(0.92f, 0.9f, 0.84f);
@@ -68,6 +75,21 @@ namespace Afterrust
 
         private void Update()
         {
+            float frameSeconds = Time.unscaledDeltaTime;
+            if (frameSeconds > 0f)
+            {
+                fpsSampleSeconds += frameSeconds;
+                fpsSampleFrames++;
+                if (fpsSampleSeconds >= FpsRefreshSeconds)
+                {
+                    float averageFrameSeconds = fpsSampleSeconds / fpsSampleFrames;
+                    fpsLabel = "FPS " + (fpsSampleFrames / fpsSampleSeconds).ToString("0") +
+                               "  |  " + (averageFrameSeconds * 1000f).ToString("0.0") + " ms";
+                    fpsSampleSeconds = 0f;
+                    fpsSampleFrames = 0;
+                }
+            }
+
             Keyboard kb = Keyboard.current;
             if (kb == null) return;
             if (vitals != null && vitals.IsDead)
@@ -131,6 +153,13 @@ namespace Afterrust
         {
             Styles();
             float sw = Screen.width, sh = Screen.height;
+
+            // Small always-visible diagnostic, tucked below the top-right clock.
+            // Update happens every half-second, not every OnGUI redraw.
+            Rect fpsRect = new Rect(sw - 176f, 51f, 162f, 25f);
+            Fill(fpsRect, new Color(0f, 0f, 0f, 0.55f));
+            GUI.Label(new Rect(fpsRect.x + 5f, fpsRect.y + 2f, fpsRect.width - 10f, 20f),
+                fpsLabel, rightSmall);
 
             if (vitals != null && vitals.IsDead)
             {
