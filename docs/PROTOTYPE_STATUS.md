@@ -99,3 +99,10 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - AR-1501 kodlandı: mevcut sığınağın zemin, duvar/kapı, tezgâh, raf, yatak/masa, soba ve kişisel depo yüzeyleri **12 yeni iç mekân PBR materyali** ile ayrıştırılıyor. Önceden var olan albedo + normal haritaları ve ortak materyal varlıkları kullanılıyor; dış dünya materyallerine dokunulmuyor.
 - Var olan sahne v13'ten v15'e materyal değiştirilerek yükseltilir; eski geometri/çarpışma/oyuncu kayıtları yeniden kurulmaz. Taze sahne inşasında aynı materyal geçişi uygulanır.
 - **Durum:** kodlandı; gerçek Unity gündüz/gece iç QA (02/08/14), FPS karşılaştırması ve derleme testleri bekliyor. Bu aşama liste üzerinde `[~]`.
+
+## 7 Kasım — AR-1502 sığınak içi aydınlatma (sprint v15.2 / teknik sahne v16)
+- Var olan tezgâh duvar lambası sıcak, dar açılı **spot** olarak ayarlandı; gölge hesaplaması kaldırıldı ve ışık sığınağın önüne/dışarı taşmayacak şekilde sınırlandırıldı.
+- Orta sarkıt lamba hafif soğuk/nötr renge, **Hard** gölgeye ve dengeli kapsama alanına ayarlandı. Pahalı Soft shadow yerine Hard shadow kullanılıyor.
+- Soba yandığında mevcut ateş ışığı daha dar sıcak bölgeye odaklandı; söndüğünde v15.1'in siyah metal kaplamasına geri dönmesi sağlandı.
+- **Yeni dinamik ışık, collider veya sahne nesnesi eklenmedi**; mevcut lamp referansları ve saved stove/depo/kapı durumu değişmedi. Atmosfer önayarları elle yeniden uygulanınca aynı ışık pass'i tekrarlanıyor.
+- `docs/DEVELOPMENT_PLAN.md`: AR-1502 `[~]`. Gündüz ve gece 02/08/14 QA ve FPS-ms/Unity derleme testleri bekliyor.
