@@ -48,3 +48,11 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - Yağmur sistemi, her damlanın düşüş sütununa raycast yaparak çatı ve objelerin **üstünde** sonlanan ömür verir. Sığınaktan dışarı bakıldığında dışarıda yağmur görünmeye devam eder; damlalar çatının altına geçmez.
 - Rüzgâr/yağmur seslerinde aynı 2–3 saniyelik kaydın tekrar etmesi kaldırıldı; PCM akışı sürekli yeni ses üretir. İçeride yağmur/rüzgâr sesleri filtrelenir, adımlarda farklı ses ve perde varyasyonları vardır.
 - Yağmur ve sürekli ses üretimi için EditMode regresyon testleri eklendi. Görsel/işitsel çalışma ve performans hâlâ Unity Editor'da doğrulanmalıdır.
+
+## 6 Kasım — güvenli avlu düzeni (sahne v9)
+- Güvenli avlunun güney çitindeki yaklaşık 8 metrelik boşluk iki kanatlı, paslı metal kapıyla kapatıldı. Kapı varsayılan kapalı; her iki kanat tek **E** ile birlikte açılır/kapanır. Üst çelik kiriş, kapı çerçeveleri ve güvenli bölge tabelası eklendi.
+- Kapı durumu eski kayıt biçimindeki `doors` listesine dahil edildi; mevcut kayıtları geçersiz kılmadan açık/kapalı durumu korunur.
+- Tüccar tentesinin görsel çatı levhası direklerin üstüne hizalandı; iki yatay destek kirişi ve yağmur collider'ı yeni konuma taşındı. V8'den geçiş yalnız çatıyı değiştirir, sığınak ve tüccarı yeniden kurmaz.
+- Varsayılan adım sesi ayrı `footstepsVolume=0.10` karışımına alındı (eski seviyeden yaklaşık %90 daha düşük). Rüzgâr ve yağmur sesleri aynı kalır.
+- Güvenli bölgenin içi tamamlanana kadar dış keşif hedefi HUD'dan gizlendi; dış bölge varlıkları silinmedi.
+- GitHub yapı kontrolleri ve EditMode kapı testleri eklendi; **Unity Editor ve gerçek ses/görsel çalışma testi halen yerelde yapılmalıdır.**
