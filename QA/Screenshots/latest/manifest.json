@@ -1,105 +1,119 @@
 {
-    "capturedAtUtc": "2026-11-01T15:27:32.8615784Z",
+    "capturedAtUtc": "2026-11-06T17:24:36.9459970Z",
     "unityVersion": "6000.3.27f2",
     "scene": "AfterrustPrototype",
     "planAsset": "Assets/Resources/qa_screenshot_plan.json",
-    "imageCount": 7,
+    "imageCount": 8,
     "images": [
         {
-            "file": "01_spawn_and_vehicle.png",
-            "description": "Player start: prototype car and salvage work area",
+            "file": "01_spawn_shelter_front.png",
+            "description": "Player start: forecourt and shelter front with door",
             "position": {
                 "x": 0.0,
-                "y": 2.75,
+                "y": 1.75,
                 "z": -9.0
             },
             "rotation": {
-                "x": 7.0,
+                "x": 2.0,
                 "y": 0.0,
                 "z": 0.0
             }
         },
         {
-            "file": "02_car_connections.png",
-            "description": "Closer view of car battery clamp, battery, alternator cable and alternator",
+            "file": "02_shelter_interior.png",
+            "description": "Inside the shelter: bed, workbench, shelves, table",
             "position": {
-                "x": 0.0,
-                "y": 2.0999999046325685,
-                "z": -3.299999952316284
+                "x": 0.6000000238418579,
+                "y": 1.7000000476837159,
+                "z": 1.0
             },
             "rotation": {
-                "x": 19.0,
-                "y": 0.0,
+                "x": 12.0,
+                "y": -25.0,
                 "z": 0.0
             }
         },
         {
-            "file": "03_trade_post.png",
-            "description": "Trade post for sale and wire-cutter purchase",
+            "file": "03_scrap_corner.png",
+            "description": "Scrap corner outside: engine stand, battery crate, scrap pile",
             "position": {
-                "x": 5.0,
-                "y": 2.0,
-                "z": -5.0
+                "x": 4.5,
+                "y": 1.7999999523162842,
+                "z": -4.5
+            },
+            "rotation": {
+                "x": 10.0,
+                "y": 30.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "04_trade_stall.png",
+            "description": "Trade stall by the forecourt",
+            "position": {
+                "x": 6.0,
+                "y": 1.899999976158142,
+                "z": -17.0
             },
             "rotation": {
                 "x": 4.0,
-                "y": 0.0,
+                "y": 30.0,
                 "z": 0.0
             }
         },
         {
-            "file": "04_industrial_overview.png",
-            "description": "Industrial graybox overview for visual composition",
+            "file": "05_yard_overview.png",
+            "description": "Yard overview",
             "position": {
-                "x": 0.0,
+                "x": -16.0,
+                "y": 11.0,
+                "z": -22.0
+            },
+            "rotation": {
+                "x": 28.0,
+                "y": 38.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "06_distant_ruins.png",
+            "description": "Ruined city skyline beyond the yard, power lines and fog layers",
+            "position": {
+                "x": -10.0,
+                "y": 8.0,
+                "z": -18.0
+            },
+            "rotation": {
+                "x": 6.0,
+                "y": 12.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "07_scavenger_trader.png",
+            "description": "Scavenger standing behind the tarp-covered trader counter",
+            "position": {
+                "x": 8.0,
+                "y": 1.7999999523162842,
+                "z": -18.0
+            },
+            "rotation": {
+                "x": 5.0,
                 "y": 17.0,
-                "z": -20.0
-            },
-            "rotation": {
-                "x": 32.0,
-                "y": 0.0,
                 "z": 0.0
             }
         },
         {
-            "file": "05_character_test.png",
-            "description": "Front-level diagnosis of imported scavenger on centered pedestal",
+            "file": "08_stove_and_bed.png",
+            "description": "Survivor shelter: stove, sleeping area and warm fire lighting",
             "position": {
-                "x": 8.0,
-                "y": 1.399999976158142,
-                "z": 4.0
+                "x": 0.6000000238418579,
+                "y": 1.649999976158142,
+                "z": 3.5999999046325685
             },
             "rotation": {
-                "x": 0.0,
-                "y": 0.0,
-                "z": 0.0
-            }
-        },
-        {
-            "file": "06_character_side.png",
-            "description": "Side view to inspect FBX rotation, height, and feet alignment",
-            "position": {
-                "x": 12.0,
-                "y": 1.399999976158142,
-                "z": 8.0
-            },
-            "rotation": {
-                "x": 0.0,
-                "y": 270.0,
-                "z": 0.0
-            }
-        },
-        {
-            "file": "07_character_overview.png",
-            "description": "High-angle inspection of pedestal and character placement",
-            "position": {
-                "x": 8.0,
-                "y": 4.5,
-                "z": 2.0
-            },
-            "rotation": {
-                "x": 26.0,
-                "y": 0.0,
+                "x": 9.0,
+                "y": 120.0,
                 "z": 0.0
             }
         }
