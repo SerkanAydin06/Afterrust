@@ -72,3 +72,9 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - QA planı artık gündüz 11:00'de sabit koşulla görüntü üretiyor ve eski oyun saati/hava durumunu çekimden hemen sonra geri yüklemeyi hedefliyor; manifestoya gerçek çekim saati/hava bilgisi eklendi. Bu, *gündüz görsel incelemesine* yöneliktir ve gece QA'nın yerine geçmez.
 - V10'da üç eski varilin silinmesiyle değişen `Yard Props` kardeş sıralarının v9 ganimet kayıtlarını bozabilmesi için eski yol kimliklerini okuyabilen uyumluluk eklemesi yapıldı.
 - Unity EditMode testleri ve yeni görseller Editor'da bir kez daha doğrulanmalı; GitHub statik testleri C# derleme kanıtı değildir.
+
+## 6 Kasım — giriş tabelası kaldırıldı; FPS göstergesi (sahne v12)
+- Güvenli alanın güney kapısındaki **GÜVENLİ BÖLGE** yazısı ve arkasındaki dekoratif tabela tamamen kaldırıldı; mevcut kapı, üst bağlantı kirişi, iki kanat ve kayıtlı açık/kapalı durumu korunuyor. Yeni sahne inşalarında da tabela artık üretilmez.
+- Mevcut `SurvivalHud` sağ üst köşede saat/hava durumunun hemen altında **FPS ve ortalama kare süresi (ms)** gösterir. Gerçek zamanı `Time.unscaledDeltaTime` üzerinden hesaplar; değer yarım saniyede bir güncellenir, varsayılan açık ve her zaman görünür.
+- FPS bilgisi oyun içi IMGUI katmanındadır. Otomatik QA ekran görüntüleri `Camera.Render` ile çekildiğinden FPS/HUD bu PNG'lere yazılmaz. FPS değerini Play/Game penceresinde kontrol et.
+- Yeni v12 değişiklikleri GitHub statik CI ile denetlenir. Unity gerçek çalışması ve FPS ölçümü yerel Play'de değerlendirilmelidir.
