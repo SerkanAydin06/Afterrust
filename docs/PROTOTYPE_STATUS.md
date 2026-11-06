@@ -93,3 +93,9 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - Tüccarın satış ürünleri: temiz su (16 K), konserve yemek (24 K), bandaj (14 K), bez (6 K), kömür (6 K) ve tek sefer alınabilen kablo kesici (60 K). Satın alma kredi ve çanta kapasitesi kontrolünden sonra tamamlanır; başarısız işlemde kredi eksilmez.
 - Eski gizli `F` ile kablo kesici al kısayolu kaldırıldı; kablo kesici dahil tüm alışveriş işlemleri açık panel üzerinden.
 - Yeniden sahne kurma gerekmez: tüccarın konumu, sığınak sandığı ve mevcut kayıtlar korunur. `TraderMarketTests` tekli satış, stok, kredi, çanta kapasitesi ve iki kez alınamayan kablo kesiciyi kontrol eder. **Unity derleme/Play testi henüz yerel Editor'da doğrulanmadı.**
+
+## 7 Kasım — canlı plan ve ilk v15 görsel geliştirme
+- Tek etkin görev listesi: `docs/DEVELOPMENT_PLAN.md`. Her geliştirme oturumunda önce bu dosya incelenip ilerleme/öncelikler aynı PR'da güncellenecek.
+- AR-1501 kodlandı: mevcut sığınağın zemin, duvar/kapı, tezgâh, raf, yatak/masa, soba ve kişisel depo yüzeyleri **12 yeni iç mekân PBR materyali** ile ayrıştırılıyor. Önceden var olan albedo + normal haritaları ve ortak materyal varlıkları kullanılıyor; dış dünya materyallerine dokunulmuyor.
+- Var olan sahne v13'ten v15'e materyal değiştirilerek yükseltilir; eski geometri/çarpışma/oyuncu kayıtları yeniden kurulmaz. Taze sahne inşasında aynı materyal geçişi uygulanır.
+- **Durum:** kodlandı; gerçek Unity gündüz/gece iç QA (02/08/14), FPS karşılaştırması ve derleme testleri bekliyor. Bu aşama liste üzerinde `[~]`.
