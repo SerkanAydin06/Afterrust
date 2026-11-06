@@ -85,7 +85,121 @@ namespace Afterrust.EditorTools
                 r.sharedMaterial = groundLarge;
             }
 
+            // Keep the south opening protected even when the yard is rebuilt manually.
+            EnsureSafeZoneGate();
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+
+        /// <summary>
+        /// Adds a closed, interactive 8 m double gate at the existing south opening.
+        /// Existing fence objects and their sibling indices are never rebuilt here.
+        /// Safe to call when migrating an already-built Unity scene.
+        /// </summary>
+        public static void EnsureSafeZoneGate()
+        {
+            Transform yard = ScavengerWalkSetup.FindInScene(SceneRootName);
+            if (yard == null)
+                throw new System.InvalidOperationException("Cannot add yard gate: Scrapyard Environment was not found.");
+
+            Transform existing = yard.Find("South Safe Zone Gate");
+            if (existing != null)
+            {
+                // Respect the current gate and saved states, if this is run twice.
+                SafeZoneGate gate = existing.GetComponent<SafeZoneGate>();
+                if (gate == null)
+                    throw new System.InvalidOperationException("Existing south gate has no SafeZoneGate component.");
+                return;
+            }
+
+            Material gateSheet = MaterialKit.Lit("M_SafeGate_CorrugatedRust", "corrugated_rust", 2f, 0.22f, 0.35f);
+            Material frame = MaterialKit.Lit("M_SafeGate_SteelFrame", "rusty_steel", 2f, 0.24f, 0.55f);
+            Material paint = MaterialKit.Plain("M_SafeGate_SignPaint", new Color(0.14f, 0.21f, 0.18f), 0.17f, 0.25f);
+            Material caution = MaterialKit.Plain("M_SafeGate_Caution", new Color(0.85f, 0.63f, 0.23f), 0.25f, 0.2f);
+
+            GameObject root = new GameObject("South Safe Zone Gate");
+            root.transform.SetParent(yard, false);
+            root.transform.localPosition = new Vector3(0f, 0f, ZMin);
+            Undo.RegisterCreatedObjectUndo(root, "Add double safe zone gate");
+            SafeZoneGate gateComponent = root.AddComponent<SafeZoneGate>();
+            gateComponent.openAngle = 100f;
+            gateComponent.degreesPerSecond = 115f;
+            gateComponent.isOpen = false;
+
+            Transform left = Group(root, "Left Hinge");
+            Transform right = Group(root, "Right Hinge");
+            left.localPosition = new Vector3(-GateHalfWidth, 0f, 0f);
+            right.localPosition = new Vector3(GateHalfWidth, 0f, 0f);
+            gateComponent.leftHinge = left;
+            gateComponent.rightHinge = right;
+
+            // Leaves fill the 8 m clear space, with a small clearance at the centre.
+            // Both rotate INTO the yard (+z); existing perimeter posts act as jambs.
+            AddGateLeaf(left, "Left Gate Leaf", gateSheet, frame, caution, true);
+            AddGateLeaf(right, "Right Gate Leaf", gateSheet, frame, caution, false);
+
+            // Crossbar is flush with the tops of the existing 2.7 m gateposts.
+            GateBox(root.transform, "Gate Lintel", frame,
+                new Vector3(0f, 2.59f, 0f), new Vector3(8.06f, 0.18f, 0.18f), true);
+            GateBox(root.transform, "Entrance Name Plate", paint,
+                new Vector3(0f, 2.87f, 0.03f), new Vector3(3.55f, 0.43f, 0.07f), true);
+
+            GameObject label = new GameObject("Safe Zone Name");
+            label.transform.SetParent(root.transform, false);
+            label.transform.localPosition = new Vector3(0f, 2.87f, 0.093f);
+            label.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+            TextMesh text = label.AddComponent<TextMesh>();
+            text.text = "GUVENLI BOLGE";
+            text.fontSize = 42;
+            text.characterSize = 0.27f;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.color = new Color(0.95f, 0.89f, 0.68f);
+
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+
+        private static void AddGateLeaf(Transform hinge, string name, Material sheet,
+            Material frame, Material caution, bool left)
+        {
+            float direction = left ? 1f : -1f;
+            Transform panel = Group(hinge.gameObject, name);
+            panel.localPosition = new Vector3(direction * 1.97f, 0.04f, 0f);
+            panel.gameObject.AddComponent<MeshFilter>().sharedMesh =
+                MeshKit.Corrugated("Corrugated_SafeGate_3_94x2_34", 3.94f, 2.34f, 48, 0.018f, 0f);
+            panel.gameObject.AddComponent<MeshRenderer>().sharedMaterial = sheet;
+            BoxCollider collider = panel.gameObject.AddComponent<BoxCollider>();
+            collider.center = new Vector3(0f, 1.17f, 0f);
+            collider.size = new Vector3(3.94f, 2.34f, 0.14f);
+
+            // A welded perimeter, middle rail and diagonal stiffener, slightly ahead
+            // of the corrugation, make both doors read as structural metal gate leaves.
+            foreach (float x in new[] { -1.86f, 1.86f })
+                GateBox(panel, "Vertical frame", frame,
+                    new Vector3(x, 1.17f, 0.07f), new Vector3(0.12f, 2.32f, 0.12f), false);
+            foreach (float y in new[] { 0.085f, 1.17f, 2.255f })
+                GateBox(panel, "Horizontal frame", frame,
+                    new Vector3(0f, y, 0.07f), new Vector3(3.81f, 0.12f, 0.12f), false);
+            GameObject brace = GateBox(panel, "Diagonal brace", frame,
+                new Vector3(0f, 1.17f, 0.13f), new Vector3(4.15f, 0.12f, 0.10f), false);
+            brace.transform.localEulerAngles = new Vector3(0f, 0f, left ? 31f : -31f);
+            GateBox(panel, "Central latch", caution,
+                new Vector3(direction * 1.66f, 1.14f, 0.19f), new Vector3(0.17f, 0.34f, 0.10f), false);
+        }
+
+        private static GameObject GateBox(Transform parent, string name, Material material,
+            Vector3 position, Vector3 scale, bool fixedPart)
+        {
+            GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            go.name = name;
+            go.transform.SetParent(parent, false);
+            go.transform.localPosition = position;
+            go.transform.localScale = scale;
+            go.GetComponent<MeshRenderer>().sharedMaterial = material;
+            // The leaf's single collider handles picking/physics; decorative frame
+            // colliders must not intercept interaction rays.
+            if (!fixedPart) Object.DestroyImmediate(go.GetComponent<BoxCollider>());
+            go.isStatic = fixedPart;
+            return go;
         }
 
         private static GameObject SavePrefab(string name, Mesh mesh, Material material, Vector3 colliderSize,
