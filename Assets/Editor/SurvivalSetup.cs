@@ -17,10 +17,10 @@ namespace Afterrust.EditorTools
         {
             SetupPlayer();
 
-            Transform shop = ScavengerWalkSetup.FindInScene("Repair Shop");
+            Transform shop = ScavengerWalkSetup.FindInScene("Shelter");
             if (shop == null)
             {
-                Debug.LogWarning("[Afterrust] Repair Shop not found; loot containers skipped.");
+                Debug.LogWarning("[Afterrust] Shelter not found; loot containers skipped.");
                 return;
             }
 

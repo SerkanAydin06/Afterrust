@@ -2,7 +2,7 @@
 Durum: P0 hayatta kalma döngüsü uygulanıyor.
 
 ## P0: Hayatta kalma dikey dilimi
-- [x] FPS hareket, etkileşim, avlu + harap atölye sığınağı, ışık/atmosfer.
+- [x] FPS hareket, etkileşim, avlu + kapılı harap sığınak, ışık/atmosfer.
 - [x] Yaşamsal değerler: sağlık, açlık, susuzluk, dayanıklılık; ölüm ve yeniden başlama.
 - [x] Eşya veritabanı, ağırlık tabanlı envanter, tüketme (1 ye, 2 iç, 3 bandaj).
 - [x] Aranabilir kaplar ve ganimet tabloları; yağmur varili.

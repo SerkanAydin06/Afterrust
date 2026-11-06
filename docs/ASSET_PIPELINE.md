@@ -11,11 +11,10 @@
 - Yeni içerik eklerken: `Latest` sürümünü artır, yeni `if (current < N)` bloğuna adımı ekle. Adımlar tekrar çalıştırılabilir (aynı adlı kökü silip yeniden kurar).
 - Sürüm 1: avlu ve çit (`ScrapyardEnvironmentBuilder`), tamir atölyesi (`RepairShopBuilder`), yürüyen NPC'ler (scavenger, Character1, Neutral Figure; malzemeler FBX'e gömülü dokular yerine çıkarılmış dokulardan), eski kutu/silindir nesnelerin kaldırılması, Golden Hour ışığı + post-processing.
 
-## Tamir atölyesi
-- 8,5 × 6 m, ön tarafı oyuncuya bakan küçük harap dükkân: boyası dökülmüş briket duvarlar (sol ön köşe yıkık, sağda tahta çakılı kırık pencere), bir levhası eksik oluklu sac çatı (motor sehpasına güneş düşer), yarı açık kepenk, "TAMİR ATÖLYESİ" tabelası.
-- İç: tezgâh + alet panosu, raf, motor sehpası (sökülebilir alternatör ve kablosu), sandık üstünde akü ve kıskacı, tüccar tezgâhı (`Trade Post - E to Sell`, E ile sat / F ile kablo kesici).
-- Dış: lastik yığını, variller, palet yığını, hurda yığını (`Loose Metal`), konteynerler, sarkan titrek ampul ve duvar lambaları.
-- Oyun nesneleri (sökülebilir parçalar, tüccar) bileşen ve verilerini korur; yalnız görünümleri değişti.
+## Sığınak (eski tamir atölyesi)
+- `ShelterBuilder`: 8,5 × 6 m harap briket yapı. Eski garaj açıklığı briketle örüldü; ortada menteşeli ahşap/metal **kapı** (`Door`, E ile açılır/kapanır, kayda geçer). Tam kapalı oluklu çatı (içeri yağmur girmez), sol duvarın yıkık üstü oluklu sacla yamalı, sağda tahta çakılı pencere.
+- İç: palet üstünde yatak, masa ve sandalye, borulu varil soba (ateş ileride), tezgâh + alet panosu (üretim), raf ve kutular (yağma).
+- Dış: hurda köşesi (motor sehpası: alternatör + kablosu, sandık üstünde akü + kıskacı), avlu kenarında tenteli takas tezgâhı, lastikler, variller (biri yağmur varili), paletler, hurda yığını, konteynerler.
 
 ## Dokular
 - Prosedürel, dikişsiz, özgün: `Assets/Arts/Environment/Textures/` (toprak, beton zemin/duvar, briket, oluklu sac, paslı çelik, ahşap, lastik, boyalı metal, alet panosu, döküm metal, tabela). Üretici: `python3 tools/textures/generate_scrapyard_textures.py Assets/Arts/Environment/Textures 1024`.

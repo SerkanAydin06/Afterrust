@@ -9,18 +9,21 @@ using UnityEngine.SceneManagement;
 namespace Afterrust.EditorTools
 {
     /// <summary>
-    /// Builds the small, run-down repair shop (8.5 x 6 m, open front facing the player spawn)
-    /// and restyles the gameplay objects that used to be primitives: salvageable engine parts,
-    /// the scrap pile and the trade counter keep their components/data, only visuals change.
-    /// Legacy graybox objects are removed. Re-running replaces the "Repair Shop" root.
+    /// Builds the survivor's shelter: a small run-down cinder-block building (8.5 x 6 m) whose
+    /// old garage opening is bricked up around a hinged door (E opens/closes). Inside: bed,
+    /// table, stove, workbench and shelves. Outside: scrap corner with the salvageable engine,
+    /// trade stall by the forecourt, tires, drums, pallets, containers. Gameplay objects keep
+    /// their components/data, only visuals change. Re-running replaces the "Shelter" root
+    /// (and removes the legacy "Repair Shop" root).
     /// </summary>
-    public static class RepairShopBuilder
+    public static class ShelterBuilder
     {
-        private const string RootName = "Repair Shop";
+        private const string RootName = "Shelter";
+        private const string LegacyRootName = "Repair Shop";
         private const float RoofFront = 3.15f, RoofDrop = 0.1f, Depth = 6f;
 
         private static readonly Dictionary<string, Mesh> Cache = new Dictionary<string, Mesh>();
-        private static Material block, slab, steel, sheet, wood, rubber, peg, cast, sign;
+        private static Material block, slab, steel, sheet, wood, rubber, peg, cast;
         private static Material paintGreen, paintRed, paintBlue, paintYellow, containerRed, containerBlue, containerGreen;
         private static Material plastic, terminalRed, lead, cable, cardboard, paper;
 
@@ -30,17 +33,22 @@ namespace Afterrust.EditorTools
             CreateMaterials();
             RemoveLegacyPrimitives();
 
-            Transform old = ScavengerWalkSetup.FindInScene(RootName);
-            if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+            foreach (string name in new[] { RootName, LegacyRootName })
+            {
+                Transform old = ScavengerWalkSetup.FindInScene(name);
+                if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+            }
             Transform root = new GameObject(RootName).transform;
-            Undo.RegisterCreatedObjectUndo(root.gameObject, "Build repair shop");
+            Undo.RegisterCreatedObjectUndo(root.gameObject, "Build shelter");
 
             BuildShell(Group(root, "Shell"));
             BuildRoof(Group(root, "Roof"));
-            BuildFront(Group(root, "Door And Sign"));
+            BuildFront(Group(root, "Front Wall And Door"));
             BuildWorkbench(Group(root, "Workbench"));
             BuildShelving(Group(root, "Shelving"));
-            BuildEngineStand(Group(root, "Engine Stand"));
+            BuildEngineStand(Group(root, "Scrap Corner"));
+            BuildLivingArea(Group(root, "Living Area"));
+            BuildTradeStall(Group(root, "Trade Stall"));
             BuildExterior(Group(root, "Yard Props"));
             RestyleSalvageParts();
             RestyleTrader();
@@ -60,7 +68,6 @@ namespace Afterrust.EditorTools
             rubber = MaterialKit.Lit("M_TireRubber", "rubber_tire", 1f, 0.2f, 0f, null, Vector2.one);
             peg = MaterialKit.Lit("M_Pegboard", "pegboard", 1f, 0.1f, 0f);
             cast = MaterialKit.Lit("M_CastMetal", "cast_metal", 1f, 0.35f, 0.6f);
-            sign = MaterialKit.Lit("M_ShopSign", "shop_sign", 1f, 0.2f, 0.2f, null, new Vector2(1f / 3.2f, 1f / 0.8f));
             paintGreen = MaterialKit.Lit("M_Paint_Green", "chipped_paint", 1f, 0.35f, 0.2f, new Color(0.42f, 0.52f, 0.45f));
             paintRed = MaterialKit.Lit("M_Paint_Red", "chipped_paint", 1f, 0.4f, 0.2f, new Color(0.72f, 0.16f, 0.12f));
             paintBlue = MaterialKit.Lit("M_Paint_Blue", "chipped_paint", 1f, 0.35f, 0.2f, new Color(0.2f, 0.32f, 0.52f));
@@ -133,37 +140,45 @@ namespace Afterrust.EditorTools
             for (int r = 0; r < rowStart.Length; r++)
             for (int c = 0; c < colX.Length; c++)
             {
-                if (r == 1 && c == 1) continue; // missing sheet: light falls onto the engine stand
                 float z = rowStart[r];
                 Part(p, "Roof Sheet", roofSheet, sheet, new Vector3(colX[c], RoofTop(z) + 0.02f + r * 0.035f, z),
                     new Vector3(-90f + slope, (float)(rnd.NextDouble() - 0.5) * 2f, (float)(rnd.NextDouble() - 0.5) * 1.5f),
                     false);
             }
-            // The missing sheet leans against the right wall outside.
+            // A spare sheet leans against the right wall outside.
             GameObject leaning = Part(p, "Fallen Roof Sheet", roofSheet, sheet, new Vector3(4.75f, 0f, 4.4f), Vector3.zero);
             leaning.transform.rotation = Quaternion.AngleAxis(12f, Vector3.forward) * Quaternion.Euler(0f, 90f, 0f);
         }
 
         private static void BuildFront(Transform p)
         {
-            // Roll-up door stuck half open, one slat bent.
-            Part(p, "Door Roll Housing", Cyl(0.2f, 4.6f, 20), steel, new Vector3(2.3f, 3f, -0.32f), new Vector3(0f, 0f, 90f), false);
-            for (int i = 0; i < 9; i++)
-            {
-                float y = 2.85f - i * 0.1f;
-                Vector3 euler = i == 8 ? new Vector3(8f, 0f, 3f) : Vector3.zero;
-                float x = i == 8 ? 0.06f : 0f;
-                Part(p, "Door Slat " + i, BoxC(4.4f, 0.1f, 0.03f), paintGreen, new Vector3(x, y, -0.2f), euler, false);
-            }
-            Part(p, "Door Bottom Bar", BoxC(4.4f, 0.05f, 0.05f), steel, new Vector3(0.08f, 1.98f, -0.22f), new Vector3(8f, 0f, 3f), false);
-            Part(p, "Door Rail L", BoxB(0.06f, 2.9f, 0.08f), steel, new Vector3(-2.25f, 0f, -0.18f), Vector3.zero, false);
-            Part(p, "Door Rail R", BoxB(0.06f, 2.9f, 0.08f), steel, new Vector3(2.25f, 0f, -0.18f), Vector3.zero, false);
+            // Old 4.4 m garage opening (x -2.2..2.2, up to the lintel at 2.8) bricked up around a
+            // 1.1 x 2.1 m door. Pieces only touch each other (no coplanar overlaps).
+            Part(p, "Infill Left", BoxB(1.55f, 2.8f, 0.25f), block, new Vector3(-1.425f, 0f, 0f));
+            Part(p, "Infill Right", BoxB(1.55f, 2.8f, 0.25f), block, new Vector3(1.425f, 0f, 0f));
+            Part(p, "Infill Above Door", BoxB(1.3f, 0.5f, 0.25f), block, new Vector3(0f, 2.3f, 0f));
+            Part(p, "Door Post L", BoxB(0.1f, 2.2f, 0.25f), wood, new Vector3(-0.6f, 0f, 0f));
+            Part(p, "Door Post R", BoxB(0.1f, 2.2f, 0.25f), wood, new Vector3(0.6f, 0f, 0f));
+            Part(p, "Door Header", BoxB(1.3f, 0.1f, 0.25f), wood, new Vector3(0f, 2.2f, 0f));
 
-            GameObject board = Part(p, "Shop Sign", BoxC(3.2f, 0.8f, 0.05f), sign, new Vector3(0f, 3.6f, -0.34f),
-                new Vector3(0f, 0f, 2.5f), false);
-            // Brackets run back to the front roof beam, behind the door roll.
-            Part(board.transform, "Bracket L", BoxC(0.05f, 0.05f, 0.5f), steel, new Vector3(-1.2f, -0.3f, 0.27f), Vector3.zero, false);
-            Part(board.transform, "Bracket R", BoxC(0.05f, 0.05f, 0.5f), steel, new Vector3(1.2f, -0.3f, 0.27f), Vector3.zero, false);
+            // Hinged door: pivot on the left jamb, opens inwards (towards +z).
+            Transform hinge = new GameObject("Shelter Door").transform;
+            hinge.SetParent(p, false);
+            hinge.localPosition = new Vector3(-0.55f, 0f, 0f);
+            hinge.gameObject.AddComponent<Door>();
+            GameObject leaf = Part(hinge, "Door Leaf", BoxC(1.09f, 2.09f, 0.05f), wood, new Vector3(0.55f, 1.05f, 0f));
+            Part(leaf.transform, "Strap Top", BoxC(1.0f, 0.06f, 0.012f), steel, new Vector3(0f, 0.6f, -0.031f), Vector3.zero, false);
+            Part(leaf.transform, "Strap Bottom", BoxC(1.0f, 0.06f, 0.012f), steel, new Vector3(0f, -0.55f, -0.031f), Vector3.zero, false);
+            Part(leaf.transform, "Brace", BoxC(0.06f, 1.3f, 0.012f), steel, new Vector3(0f, 0.02f, -0.031f), new Vector3(0f, 0f, 38f), false);
+            Part(leaf.transform, "Handle Out", BoxC(0.03f, 0.16f, 0.03f), steel, new Vector3(0.42f, 0f, -0.05f), Vector3.zero, false);
+            Part(leaf.transform, "Handle In", BoxC(0.03f, 0.16f, 0.03f), steel, new Vector3(0.42f, 0f, 0.05f), Vector3.zero, false);
+            foreach (Transform t in hinge.GetComponentsInChildren<Transform>(true)) t.gameObject.isStatic = false;
+
+            // Corrugated patch over the broken top of the left wall.
+            Mesh roofSheet = MeshKit.Corrugated("Corrugated_Roof_4_3x2_4", 4.3f, 2.4f, 56, 0.018f, 0f);
+            // 3 m wide (z 0.05..3.05), 1 m tall, 6 cm outside the wall face.
+            GameObject patch = Part(p, "Wall Patch", roofSheet, sheet, new Vector3(-4.31f, 2.2f, 1.55f), new Vector3(0f, 90f, 0f), false);
+            patch.transform.localScale = new Vector3(0.7f, 0.42f, 1f);
         }
 
         // ------------------------------------------------------------------ interior
@@ -204,7 +219,7 @@ namespace Afterrust.EditorTools
 
         private static void BuildShelving(Transform p)
         {
-            p.localPosition = new Vector3(-3.72f, 0f, 3.4f);
+            p.localPosition = new Vector3(-3.72f, 0f, 1.9f);
             foreach (float x in new[] { -0.23f, 0.23f })
             foreach (float z in new[] { -0.88f, 0.88f })
                 Part(p, "Upright", BoxB(0.04f, 2f, 0.04f), steel, new Vector3(x, 0f, z), Vector3.zero, false);
@@ -232,7 +247,7 @@ namespace Afterrust.EditorTools
 
         private static void BuildEngineStand(Transform p)
         {
-            p.localPosition = new Vector3(1.6f, 0f, 3.4f);
+            p.localPosition = new Vector3(6.6f, 0f, 1.2f);   // outside, right of the shelter
             Part(p, "Drip Tray", BoxB(0.7f, 0.02f, 0.5f), steel, new Vector3(0f, 0.03f, 0f), Vector3.zero, false);
             Part(p, "Stand Base X", BoxB(0.9f, 0.06f, 0.08f), paintRed, new Vector3(-0.2f, 0.03f, 0f), Vector3.zero, false);
             Part(p, "Stand Base Z", BoxB(0.08f, 0.06f, 0.9f), paintRed, new Vector3(-0.55f, 0.03f, 0f), Vector3.zero, false);
@@ -247,6 +262,65 @@ namespace Afterrust.EditorTools
             Part(p, "Exhaust Manifold", BoxC(0.45f, 0.07f, 0.08f), steel, new Vector3(0f, 1.05f, 0.27f), Vector3.zero, false);
             // Battery crate next to the engine (battery itself is a salvage part).
             Part(p, "Battery Crate", BoxB(0.55f, 0.45f, 0.45f), wood, new Vector3(1.1f, 0f, -0.6f), new Vector3(0f, 8f, 0f));
+        }
+
+        private static void BuildLivingArea(Transform p)
+        {
+            Material fabric = MaterialKit.Plain("M_Mattress", new Color(0.42f, 0.4f, 0.34f), 0.05f, 0f);
+            Material blanket = MaterialKit.Plain("M_Blanket", new Color(0.22f, 0.26f, 0.22f), 0.05f, 0f);
+
+            // Bed: two pallets + mattress along the left wall, back corner.
+            Transform bed = Group(p, "Bed");
+            bed.localPosition = new Vector3(-3.45f, 0f, 4.78f);
+            bed.localEulerAngles = new Vector3(0f, 90f, 0f);
+            for (int k = 0; k < 2; k++)
+            {
+                float y = 0.03f + k * 0.13f;
+                foreach (float z in new[] { -0.4f, 0f, 0.4f })
+                    Part(bed, "Pallet Stringer", BoxB(1.9f, 0.1f, 0.08f), wood, new Vector3(0f, y, z), Vector3.zero, false);
+                for (int b = 0; b < 6; b++)
+                    Part(bed, "Pallet Board", BoxB(0.14f, 0.02f, 0.88f), wood, new Vector3(-0.82f + b * 0.328f, y + 0.1f, 0f), Vector3.zero, false);
+            }
+            Part(bed, "Mattress", BoxB(1.92f, 0.16f, 0.9f), fabric, new Vector3(0f, 0.28f, 0f));
+            Part(bed, "Blanket", BoxB(1.1f, 0.03f, 0.92f), blanket, new Vector3(0.36f, 0.44f, 0f), new Vector3(0f, 0f, -1f), false);
+            Part(bed, "Pillow", BoxB(0.3f, 0.1f, 0.55f), fabric, new Vector3(-0.75f, 0.44f, 0f), Vector3.zero, false);
+
+            // Table and chair where the engine used to stand.
+            Transform table = Group(p, "Table");
+            table.localPosition = new Vector3(1.6f, 0f, 3.6f);
+            table.localEulerAngles = new Vector3(0f, -6f, 0f);
+            Part(table, "Table Top", BoxB(1.1f, 0.04f, 0.7f), wood, new Vector3(0f, 0.72f, 0f));
+            foreach (float x in new[] { -0.5f, 0.5f })
+            foreach (float z in new[] { -0.3f, 0.3f })
+                Part(table, "Table Leg", BoxB(0.05f, 0.72f, 0.05f), wood, new Vector3(x, 0f, z), Vector3.zero, false);
+            Part(table, "Can", Cyl(0.05f, 0.11f, 14), paintYellow, new Vector3(0.25f, 0.76f, 0.1f), Vector3.zero, false);
+            Part(table, "Map", BoxB(0.42f, 0.004f, 0.3f), paper, new Vector3(-0.2f, 0.76f, -0.05f), new Vector3(0f, 9f, 0f), false);
+            Transform chair = Group(table, "Chair");
+            chair.localPosition = new Vector3(0f, 0f, -0.7f);
+            chair.localEulerAngles = new Vector3(0f, 12f, 0f);
+            Part(chair, "Seat", BoxB(0.45f, 0.04f, 0.42f), wood, new Vector3(0f, 0.44f, 0f));
+            Part(chair, "Back", BoxB(0.45f, 0.45f, 0.04f), wood, new Vector3(0f, 0.48f, -0.19f), Vector3.zero, false);
+            foreach (float x in new[] { -0.19f, 0.19f })
+            foreach (float z in new[] { -0.17f, 0.17f })
+                Part(chair, "Chair Leg", BoxB(0.04f, 0.44f, 0.04f), wood, new Vector3(x, 0f, z), Vector3.zero, false);
+
+            // Drum stove with a flue through the roof (fire comes later).
+            Transform stove = Group(p, "Stove");
+            stove.localPosition = new Vector3(3.4f, 0f, 5.1f);
+            Part(stove, "Stove Body", Cyl(0.28f, 0.65f, 24), steel, new Vector3(0f, 0.03f, 0f));
+            Part(stove, "Stove Door", BoxC(0.2f, 0.16f, 0.02f), cast, new Vector3(-0.2f, 0.36f, -0.2f), new Vector3(0f, 45f, 0f), false);
+            Part(stove, "Flue", Cyl(0.06f, 2.5f, 14), steel, new Vector3(0f, 0.68f, 0f), Vector3.zero, false);
+        }
+
+        private static void BuildTradeStall(Transform p)
+        {
+            // Tarp-roofed barter stall by the forecourt; the trade counter is placed under it.
+            p.localPosition = new Vector3(10.5f, 0f, -12.6f);
+            foreach (float x in new[] { -1.9f, 1.9f })
+            foreach (float z in new[] { -1.0f, 1.0f })
+                Part(p, "Stall Post", BoxB(0.08f, 2.4f, 0.08f), steel, new Vector3(x, 0f, z));
+            Mesh roofSheet = MeshKit.Corrugated("Corrugated_Roof_4_3x2_4", 4.3f, 2.4f, 56, 0.018f, 0f);
+            Part(p, "Stall Roof", roofSheet, sheet, new Vector3(0f, 2.42f, 1.2f), new Vector3(-85f, 0f, 0f), false);
         }
 
         // ------------------------------------------------------------------ exterior
@@ -317,23 +391,23 @@ namespace Afterrust.EditorTools
             battery.removeFirst = new[] { clamp };
             alternator.removeFirst = new[] { wire };
 
-            // Battery on its crate next to the engine stand (crate top: y 0.45).
-            Place(battery, new Vector3(2.7f, 0.45f, 2.8f), 8f, new Vector3(0f, 0.11f, 0f), new Vector3(0.32f, 0.22f, 0.2f));
+            // Battery on its crate next to the engine stand outside (crate top: y 0.45).
+            Place(battery, new Vector3(7.7f, 0.45f, 0.6f), 8f, new Vector3(0f, 0.11f, 0f), new Vector3(0.32f, 0.22f, 0.2f));
             Part(battery.transform, "Case", BoxB(0.3f, 0.2f, 0.18f), plastic, Vector3.zero, Vector3.zero, false);
             Part(battery.transform, "Terminal +", Cyl(0.016f, 0.025f, 10), terminalRed, new Vector3(0.09f, 0.2f, 0.04f), Vector3.zero, false);
             Part(battery.transform, "Terminal -", Cyl(0.016f, 0.025f, 10), lead, new Vector3(-0.09f, 0.2f, 0.04f), Vector3.zero, false);
 
             // Clamp sits on the + terminal and pokes out above the case so it is hit first.
-            Place(clamp, new Vector3(2.79f, 0.67f, 2.84f), 8f, new Vector3(0f, 0.03f, 0f), new Vector3(0.12f, 0.08f, 0.12f));
+            Place(clamp, new Vector3(7.79f, 0.67f, 0.64f), 8f, new Vector3(0f, 0.03f, 0f), new Vector3(0.12f, 0.08f, 0.12f));
             Part(clamp.transform, "Clamp", BoxB(0.05f, 0.035f, 0.06f), terminalRed, Vector3.zero, Vector3.zero, false);
             Part(clamp.transform, "Cable", Cyl(0.007f, 0.32f, 8), cable, new Vector3(0f, 0.02f, 0f), new Vector3(0f, -20f, 100f), false);
 
             // Alternator bolted to the engine side, wire running to the block.
-            Place(alternator, new Vector3(1.88f, 1.08f, 3.1f), 0f, Vector3.zero, new Vector3(0.18f, 0.18f, 0.18f));
+            Place(alternator, new Vector3(6.88f, 1.08f, 0.9f), 0f, Vector3.zero, new Vector3(0.18f, 0.18f, 0.18f));
             Part(alternator.transform, "Body", Cyl(0.085f, 0.16f, 18), cast, new Vector3(-0.08f, 0f, 0f), new Vector3(0f, 0f, -90f), false);
             Part(alternator.transform, "Pulley", Cyl(0.04f, 0.03f, 14), steel, new Vector3(0.08f, 0f, 0f), new Vector3(0f, 0f, -90f), false);
 
-            Place(wire, new Vector3(1.72f, 1.2f, 3.08f), 0f, Vector3.zero, new Vector3(0.36f, 0.06f, 0.06f));
+            Place(wire, new Vector3(6.72f, 1.2f, 0.88f), 0f, Vector3.zero, new Vector3(0.36f, 0.06f, 0.06f));
             Part(wire.transform, "Cable", Cyl(0.008f, 0.36f, 8), cable, new Vector3(0.18f, 0f, 0f), new Vector3(0f, 0f, 90f), false);
 
             // Scrap pile outside, right of the door.
@@ -358,7 +432,7 @@ namespace Afterrust.EditorTools
             go.name = "Trade Post - E to Sell";
             Strip(go);
             go.SetActive(true);
-            go.transform.SetPositionAndRotation(new Vector3(-2.9f, 0f, 1.4f), Quaternion.Euler(0f, 90f, 0f));
+            go.transform.SetPositionAndRotation(new Vector3(10.5f, 0f, -12.6f), Quaternion.Euler(0f, 180f, 0f));
             go.transform.localScale = Vector3.one;
             BoxCollider box = go.AddComponent<BoxCollider>();
             box.center = new Vector3(0f, 0.52f, 0f);

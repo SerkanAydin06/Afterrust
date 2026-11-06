@@ -5,68 +5,68 @@
     "delaySeconds": 2,
     "views": [
         {
-            "id": "01_spawn_shop_front",
-            "description": "Player start: forecourt and repair shop front with sign",
+            "id": "01_spawn_shelter_front",
+            "description": "Player start: forecourt and shelter front with door",
             "position": {
                 "x": 0,
                 "y": 1.75,
                 "z": -9
             },
             "rotation": {
-                "x": 4,
+                "x": 2,
                 "y": 0,
                 "z": 0
             },
             "fieldOfView": 65
         },
         {
-            "id": "02_shop_interior",
-            "description": "Inside the shop: workbench, pegboard, engine stand, roof hole",
+            "id": "02_shelter_interior",
+            "description": "Inside the shelter: bed, workbench, shelves, table",
             "position": {
-                "x": 3.3,
+                "x": 0.6,
                 "y": 1.7,
-                "z": 0.8
+                "z": 1.0
             },
             "rotation": {
-                "x": 14,
-                "y": -38,
+                "x": 12,
+                "y": -25,
+                "z": 0
+            },
+            "fieldOfView": 75
+        },
+        {
+            "id": "03_scrap_corner",
+            "description": "Scrap corner outside: engine stand, battery crate, scrap pile",
+            "position": {
+                "x": 4.5,
+                "y": 1.8,
+                "z": -4.5
+            },
+            "rotation": {
+                "x": 10,
+                "y": 30,
                 "z": 0
             },
             "fieldOfView": 70
         },
         {
-            "id": "03_engine_salvage",
-            "description": "Engine stand with alternator/wire and battery/clamp on crate",
+            "id": "04_trade_stall",
+            "description": "Trade stall by the forecourt",
             "position": {
-                "x": 1.4,
-                "y": 1.65,
-                "z": 1.6
+                "x": 6,
+                "y": 1.9,
+                "z": -17
             },
             "rotation": {
-                "x": 30,
-                "y": 22,
-                "z": 0
-            },
-            "fieldOfView": 60
-        },
-        {
-            "id": "04_trade_counter",
-            "description": "Trade counter inside left of the door",
-            "position": {
-                "x": -0.6,
-                "y": 1.7,
-                "z": 0.2
-            },
-            "rotation": {
-                "x": 12,
-                "y": -62,
+                "x": 4,
+                "y": 30,
                 "z": 0
             },
             "fieldOfView": 65
         },
         {
             "id": "05_yard_overview",
-            "description": "Yard overview: shop, fence, containers, props",
+            "description": "Yard overview",
             "position": {
                 "x": -16,
                 "y": 11,
