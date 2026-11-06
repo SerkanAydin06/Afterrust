@@ -8,8 +8,8 @@ Durum: P0 hayatta kalma döngüsü uygulanıyor.
 - [x] Aranabilir kaplar ve ganimet tabloları; yağmur varili.
 - [x] Tezgâhta üretim: bandaj, temiz su, kablo kesici, büyük çanta, geri dönüşüm.
 - [x] Kayıt/yükleme (F5/F9, otomatik kayıt, açılışta devam).
-- [x] Gün-gece döngüsü (24 dk = 1 gün), kasvetli kapalı hava, sağanak ve şimşek, fener.
-- [x] Prototip sesleri (adım, etkileşim, üretim, rüzgâr ve yağmur); özgün üretilmiş geçici sesler, dış ses dosyası opsiyonel.
+- [x] Gün-gece döngüsü (24 dk = 1 gün), kasvetli kapalı hava, sağanak ve şimşek, fener. Yağmur damlaları sahne çatılarında sonlanıyor (v8).
+- [x] Prototip sesleri (adım, etkileşim, üretim, rüzgâr ve yağmur); kesintisiz prosedürel ses akışı, iç mekân filtreleme, çeşitli adım sesleri; dış ses dosyası opsiyonel.
 - [ ] Profesyonel ses kayıtları, bölgesel 3D ortam sesleri ve miks ayarları.
 
 ## P1: Derinlik
