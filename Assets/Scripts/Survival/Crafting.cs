@@ -136,17 +136,13 @@ namespace Afterrust
             if (!IsAvailable(r, inv)) return r.name + " zaten var.";
             if (!HasIngredients(r, inv)) return "Malzeme eksik: " + Describe(r, inv);
             if (!CanCraft(r, inv)) return "Çanta dolu.";
+            // Snapshot preserves individual salvage condition, mass and price on rollback.
+            List<AfterrustInventory.ItemStack> original = new List<AfterrustInventory.ItemStack>(inv.items);
             foreach (Ingredient i in r.inputs) inv.TryRemove(i.id, i.count);
-            if (r.outputItem != null)
+            if (r.outputItem != null && inv.TryAddItem(r.outputItem, r.outputCount) != r.outputCount)
             {
-                int added = inv.TryAddItem(r.outputItem, r.outputCount);
-                if (added != r.outputCount)
-                {
-                    // Defensive fallback if a future inventory rule rejects the output.
-                    inv.TryRemove(r.outputItem, added);
-                    foreach (Ingredient i in r.inputs) inv.TryAddItem(i.id, i.count);
-                    return "Üretim tamamlanamadı; malzemeler geri verildi.";
-                }
+                inv.items = original;
+                return "Üretim tamamlanamadı; malzemeler geri verildi.";
             }
             r.onCrafted?.Invoke(inv);
             return r.name + " üretildi.";
