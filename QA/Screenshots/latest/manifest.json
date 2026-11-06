@@ -1,12 +1,12 @@
 {
-    "capturedAtUtc": "2026-11-06T20:22:39.4838688Z",
+    "capturedAtUtc": "2026-11-06T21:10:52.4882816Z",
     "unityVersion": "6000.3.27f2",
     "scene": "AfterrustPrototype",
     "planAsset": "Assets/Resources/qa_screenshot_plan.json",
-    "capturedGameHour": 11.000089645385743,
+    "capturedGameHour": 11.000140190124512,
     "capturedRain": false,
     "lightingMode": "fixed-daylight",
-    "imageCount": 13,
+    "imageCount": 14,
     "images": [
         {
             "file": "01_spawn_shelter_front.png",
@@ -187,6 +187,20 @@
             "rotation": {
                 "x": 40.0,
                 "y": 0.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "14_shelter_storage.png",
+            "description": "V13 shelter: new personal storage chest against right interior wall; check walking clearance and lid",
+            "position": {
+                "x": 0.8999999761581421,
+                "y": 1.850000023841858,
+                "z": 0.8999999761581421
+            },
+            "rotation": {
+                "x": 30.0,
+                "y": 75.0,
                 "z": 0.0
             }
         }
