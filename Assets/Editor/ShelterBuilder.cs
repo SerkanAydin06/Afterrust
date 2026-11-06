@@ -361,13 +361,16 @@ namespace Afterrust.EditorTools
 
         private static void EnsureTradeStallSupports(Transform stall)
         {
+            // Migration runs after script reload; static material fields may be unset.
+            Material supportSteel = steel != null ? steel :
+                MaterialKit.Lit("M_RustySteel", "rusty_steel", 2f, 0.25f, 0.5f);
             // Horizontal beams meet the four post caps at y=2.4 m. Keep
             // their names stable for repeated scene migration.
             foreach (float z in new[] { -1f, 1f })
             {
                 string name = z < 0f ? "Rear Canopy Support" : "Front Canopy Support";
                 if (stall.Find(name) != null) continue;
-                Part(stall, name, BoxC(4.05f, 0.11f, 0.13f), steel,
+                Part(stall, name, BoxC(4.05f, 0.11f, 0.13f), supportSteel,
                     new Vector3(0f, 2.34f, z), Vector3.zero, false);
             }
         }
