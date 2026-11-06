@@ -25,7 +25,7 @@
             "position": {
                 "x": 0.6,
                 "y": 1.7,
-                "z": 1.0
+                "z": 1
             },
             "rotation": {
                 "x": 12,
@@ -80,19 +80,49 @@
             "fieldOfView": 60
         },
         {
-            "id": "06_npcs",
-            "description": "Forecourt with walking NPCs",
+            "id": "06_distant_ruins",
+            "description": "Ruined city skyline beyond the yard, power lines and fog layers",
             "position": {
-                "x": 0,
-                "y": 3.5,
-                "z": -16
+                "x": -10,
+                "y": 8,
+                "z": -18
             },
             "rotation": {
-                "x": 10,
-                "y": 0,
+                "x": 6,
+                "y": 12,
                 "z": 0
             },
-            "fieldOfView": 65
+            "fieldOfView": 70
+        },
+        {
+            "id": "07_scavenger_trader",
+            "description": "Scavenger standing behind the tarp-covered trader counter",
+            "position": {
+                "x": 8,
+                "y": 1.8,
+                "z": -18
+            },
+            "rotation": {
+                "x": 5,
+                "y": 17,
+                "z": 0
+            },
+            "fieldOfView": 60
+        },
+        {
+            "id": "08_stove_and_bed",
+            "description": "Survivor shelter: stove, sleeping area and warm fire lighting",
+            "position": {
+                "x": 0.6,
+                "y": 1.65,
+                "z": 3.6
+            },
+            "rotation": {
+                "x": 9,
+                "y": 120,
+                "z": 0
+            },
+            "fieldOfView": 75
         }
     ]
 }
