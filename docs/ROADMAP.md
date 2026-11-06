@@ -44,3 +44,10 @@ Durum: P0 hayatta kalma döngüsü + güvenli avlu v9 düzenlemesi.
 2. **Görsel kalite:** avluda gündüz ve gece aydınlatma, malzeme tekrarları, tüccar çatı düzeni ve yapılar arası geçişleri gözden geçir.
 3. **Etkileşim ve işlev:** açık yağmur varili, iş tezgâhı, depo düzeni, soba, yatak ve tüccar kullanımını baştan sona denetle.
 4. **Sonra dış bölge:** güvenli avlu testleri geçince keşif görevini tekrar etkinleştir ve dünya içeriğini genişlet.
+
+## Güvenli avlu içi v13
+- [x] Kapı, soba, yatak ve iş tezgâhı korunurken bir kişisel depo sandığı eklendi.
+- [x] Envanter↔depo eşya aktarma, ağırlık sınırı ve eşya kondisyonu koruma.
+- [x] Depo içeriğinin F5/F9/otomatik kayıtla saklanması, eski kayıtla uyumluluk.
+- [ ] Gerçek Unity testleri: kapıdan geçiş, sandık paneli, eşyaların yerleşimi, sandık görseli, sabit/koşma/yağmur FPS.
+- [ ] Güvenli alanın kullanışlılığını tamamlamak: tüccar etkileşimi ve basit üretim/depo ergonomisi.
