@@ -6,7 +6,7 @@ Durum: P0 hayatta kalma döngüsü + güvenli avlu v9 düzenlemesi.
 - [x] Güvenli avlu çevresini kapatan, çift kanatlı ve kaydedilebilen güney kapısı; tüccar çatı/direk hizalaması (v9).
 - [x] Yaşamsal değerler: sağlık, açlık, susuzluk, dayanıklılık; ölüm ve yeniden başlama.
 - [x] Eşya veritabanı, ağırlık tabanlı envanter, tüketme (1 ye, 2 iç, 3 bandaj).
-- [x] Aranabilir kaplar ve ganimet tabloları; yağmur varili.
+- [x] Aranabilir kaplar ve ganimet tabloları; güvenli avluda tek, üstü açık, görsel seviyeli ve yalnız yağmurda yavaşça dolan varil (v10).
 - [x] Tezgâhta üretim: bandaj, temiz su, kablo kesici, büyük çanta, geri dönüşüm.
 - [x] Kayıt/yükleme (F5/F9, otomatik kayıt, açılışta devam).
 - [x] Gün-gece döngüsü (24 dk = 1 gün), kasvetli kapalı hava, sağanak ve şimşek, fener. Yağmur damlaları sahne çatılarında sonlanıyor (v8).
@@ -16,7 +16,8 @@ Durum: P0 hayatta kalma döngüsü + güvenli avlu v9 düzenlemesi.
 ## P1: Derinlik
 - [x] Uyku/enerji, vücut ısısı (yağmur, gece, çatı, soba), soba ile pişirme.
 - Hastalık ve yara türleri, ıslanma.
-- Yağmur toplayıcı, sığınak yükseltmeleri (kilit, depo sandığı, yalıtım).
+- [x] Açık yağmur varili: yağışla dolan fiziksel ve kaydedilen su seviyesi.
+- [ ] Sığınak yükseltmeleri (kilit, depo sandığı, yalıtım).
 - uGUI tabanlı arayüz, eşya ikonları.
 - Meshy ile özgün eşya/kap modelleri.
 

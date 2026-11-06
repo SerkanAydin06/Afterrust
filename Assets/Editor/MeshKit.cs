@@ -72,6 +72,50 @@ namespace Afterrust.EditorTools
         }
 
         /// <summary>
+        /// Upright hollow steel barrel: outer wall, visible inner wall, top rim and
+        /// solid recessed bottom. Intentionally NO top cap so its water level is visible.
+        /// Origin at ground; dimensions in metres. Mesh is stored as a Unity asset.
+        /// </summary>
+        internal static Mesh OpenBarrel(string name, float radius, float wallThickness, float height, int segments)
+        {
+            segments = Mathf.Max(12, segments);
+            float inside = Mathf.Max(0.05f, radius - wallThickness);
+            List<Vector3> v = new List<Vector3>();
+            List<Vector3> n = new List<Vector3>();
+            List<Vector2> uv = new List<Vector2>();
+            List<int> t = new List<int>();
+
+            void Quad(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 normal)
+            {
+                int start = v.Count;
+                v.Add(a); v.Add(b); v.Add(c); v.Add(d);
+                for (int k = 0; k < 4; k++) n.Add(normal);
+                uv.Add(new Vector2(0f, 0f)); uv.Add(new Vector2(0f, 1f));
+                uv.Add(new Vector2(1f, 1f)); uv.Add(new Vector2(1f, 0f));
+                t.Add(start); t.Add(start + 1); t.Add(start + 2);
+                t.Add(start); t.Add(start + 2); t.Add(start + 3);
+            }
+
+            for (int i = 0; i < segments; i++)
+            {
+                float a = i * Mathf.PI * 2f / segments;
+                float b = (i + 1) * Mathf.PI * 2f / segments;
+                Vector3 u = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
+                Vector3 w = new Vector3(Mathf.Cos(b), 0f, Mathf.Sin(b));
+                Vector3 outward = (u + w).normalized;
+                Quad(u * radius, u * radius + Vector3.up * height,
+                    w * radius + Vector3.up * height, w * radius, outward);
+                Quad(w * inside + Vector3.up * 0.06f, w * inside + Vector3.up * height,
+                    u * inside + Vector3.up * height, u * inside + Vector3.up * 0.06f, -outward);
+                Quad(u * inside + Vector3.up * height, u * radius + Vector3.up * height,
+                    w * radius + Vector3.up * height, w * inside + Vector3.up * height, Vector3.up);
+            }
+            Cap(v, n, uv, t, inside, 0.06f, segments, true);
+            FixWinding(v, n, t);
+            return Save(name, v, n, uv, t);
+        }
+
+        /// <summary>
         /// Torus around local Y (ring in XZ). Cross-section is a superellipse so tires look
         /// boxy rather than tubular. UV: u = 0..1 around the ring, v = 0..1 around the tube.
         /// </summary>

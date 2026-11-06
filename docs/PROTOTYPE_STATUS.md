@@ -56,3 +56,11 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - Varsayılan adım sesi ayrı `footstepsVolume=0.10` karışımına alındı (eski seviyeden yaklaşık %90 daha düşük). Rüzgâr ve yağmur sesleri aynı kalır.
 - Güvenli bölgenin içi tamamlanana kadar dış keşif hedefi HUD'dan gizlendi; dış bölge varlıkları silinmedi.
 - GitHub yapı kontrolleri ve EditMode kapı testleri eklendi; **Unity Editor ve gerçek ses/görsel çalışma testi halen yerelde yapılmalıdır.**
+
+## 6 Kasım — tek açık yağmur varili (sahne v10)
+- Güvenli avludaki üç dekoratif/yağmalanabilir dış mekân varili kaldırıldı. Yerine yalnızca **bir adet dik, kapağı olmayan, içi görünen** çelik yağmur varili yerleştirildi; soba ve diğer objeler korunuyor.
+- Varil **boş başlar**. Su sadece yağmur yağarken yavaşça birikir: %100 dolum için toplam **900 saniye (15 dakika) gerçek yağış** gerekir. Yağmur durunca biriken seviye değişmez.
+- Fiziksel olarak yükselen su yüzeyi ve dış yüzeyde küçük bir seviye göstergesi bulunur. Her 1/3 dolum bir şişe kirli su verir; alındığında görünür seviye aynı oranda düşer.
+- Tamamlanmamış su miktarı (örneğin %20 doluluk) kayıt/yüklemede de saklanır; format v2 korunur. Eski varillerin kaydı yeni tek varile aktarılmaz, bu nedenle yeni varil başlangıçta boş kalır.
+- Varil ağzı üstten açık fiziksel mesh ile oluşturuldu; yağmur parçacıklarının açık ağza düşebilmesi için gizli kapak collider'ı yok.
+- V9 -> V10 geçişi çit, tüccar ve sığınağı yeniden kurmadan yalnız dış varilleri değiştirir. Unity Editor'da gerçek yağış, su seviyesi ve performans doğrulanmalıdır.

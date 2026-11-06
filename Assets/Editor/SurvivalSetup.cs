@@ -42,11 +42,6 @@ namespace Afterrust.EditorTools
             };
             LootEntry[] woodpile = { new LootEntry("wood", 1f, 5, 8) };
             LootEntry[] pallets = { new LootEntry("wood", 1f, 3, 5) };
-            LootEntry[] drum =
-            {
-                new LootEntry("charcoal", 0.4f, 1, 2), new LootEntry("scrap", 0.3f, 1, 1),
-                new LootEntry("water_dirty", 0.3f, 1, 1)
-            };
             LootEntry[] container =
             {
                 new LootEntry("canned_food", 0.6f, 1, 2), new LootEntry("water_clean", 0.6f, 1, 2),
@@ -55,8 +50,6 @@ namespace Afterrust.EditorTools
                 new LootEntry("crackers", 0.5f, 1, 2), new LootEntry("wood", 0.5f, 1, 3)
             };
 
-            Transform rainBarrel = null;
-            float best = float.MaxValue;
             foreach (Transform t in shop.GetComponentsInChildren<Transform>(true))
             {
                 switch (t.name)
@@ -70,19 +63,10 @@ namespace Afterrust.EditorTools
                     case "Pallet Stack": Loot(t, "Palet Yığını (sök)", 2.5f, pallets, 0, 0); break;
                     case "Shipping Container": Loot(t, "Konteyner", 2.5f, container, 5, 20); break;
                     case "Bench Top": if (t.GetComponent<Workbench>() == null) t.gameObject.AddComponent<Workbench>(); break;
-                    case "Oil Drum":
-                        float d = Vector3.Distance(t.position, new Vector3(3.3f, 0f, -0.9f));
-                        if (d < best) { best = d; rainBarrel = t; }
-                        break;
                 }
             }
-            foreach (Transform t in shop.GetComponentsInChildren<Transform>(true))
-                if (t.name == "Oil Drum" && t != rainBarrel) Loot(t, "Varil", 1.2f, drum, 0, 0);
-            if (rainBarrel != null)
-            {
-                rainBarrel.name = "Rain Barrel";
-                if (rainBarrel.GetComponent<WaterSource>() == null) rainBarrel.gameObject.AddComponent<WaterSource>();
-            }
+            // RainCollectorBuilder owns the single open collector and its WaterSource.
+            // Do not turn any barrel into randomized loot or initialize free water.
 
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }

@@ -426,11 +426,8 @@ namespace Afterrust.EditorTools
             Part(p, "Tire Leaning", tire, rubber, new Vector3(-3.7f, 0.34f, -0.35f), new Vector3(78f, 15f, 0f));
             Part(p, "Tire Inside", tire, rubber, new Vector3(3.75f, 0.34f, 1.2f), new Vector3(80f, -70f, 0f));
 
-            Mesh drum = Cyl(0.29f, 0.88f, 24);
-            Mesh rib = Cyl(0.3f, 0.02f, 24);
-            Barrel(p, drum, rib, paintBlue, new Vector3(3.3f, 0f, -0.9f), Vector3.zero);
-            Barrel(p, drum, rib, paintGreen, new Vector3(3.95f, 0f, -1.45f), new Vector3(0f, 40f, 0f));
-            Barrel(p, drum, rib, paintRed, new Vector3(3.2f, 0.29f, -2.2f), new Vector3(0f, 30f, 90f));
+            // Single uncovered upright rain collector replaces the three discarded oil drums.
+            RainCollectorBuilder.Place(p);
 
             Transform pallets = Group(p, "Pallet Stack");
             pallets.localPosition = new Vector3(-5.9f, 0f, 3.6f);
@@ -467,13 +464,6 @@ namespace Afterrust.EditorTools
             Container(p, containerRed, new Vector3(-13f, 0f, 6f), 90f);
             Container(p, containerBlue, new Vector3(-13f, 2.6f, 6.3f), 86f);
             Container(p, containerGreen, new Vector3(14f, 0f, 4f), 80f);
-        }
-
-        private static void Barrel(Transform p, Mesh drum, Mesh rib, Material paint, Vector3 pos, Vector3 euler)
-        {
-            GameObject b = Part(p, "Oil Drum", drum, paint, pos, euler);
-            Part(b.transform, "Rib", rib, paint, new Vector3(0f, 0.29f, 0f), Vector3.zero, false);
-            Part(b.transform, "Rib", rib, paint, new Vector3(0f, 0.59f, 0f), Vector3.zero, false);
         }
 
         private static void Container(Transform p, Material paint, Vector3 pos, float yaw)
