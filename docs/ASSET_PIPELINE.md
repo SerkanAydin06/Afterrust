@@ -29,3 +29,9 @@
 - `World Environment` (`DayNightWeather`): güneş/ay, prosedürel gökyüzü (çalışırken kopyası), iki bulut katmanı (`storm_clouds.png`, 55 m ve 85 m; sis onları silmesin diye alçak), oyuncuyu izleyen yağmur parçacıkları (dünyayla çarpışır, çatı altında yağmaz), şimşek ışığı, karanlıkta lambalar.
 - Ayarlar Inspector'da: gün uzunluğu, kuru/yağmurlu süre aralıkları, şimşek aralığı, yağmur yoğunluğu.
 - Kalıcı kural: modüler parçalar **birbirine değer, üst üste binmez**. Aynı yöne bakan çakışık yüzeyler z-fighting (titreme) yapar; parçalar arasında en az 1–1,5 cm boşluk ya da açık bir iç içe geçme olmalı.
+
+## Ufuk ve uzak harabeler (sahne sürümü 6)
+- `WorldBackdropBuilder`: avlu çevresinde 48–88 m'de 22 yıkık bina (çökmüş köşe + kırık çatı parçası, `ruin_facade` dokusu, tek birleştirilmiş mesh + collider), yol boyunca ve kuzeyde elektrik direkleri ve teller, kuzeybatıda su kulesi. Sis bunları katman katman siluete çevirir. Yerleşim üreticisi: `tools/textures/ruins_layout.py`.
+- Zemin 400 m'ye uzatıldı (5 m'de bir doku tekrarı).
+- Sığınaktaki lambalar gölge üretir (ışık duvardan sızmaz); Very High/Ultra'da piksel ışık sayısı 6/8.
+- NPC'ler: dünyaya uymayan iki yürüyen karakter kaldırıldı; hurdacı takas tezgâhının arkasında duran tüccar oldu.

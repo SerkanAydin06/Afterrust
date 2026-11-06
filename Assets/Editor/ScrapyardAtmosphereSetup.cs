@@ -234,7 +234,9 @@ namespace Afterrust.EditorTools
                 light.range = 7f;
                 light.intensity = intensity;
                 light.color = new Color(1f, 0.72f, 0.42f);
-                light.shadows = LightShadows.None;
+                // Lamps on the shelter cast shadows so their light does not leak through walls.
+                light.shadows = pos.z > -10f ? LightShadows.Hard : LightShadows.None;
+                light.range = pos.z > -10f ? 6f : 7f;
             }
 
             // Bare pendant bulb hanging from the middle roof beam, flickering slightly.

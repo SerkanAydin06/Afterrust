@@ -319,6 +319,30 @@ def smoke_puff():
     print("saved smoke_puff")
 
 
+def ruin_facade():
+    """Tile = 8 m wide x 6 m tall facade: 4 window columns x 2 floors, dark/broken windows,
+    floor slab bands, rain streaks. Used with tiling (1/8, 1/6) on distant ruins."""
+    y, x = np.mgrid[0:N, 0:N]
+    colw, rowh = N // 4, N // 2
+    cx, cy = x % colw, y % rowh
+    col, row = x // colw, y // rowh
+    win = (np.abs(cx - colw / 2) < colw * 0.25) & (cy > rowh * 0.22) & (cy < rowh * 0.7)
+    cell = (col * 3 + row * 5) % 7
+    boarded = win & (cell == 2)
+    missing_wall = smooth(0.72, 0.8, fbm(2.6, highpass=1.0))       # blown-out patches
+    base = fbm(2.0)
+    streak = fbm(1.6, aniso=(0.06, 1.0))
+    c = lerp(col_rgb := np.array([0.36, 0.36, 0.35]), np.array([0.5, 0.49, 0.47]), base)
+    c = c * (1 - 0.25 * smooth(0.45, 0.85, streak)[..., None])
+    slab = smooth(10, 0, np.minimum(cy, rowh - 1 - cy))
+    c = c * (1 - 0.25 * slab[..., None])
+    c = np.where(win[..., None], np.array([0.03, 0.03, 0.035]), c)
+    c = np.where(boarded[..., None], np.array([0.22, 0.17, 0.12]), c)
+    c = lerp(c, np.array([0.05, 0.05, 0.055]), missing_wall * 0.85)
+    h = base * 0.3 - win * 2.0 - missing_wall * 1.5 + slab * 0.4
+    save("ruin_facade", c, h, 3.0)
+
+
 if __name__ == "__main__":
     ground_dirt()
     concrete_slab()
@@ -335,3 +359,4 @@ if __name__ == "__main__":
     storm_clouds()
     rain_streak()
     smoke_puff()
+    ruin_facade()

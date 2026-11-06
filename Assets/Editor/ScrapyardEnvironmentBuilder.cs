@@ -24,8 +24,9 @@ namespace Afterrust.EditorTools
             Material slab = MaterialKit.Lit("M_ConcreteSlab", "concrete_slab", 4f, 0.18f, 0f);
             Material sheet = MaterialKit.Lit("M_CorrugatedRust", "corrugated_rust", 2f, 0.3f, 0.35f);
             Material steel = MaterialKit.Lit("M_RustySteel", "rusty_steel", 2f, 0.25f, 0.5f);
+            // Ground runs to the horizon (400 m) so the distant ruins stand on it; 5 m per texture tile.
             Material groundLarge = MaterialKit.Lit("M_GroundDirt_Large", "ground_dirt", 0f, 0.08f, 0f,
-                null, new Vector2(13f, 13f));
+                null, new Vector2(80f, 80f));
 
             GameObject floorPrefab = SavePrefab("Floor_Concrete_4x4",
                 MeshKit.Box("Floor_4x4", new Vector3(4f, 0.2f, 4f), new Vector3(0f, -0.1f, 0f)), slab,
@@ -72,6 +73,12 @@ namespace Afterrust.EditorTools
             }
 
             Transform ground = ScavengerWalkSetup.FindInScene("Industrial Ground");
+            if (ground != null)
+            {
+                Undo.RecordObject(ground, "Ground size");
+                ground.position = new Vector3(0f, -0.5f, 0f);
+                ground.localScale = new Vector3(400f, 1f, 400f);
+            }
             if (ground != null && ground.TryGetComponent(out Renderer r))
             {
                 Undo.RecordObject(r, "Ground material");

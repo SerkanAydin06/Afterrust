@@ -9,6 +9,7 @@ namespace Afterrust.EditorTools
     /// Procedural meshes with UVs in meters (material tiling = 1 / texture world size),
     /// saved once as assets under Assets/Arts/Environment/Meshes and reused by name.
     /// Winding follows Unity's rule: Cross(B - A, C - A) points along the face normal.
+    /// Pass name = null to get an unsaved temporary mesh.
     /// </summary>
     internal static class MeshKit
     {
@@ -191,10 +192,29 @@ namespace Afterrust.EditorTools
             }
         }
 
+        /// <summary>Saves (or overwrites in place) a mesh built elsewhere, e.g. a combined mesh.</summary>
+        internal static Mesh SaveAsset(string name, Mesh mesh)
+        {
+            mesh.name = name;
+            if (!AssetDatabase.IsValidFolder(MeshDir)) AssetDatabase.CreateFolder("Assets/Arts/Environment", "Meshes");
+            string path = MeshDir + "/" + name + ".asset";
+            Mesh existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (existing == null)
+            {
+                AssetDatabase.CreateAsset(mesh, path);
+                return mesh;
+            }
+            EditorUtility.CopySerialized(mesh, existing);
+            existing.name = name;
+            EditorUtility.SetDirty(existing);
+            Object.DestroyImmediate(mesh);
+            return existing;
+        }
+
         private static Mesh Save(string name, List<Vector3> v, List<Vector3> n, List<Vector2> uv, List<int> t,
             bool tangents = true)
         {
-            Mesh mesh = new Mesh { name = name };
+            Mesh mesh = new Mesh { name = name ?? "Temp" };
             if (v.Count > 65000) mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             mesh.SetVertices(v);
             mesh.SetNormals(n);
@@ -203,6 +223,7 @@ namespace Afterrust.EditorTools
             mesh.RecalculateBounds();
             if (tangents) mesh.RecalculateTangents();
 
+            if (name == null) return mesh;   // unsaved temp mesh (e.g. for CombineMeshes)
             if (!AssetDatabase.IsValidFolder(MeshDir)) AssetDatabase.CreateFolder("Assets/Arts/Environment", "Meshes");
             string path = MeshDir + "/" + name + ".asset";
             Mesh existing = AssetDatabase.LoadAssetAtPath<Mesh>(path);
@@ -220,3 +241,4 @@ namespace Afterrust.EditorTools
     }
 }
 #endif
+

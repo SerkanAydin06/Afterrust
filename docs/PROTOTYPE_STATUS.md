@@ -18,7 +18,8 @@ Distopik hayatta kalma (bkz. `DECISIONS.md`, `GAME_DESIGN.md` v2.0): yaşamsal i
 - Duvar birleşimlerindeki titreme (üst üste binen aynı düzlemli yüzeyler) giderildi: duvarlar artık birbirine yalnız değiyor.
 - Sığınak: tamir atölyesi yerine kapısı açılıp kapanan sığınak (yatak, masa, soba); motor dışarıda hurda köşesinde, tüccar tenteli takas tezgâhında.
 - Isı ve enerji değerleri; soba (odun/kömür, ısıtma, duman, pişirme: kaynat, ısıt, kömür yap); yatakta uyku (gece sabaha kadar, gündüz şekerleme, sonra otomatik kayıt); odun yığını ve palet yığını.
-- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 5).
+- Ufuk: sise gömülen yıkık şehir siluetleri, elektrik direkleri, su kulesi; zemin ufka kadar. Lamba ışığı duvardan sızmıyor. Hurdacı artık tüccar; diğer iki karakter kaldırıldı.
+- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 6).
 
 ## Test
 - EditMode: `SalvageRulesTests`, `SurvivalRulesTests`, `SaveAndWorldTests`, `FireAndSleepTests` (Window > General > Test Runner). Bu ortamda Unity yok; testler henüz çalıştırılmadı.
