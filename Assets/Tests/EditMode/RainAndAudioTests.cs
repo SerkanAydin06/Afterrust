@@ -10,7 +10,7 @@ namespace Afterrust.Tests
         {
             float justAboveRoof = DayNightWeather.LifetimeToSurface(10f, 22f, 9.81f * 0.3f, 1.1f);
             float nearRoof = DayNightWeather.LifetimeToSurface(2f, 22f, 9.81f * 0.3f, 1.1f);
-            float ground = DayNightWeather.LifetimeToSurface(25f, 22f, 9.81f * 0.3f, 1.1f);
+            float ground = DayNightWeather.LifetimeToSurface(32f, 22f, 9.81f * 0.3f, 1.1f);
 
             Assert.Greater(justAboveRoof, 0.35f);
             Assert.Less(justAboveRoof, 0.5f);
