@@ -41,6 +41,11 @@ namespace Afterrust
         private float rainBlend;          // 0 dry .. 1 full rain (smoothed)
         private float flash;              // lightning brightness 0..1
         private float nextLightning;
+        private float rainParticleCarry;
+        private const float DropSpeed = 22f;
+        private const float DropGravity = 9.81f * 0.3f;
+        private const float MaxDropLifetime = 1.1f;
+        private const float RainHalfExtent = 18f;
 
         public bool IsRaining => raining;
         public float Darkness { get; private set; }
@@ -71,6 +76,21 @@ namespace Afterrust
             if (lightning != null) lightning.intensity = 0f;
             rainBlend = raining ? 1f : 0f;
             nextLightning = Time.time + Random.Range(lightningSeconds.x, lightningSeconds.y);
+
+            // The former box emitter + low-quality particle collision passed through
+            // thin roofs. Emit manually; raycast the vertical fall column once per
+            // droplet and end its life just above the first solid surface.
+            if (rain != null)
+            {
+                ParticleSystem.EmissionModule emission = rain.emission;
+                emission.rateOverTime = 0f;
+                ParticleSystem.ShapeModule shape = rain.shape;
+                shape.enabled = false;
+                ParticleSystem.CollisionModule collision = rain.collision;
+                collision.enabled = false;
+                ParticleSystem.MainModule rainMain = rain.main;
+                rainMain.simulationSpace = ParticleSystemSimulationSpace.World;
+            }
         }
 
         private void OnDestroy()
@@ -145,6 +165,64 @@ namespace Afterrust
             rainBlend = raining ? 1f : 0f;
         }
 
+        /// <summary>
+        /// Project each falling column against world colliders before emitting.
+        /// Rain still remains visible OUTSIDE windows/doorways while the player is
+        /// indoors; only drops below a solid roof are culled.
+        /// A bounded per-frame budget prevents lag spikes after long frames.
+        /// </summary>
+        private void EmitRoofAwareRain(float deltaTime)
+        {
+            if (rain == null || deltaTime <= 0f) return;
+            float rate = Mathf.Max(0f, rainRate) * rainBlend * rainBlend;
+            rainParticleCarry = Mathf.Min(150f, rainParticleCarry + rate * deltaTime);
+            int count = Mathf.FloorToInt(rainParticleCarry);
+            rainParticleCarry -= count;
+            if (count <= 0) return;
+
+            Vector3 origin = rain.transform.position;
+            const float maxFallDistance = DropSpeed * MaxDropLifetime +
+                                          0.5f * DropGravity * MaxDropLifetime * MaxDropLifetime;
+
+            for (int i = 0; i < count; i++)
+            {
+                Vector3 spawn = origin + new Vector3(
+                    Random.Range(-RainHalfExtent, RainHalfExtent),
+                    0f,
+                    Random.Range(-RainHalfExtent, RainHalfExtent));
+
+                float lifetime = MaxDropLifetime;
+                if (Physics.Raycast(spawn, Vector3.down, out RaycastHit hit,
+                    maxFallDistance + 0.5f, ~0, QueryTriggerInteraction.Ignore))
+                {
+                    // Stop before the collider, so particles never draw beneath ceilings.
+                    lifetime = LifetimeToSurface(hit.distance, DropSpeed, DropGravity, MaxDropLifetime);
+                    if (lifetime <= 0f) continue;
+                }
+
+                ParticleSystem.EmitParams particle = new ParticleSystem.EmitParams
+                {
+                    position = spawn,
+                    startLifetime = lifetime
+                };
+                rain.Emit(particle, 1);
+            }
+        }
+
+        /// <summary>
+        /// Solves d = v*t + 0.5*g*t². Keep 25cm clearance to prevent rendered
+        /// stretched streaks clipping through roofs at low frame rates.
+        /// </summary>
+        public static float LifetimeToSurface(float distance, float fallSpeed, float gravity, float maximumLife)
+        {
+            float clearance = distance - 0.25f;
+            if (clearance <= 0f || maximumLife <= 0f || fallSpeed <= 0f) return 0f;
+            float t = gravity > 0.0001f
+                ? (Mathf.Sqrt(fallSpeed * fallSpeed + 2f * gravity * clearance) - fallSpeed) / gravity
+                : clearance / fallSpeed;
+            return Mathf.Min(maximumLife, Mathf.Max(0f, t));
+        }
+
         private void Apply()
         {
             // Sun elevation: 0 deg at 06:00, 90 at 12:00, 180 at 18:00.
@@ -196,11 +274,7 @@ namespace Afterrust
                 m.mainTextureOffset += new Vector2(0.004f + i * 0.002f, 0.0015f) * Time.deltaTime * Mathf.Lerp(1f, 2.2f, rainBlend);
             }
 
-            if (rain != null)
-            {
-                ParticleSystem.EmissionModule em = rain.emission;
-                em.rateOverTime = rainRate * rainBlend * rainBlend;
-            }
+            EmitRoofAwareRain(Time.deltaTime);
             if (lightning != null) lightning.intensity = flash * 2.2f;
 
             bool lampsOn = Darkness > 0.55f;
