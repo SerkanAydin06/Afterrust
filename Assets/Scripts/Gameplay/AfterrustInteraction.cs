@@ -5,7 +5,7 @@ namespace Afterrust
 {
     /// <summary>
     /// Looks at IInteractable objects (loot, salvage, workbench, water, trader) and handles
-    /// E (press or hold), F (buy at trader), quick-use keys and Tab. Drawing is done by SurvivalHud.
+    /// E (press or hold), quick-use keys and Tab. Trader and storage panels are drawn by SurvivalHud.
     /// </summary>
     public sealed class AfterrustInteraction : MonoBehaviour
     {
@@ -68,12 +68,6 @@ namespace Afterrust
                 Target = hit.collider.GetComponentInParent<IInteractable>();
             }
             if (Target != null) Prompt = Target.GetPrompt(this);
-
-            if (Target is AfterrustTrader trader && kb.fKey.wasPressedThisFrame)
-            {
-                Notify(trader.BuyWireCutter(inventory));
-                audio?.PlayInteraction();
-            }
 
             if (Target == null || Target != holdTarget) ResetHold();
             if (Target == null) return;
