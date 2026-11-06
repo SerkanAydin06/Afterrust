@@ -105,12 +105,14 @@ namespace Afterrust
             float delta = 0f;
             foreach (Ingredient i in r.inputs)
             {
+                // Inventory.TryRemove removes matching units from the END of the list.
+                // Use the same order; salvage of the same type can have different weights.
                 int left = i.count;
-                foreach (AfterrustInventory.ItemStack s in inv.items)
+                for (int j = inv.items.Count - 1; j >= 0 && left > 0; j--)
                 {
-                    if (left == 0) break;
-                    if (s.id != i.id) continue;
-                    delta -= s.massKg;
+                    AfterrustInventory.ItemStack item = inv.items[j];
+                    if (item.id != i.id) continue;
+                    delta -= item.massKg;
                     left--;
                 }
             }
@@ -121,18 +123,31 @@ namespace Afterrust
 
         public static bool CanCraft(Recipe r, AfterrustInventory inv)
         {
-            return inv != null && IsAvailable(r, inv) && HasIngredients(r, inv) &&
+            return inv != null && r != null && (r.outputItem == null || ItemDatabase.Get(r.outputItem) != null) &&
+                   IsAvailable(r, inv) && HasIngredients(r, inv) &&
                    inv.CurrentMassKg + MassDelta(r, inv) <= inv.capacityKg + 0.0001f;
         }
 
         public static string Craft(Recipe r, AfterrustInventory inv)
         {
             if (inv == null) return "Envanter yok.";
+            if (r == null || (r.outputItem != null && ItemDatabase.Get(r.outputItem) == null))
+                return "Tarif hatalı.";
             if (!IsAvailable(r, inv)) return r.name + " zaten var.";
             if (!HasIngredients(r, inv)) return "Malzeme eksik: " + Describe(r, inv);
             if (!CanCraft(r, inv)) return "Çanta dolu.";
             foreach (Ingredient i in r.inputs) inv.TryRemove(i.id, i.count);
-            if (r.outputItem != null) inv.TryAddItem(r.outputItem, r.outputCount);
+            if (r.outputItem != null)
+            {
+                int added = inv.TryAddItem(r.outputItem, r.outputCount);
+                if (added != r.outputCount)
+                {
+                    // Defensive fallback if a future inventory rule rejects the output.
+                    inv.TryRemove(r.outputItem, added);
+                    foreach (Ingredient i in r.inputs) inv.TryAddItem(i.id, i.count);
+                    return "Üretim tamamlanamadı; malzemeler geri verildi.";
+                }
+            }
             r.onCrafted?.Invoke(inv);
             return r.name + " üretildi.";
         }
