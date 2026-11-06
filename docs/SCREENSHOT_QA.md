@@ -6,7 +6,7 @@ Unity Editor'da Play başlayınca `Assets/Resources/qa_screenshot_plan.json` yü
 `QA/Screenshots/latest/` içindeki PNG'ler ve `manifest.json` yeni Play'de yeniden oluşturulur; yalnızca bu klasördeki eski PNG'ler ve manifest silinir. Plan şu an **11** açı içerir: eski sığınak/avlu karelerine ek olarak v7 giriş rotası, yardım büfesi ve kimyasal konteyner/tehlike alanı.
 
 ## Önemli: GitHub'a gönderilen görsellerin güncelliği
-1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v10 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
+1 Kasım 2026 tarihli manifest, eski prototipin yedi açısını gösteriyor; yeni v11 kodunun çıktıları değildir. Yeni Unity Play çalıştırılana kadar bunları güncel sahnenin kanıtı olarak kullanmayın. Otomatik sistem dosyaları **yerelde üretir**, GitHub'a kendiliğinden push etmez.
 
 ## Yeni kamera noktaları
 `Assets/Resources/qa_screenshot_plan.json` dosyasındaki `views` dizisini düzenle:
@@ -44,3 +44,9 @@ Görüntünün doğru yeri gösterdiğini Play içinde kontrol et. Her yeni sahn
 - Yağmurdayken su yüzeyi çok yavaş yükselmeli. İlerleme hızını geliştirme testi için bir EditMode testi de denetler (tam dolum: 15 dakika aktif yağış).
 - Varilin üstünden bakıldığında boş iç metal dibi, doldukça su yüzeyi görünmelidir. İsteğe bağlı dış seviye çizgisi de suyla beraber yükselir.
 - `F5` ile örneğin %20 doluyken kaydedip `F9` ile yükleyerek doluluğun aynen geri geldiğini kontrol et.
+
+## v11: Gece kaydından bağımsız QA gündüz çekimi
+- 6 Kasım 2026 tarihli Unity v10 PNG'leri karanlık gece koşullarında üretildiği için tasarım kontrolüne yeterli değil; özellikle tüccar ve varil tamamen karanlık.
+- Planın `captureAtFixedDaytime=true`, `captureHour=11` alanları QA çekimini sabah/öğle aydınlığına sabitler. Çekim bitince gerçek oyun saati, hava ve yağış zamanlayıcısı geri yüklenir.
+- `manifest.json` yeni çekimde `capturedGameHour`, `capturedRain`, `lightingMode` bilgilerini içerir.
+- Gece görsel kontrolü ayrıca Play'de yapılmalı; gündüz QA gece karanlığını test etmez. Eski PNG'ler, Play ve commit edilene kadar eski gece görüntüleridir.
