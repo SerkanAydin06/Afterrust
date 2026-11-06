@@ -30,13 +30,13 @@ namespace Afterrust
         }
 
         [Serializable]
-        [Serializable]
         public sealed class StorageState
         {
             public string id;
             public List<AfterrustInventory.ItemStack> items = new List<AfterrustInventory.ItemStack>();
         }
 
+        [Serializable]
         public sealed class DoorState { public string id; public bool open; }
 
         [Serializable]
