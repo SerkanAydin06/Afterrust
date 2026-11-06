@@ -47,7 +47,8 @@ jobs:
           assert json.loads(Path("Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef").read_text())["name"] == "Afterrust.EditModeTests"
           assert "m_Name: Player" in Path("Assets/Scenes/AfterrustPrototype.unity").read_text()
           scene_sync = Path("Assets/Editor/AfterrustSceneSync.cs").read_text()
-          assert "private const int Latest = 13" in scene_sync
+          assert "private const int Latest = 15" in scene_sync
+          assert "ShelterInteriorMaterialPass.Apply" in scene_sync
           assert "ShelterStorageBuilder.EnsureStorage" in scene_sync
           assert "ScrapyardEnvironmentBuilder.RemoveSafeZoneSign" in scene_sync
           assert "ShelterBuilder.EnsureTraderNightLight" in scene_sync
@@ -158,7 +159,24 @@ jobs:
           assert "trader.BuyWireCutter" not in interaction
           assert 'Tüccar — E: hurda sat' not in trader_source
           assert len(plan["views"]) == 14
-          print("V14 safe-yard deliberate trading, atomic purchases and 14-view QA structure validated.")
+          visual = Path("Assets/Editor/ShelterInteriorMaterialPass.cs")
+          assert visual.is_file() and Path(str(visual) + ".meta").is_file()
+          visual_source = visual.read_text()
+          assert "private static Palette CreatePalette()" in visual_source
+          assert "M_V15_Interior_DustySlab" in visual_source
+          assert "M_V15_Interior_WarmCinder" in visual_source
+          assert "M_V15_Interior_ColdCinder" in visual_source
+          assert "M_V15_Interior_DarkReclaimedWood" in visual_source
+          assert "M_V15_Interior_BlackenedStove" in visual_source
+          assert "GetComponentsInChildren<MeshRenderer>" in visual_source
+          assert "AssetDatabase.SaveAssets()" in visual_source
+          assert "ShelterInteriorMaterialPass.Apply();" in shelter
+          assert "BuildShell(" not in visual_source and "DestroyImmediate(" not in visual_source
+          live_plan = Path("docs/DEVELOPMENT_PLAN.md")
+          assert live_plan.is_file() and "AR-1501" in live_plan.read_text()
+          assert "AR-1502" in live_plan.read_text() and "AR-1601" in live_plan.read_text()
+          assert "docs/DEVELOPMENT_PLAN.md" in Path("AGENTS.md").read_text()
+          print("V15 interior-only shared material palette and living plan structure validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:
