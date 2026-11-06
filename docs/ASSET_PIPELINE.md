@@ -25,3 +25,8 @@
 - Golden Hour (varsayılan): alçak sıcak güneş, prosedürel gökyüzü, üç tonlu ortam ışığı, tozlu sis; Overcast alternatifi `ScrapyardAtmosphereSetup.ApplyOvercast` ile.
 - Post Processing v2: ACES HDR renk, bloom, MSVO AO, vignette, hafif gren. Linear renk uzayı, MSAA 4x.
 - Önizlemeler (Blender, yaklaşık): `QA/Environment/`.
+
+## Hava ve gün-gece (sahne sürümü 3)
+- `World Environment` (`DayNightWeather`): güneş/ay, prosedürel gökyüzü (çalışırken kopyası), iki bulut katmanı (`storm_clouds.png`, 55 m ve 85 m; sis onları silmesin diye alçak), oyuncuyu izleyen yağmur parçacıkları (dünyayla çarpışır, çatı altında yağmaz), şimşek ışığı, karanlıkta lambalar.
+- Ayarlar Inspector'da: gün uzunluğu, kuru/yağmurlu süre aralıkları, şimşek aralığı, yağmur yoğunluğu.
+- Kalıcı kural: modüler parçalar **birbirine değer, üst üste binmez**. Aynı yöne bakan çakışık yüzeyler z-fighting (titreme) yapar; parçalar arasında en az 1–1,5 cm boşluk ya da açık bir iç içe geçme olmalı.

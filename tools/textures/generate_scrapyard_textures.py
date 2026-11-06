@@ -283,6 +283,31 @@ def shop_sign():
     print("saved shop_sign")
 
 
+def storm_clouds():
+    """1024 RGBA tileable cloud layer: dense dark storm clouds with thinner gaps (alpha)."""
+    big = fbm(3.4)
+    mid = fbm(2.8)
+    density = np.clip(0.65 * big + 0.35 * mid, 0, 1)
+    density = (density - density.min()) / (density.max() - density.min())
+    alpha = 0.55 + 0.45 * smooth(0.2, 0.6, density)          # overcast: never fully clear
+    shade = 0.5 + 0.5 * (1 - smooth(0.3, 0.95, density))      # thick parts darker
+    rgb = np.stack([shade * 0.96, shade * 0.98, shade], -1)
+    img = np.concatenate([np.clip(rgb, 0, 1), alpha[..., None]], -1)
+    Image.fromarray((img * 255).astype(np.uint8), "RGBA").save(f"{OUT}/storm_clouds.png", optimize=True)
+    print("saved storm_clouds")
+
+
+def rain_streak():
+    """16x128 soft vertical streak for stretched rain particles."""
+    y, x = np.mgrid[0:128, 0:16]
+    across = np.exp(-((x - 7.5) / 2.2) ** 2)
+    along = np.sin(np.clip(y / 127.0, 0, 1) * np.pi) ** 0.6
+    a = across * along
+    img = np.stack([np.full_like(a, 0.85), np.full_like(a, 0.88), np.ones_like(a), a], -1)
+    Image.fromarray((img * 255).astype(np.uint8), "RGBA").save(f"{OUT}/rain_streak.png")
+    print("saved rain_streak")
+
+
 if __name__ == "__main__":
     ground_dirt()
     concrete_slab()
@@ -296,3 +321,5 @@ if __name__ == "__main__":
     pegboard()
     cast_metal()
     shop_sign()
+    storm_clouds()
+    rain_streak()

@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 2;
+        private const int Latest = 3;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -71,6 +71,15 @@ namespace Afterrust.EditorTools
             if (current < 2)
             {
                 Step("Survival systems (vitals, HUD, loot, workbench, rain barrel)", SurvivalSetup.Apply);
+            }
+
+            if (current < 3)
+            {
+                // Rebuild yard and shop without overlapping (flickering) faces, then re-wire survival.
+                Step("Yard and fence (no overlaps)", ScrapyardEnvironmentBuilder.Build);
+                Step("Repair shop (no overlaps)", RepairShopBuilder.Build);
+                Step("Survival systems", SurvivalSetup.Apply);
+                Step("Day/night, storm weather, rain, flashlight, save system", WeatherSetup.Apply);
             }
 
             if (!allStepsSucceeded)

@@ -49,6 +49,29 @@ namespace Afterrust
             else if (!uiMode) SetCursorLocked(true);
         }
 
+        /// <summary>Camera pitch in degrees (for save/load).</summary>
+        public float Pitch
+        {
+            get => pitch;
+            set
+            {
+                pitch = Mathf.Clamp(value, -85f, 85f);
+                if (viewCamera != null) viewCamera.transform.localEulerAngles = new Vector3(pitch, 0f, 0f);
+            }
+        }
+
+        /// <summary>Moves the player (CharacterController must be disabled while teleporting).</summary>
+        public void Teleport(Vector3 position, float yaw)
+        {
+            if (controller == null) controller = GetComponent<CharacterController>();
+            bool was = controller.enabled;
+            controller.enabled = false;
+            transform.SetPositionAndRotation(position, Quaternion.Euler(0f, yaw, 0f));
+            controller.enabled = was;
+            planarVelocity = Vector3.zero;
+            verticalSpeed = 0f;
+        }
+
         /// <summary>UI panels/death screen: free cursor, no movement input or look.</summary>
         public void SetUiMode(bool on)
         {

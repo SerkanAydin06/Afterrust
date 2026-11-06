@@ -16,15 +16,27 @@ namespace Afterrust
 
         public float HoldSeconds => 0.6f;
 
+        public int Units { get { Refill(); return units; } }
+
+        public void Restore(int savedUnits)
+        {
+            units = Mathf.Clamp(savedUnits, 0, maxUnits);
+            nextRefill = Time.time + refillSeconds;
+        }
+
+        /// <summary>Rain fills the barrel four times faster.</summary>
+        private float RefillSeconds =>
+            DayNightWeather.Instance != null && DayNightWeather.Instance.IsRaining ? refillSeconds * 0.25f : refillSeconds;
+
         private void Refill()
         {
             if (units < 0) units = maxUnits;
             while (units < maxUnits && Time.time >= nextRefill)
             {
                 units++;
-                nextRefill += refillSeconds;
+                nextRefill += RefillSeconds;
             }
-            if (units >= maxUnits) nextRefill = Time.time + refillSeconds;
+            if (units >= maxUnits) nextRefill = Time.time + RefillSeconds;
         }
 
         public string GetPrompt(AfterrustInteraction player)
@@ -40,7 +52,7 @@ namespace Afterrust
             if (units <= 0) return displayName + " boş.";
             if (player == null || player.inventory == null || player.inventory.TryAddItem(itemId) == 0)
                 return "Çanta dolu.";
-            if (units == maxUnits) nextRefill = Time.time + refillSeconds;
+            if (units == maxUnits) nextRefill = Time.time + RefillSeconds;
             units--;
             return "Kirli Su dolduruldu. Süzmeden içmek riskli.";
         }
