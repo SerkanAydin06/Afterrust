@@ -107,5 +107,41 @@ namespace Afterrust.Tests
                 Object.DestroyImmediate(go);
             }
         }
+
+        [Test]
+        public void SaveJson_RejectsCorruptionAndOldFormats()
+        {
+            SaveSystem.SaveData expected = new SaveSystem.SaveData
+            {
+                health = 77f, warmth = 45f, energy = 80f
+            };
+            string json = JsonUtility.ToJson(expected);
+            Assert.IsTrue(SaveSystem.TryParseSaveJson(json, out SaveSystem.SaveData parsed));
+            Assert.AreEqual(77f, parsed.health, 0.01f);
+            Assert.IsFalse(SaveSystem.TryParseSaveJson("{invalid JSON", out _));
+            Assert.IsFalse(SaveSystem.TryParseSaveJson("{\\"version\\":1}", out _));
+            Assert.IsFalse(SaveSystem.TryParseSaveJson("", out _));
+        }
+
+        [Test]
+        public void SaveJson_RecoversFromBackupWhenPrimaryIsCorrupt()
+        {
+            string folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "afterrust-test-" + System.Guid.NewGuid().ToString("N"));
+            System.IO.Directory.CreateDirectory(folder);
+            string primary = System.IO.Path.Combine(folder, "save.json");
+            string backup = primary + ".bak";
+            try
+            {
+                System.IO.File.WriteAllText(primary, "{invalid");
+                System.IO.File.WriteAllText(backup, JsonUtility.ToJson(new SaveSystem.SaveData { health = 64f }));
+                Assert.IsTrue(SaveSystem.TryReadSave(primary, backup, out SaveSystem.SaveData data));
+                Assert.AreEqual(64f, data.health, 0.01f);
+            }
+            finally
+            {
+                System.IO.Directory.Delete(folder, true);
+            }
+        }
+
     }
 }
