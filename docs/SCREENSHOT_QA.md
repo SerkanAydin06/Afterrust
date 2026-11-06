@@ -60,3 +60,8 @@ Görüntünün doğru yeri gösterdiğini Play içinde kontrol et. Her yeni sahn
 - `14_shelter_storage` açısı sığınağın sağ tarafına yerleştirilen sandığı, kapı geçiş açıklığını ve sandık kapağını göstermelidir.
 - Otomatik sistem **14 açı** çeker. Diğer bütün kareler olduğu gibi eski PNG'ler silinir ve yeni kareler yerlerine yazılır.
 - Depo UI'sı IMGUI ile çizildiğinden Camera.Render QA PNG'lerinde görünmez; Play/Game içinde `E` ile açıp **Koy**, **Al**, dolu kapasite ve F5/F9 kaydını manuel kontrol et.
+
+## v14: Tüccar ekranını Game penceresinde doğrula
+- Güncel `manifest.json` 14 Unity görüntüsü içerir; Play sırasında sabit gündüz koşulunda üretildiler. Bu, yeni `v14` ticaret panelinin çalıştığının kanıtı **değildir**.
+- Ticaret ekranı ve FPS sayacı IMGUI ile çizildiği için kamera tabanlı QA PNG'lerine girmez. Gerçek oyun **Game** penceresinden `E` ile açılıp iki sütun, tekli satış, satın alma ve Esc/E kapatma kontrol edilmeli.
+- Bu aşamada yeni otomatik kamera açısı eklenmedi: tüccarın fiziksel modeli değişmedi, mevcut `04_trade_stall` ve `07_scavenger_trader` açıları kullanılabilir.
