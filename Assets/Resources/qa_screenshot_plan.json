@@ -123,6 +123,51 @@
                 "z": 0
             },
             "fieldOfView": 75
+        },
+        {
+            "id": "09_first_expedition",
+            "description": "V7: checkpoint approach from the south gate, two searchable structures",
+            "position": {
+                "x": -2,
+                "y": 6.3,
+                "z": -25
+            },
+            "rotation": {
+                "x": 24,
+                "y": 169,
+                "z": 0
+            },
+            "fieldOfView": 75
+        },
+        {
+            "id": "10_relief_kiosk",
+            "description": "V7: enterable roadside relief kiosk, cabinet and food supplies",
+            "position": {
+                "x": -11,
+                "y": 1.85,
+                "z": -31
+            },
+            "rotation": {
+                "x": 6,
+                "y": 180,
+                "z": 0
+            },
+            "fieldOfView": 72
+        },
+        {
+            "id": "11_toxic_depot",
+            "description": "V7: visible chemical spill and scavengable cargo container",
+            "position": {
+                "x": 9,
+                "y": 6.5,
+                "z": -33.5
+            },
+            "rotation": {
+                "x": 28,
+                "y": 180,
+                "z": 0
+            },
+            "fieldOfView": 78
         }
     ]
 }
