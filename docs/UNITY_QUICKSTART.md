@@ -19,7 +19,7 @@
 - **WASD** hareket; fareyle bak; **Shift** koş; **Space** zıpla.
 - **E** etkileşim; yağmalanabilir kapta basılı tut.
 - **Tab** envanter; **1** ye, **2** iç, **3** bandaj; **L** fener.
-- **F** tüccarda kablo kesici satın al; **F5** kaydet, **F9** yükle.
+- Tüccara bakıp **E** ile ticaret ekranını aç; **Sat** ile tek hurda sat, **Al** ile ihtiyaç malzemesi/kablo kesici satın al; **F5** kaydet, **F9** yükle.
 - **Esc** paneli kapat; ölüm ekranında **R** son kayıttan devam, **N** yeni oyun.
 
 ## Bilinen sınırlar
@@ -27,3 +27,11 @@
 - GitHub'daki eski sahne / eski QA fotoğrafları yeni kodun Unity'de çalıştığını kanıtlamaz.
 - Prototip bir avlu ve sığınak etrafında; kesintisiz açık dünya, düşman AI, nihai UI ve kapsamlı ses sistemi henüz tamamlanmadı.
 - Kayıtlar `Application.persistentDataPath/afterrust_save.json` dosyasında tutulur; tamamlanmış önceki kayıt `.bak` olarak korunur.
+
+## Tüccar alışveriş testi (v14)
+1. Avluda tüccar tezgâhına bakıp **E** bas: satış yapılmadan ticaret paneli açılmalı.
+2. Çantada en az iki hurda varsa **Sat**: tek hurda çıkarılmalı, karşılığında o eşyanın değeri kadar kredi gelmeli. Yiyecek, su ve bez aynen kalmalı.
+3. Kredin varsa **Al** ile temiz su veya bandaj satın al. Kredi tam fiyatı kadar düşmeli ve yalnızca 1 eşya çantaya girmeli.
+4. Çanta doluyken satın almaya çalış: eşya ve kredi değişmemeli.
+5. Kablo kesici bir kez satın alınabilmeli; ikinci kez satın alma butonu pasif olmalı.
+6. **E/Esc** ile paneli kapat; FPS göstergesi sağ üstte devam etmeli. F5/F9 ile alım/satımın saklandığını kontrol et.
