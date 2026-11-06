@@ -72,3 +72,10 @@ Görüntünün doğru yeri gösterdiğini Play içinde kontrol et. Her yeni sahn
 - `14_shelter_storage`: sandık ahşabı/metal şeritler; kapı geçişi, collider ve yakın duvarla fiziksel örtüşme kontrolü.
 - Yeni yüzeyler mevcut `concrete_*`, `wood_planks`, `rusty_steel`, `cast_metal`, `pegboard` texture/normal setleriyle üretilir. Dış avlu yüzeyleri değişmemeli; FPS ve draw call bilgisi gerçek Unity testinden gelmeli.
 - Mevcut üç QA açısı yeniden kullanıldı; kamera sayısı 14 olarak korunuyor. Yerel Play ve GitHub push olmadan görsellerin güncellendiği varsayılmaz.
+
+## v15.2 — sığınak ışık geçişi (sahne 16)
+- Oyun Play'de **gece**: sarkıt lamba yatak/depo/orta alanı okunur tutmalı, tezgâh ayrı sıcak ışık almalı, dışarı ışık sızmamalı.
+- Soba ateşlendiğinde sağ arka köşe sıcak görünmeli; söndürülünce kapaktaki parlama ve ışık kaybolmalı, siyah metal kaplama kalmalı.
+- **Gündüz**: iki iç lamba normal gün/gece döngüsüyle kapanmalı, dış avlunun ve tüccarın ışığı etkilenmemeli.
+- `02_shelter_interior`, `08_stove_and_bed`, `14_shelter_storage` mevcut açılar yeniden kullanılır. Otomatik QA sadece **11:00 gündüz** çektiği için gece testi ayrıca doğrudan Unity Play/Game penceresinde yapılmalı.
+- FPS/ms değerlerini iç/dış, gündüz/gece, soba açık/kapalı durumlarında karşılaştır. GitHub CI sayısal FPS sonucu üretemez.
