@@ -61,7 +61,7 @@ namespace Afterrust
             source.playOnAwake = false;
             source.loop = loop;
             source.spatialBlend = 0f;
-            source.volume = 0f;
+            source.volume = loop ? 0f : 1f;
             return source;
         }
 
