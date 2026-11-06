@@ -25,7 +25,7 @@ jobs:
           set -euo pipefail
           python3 -m json.tool Packages/manifest.json >/dev/null
           grep -q '6000.3.' ProjectSettings/ProjectVersion.txt
-          test -s Assets/Editor/AfterrustFirstSceneBuilder.cs
+          test -s Assets/Editor/ShelterBuilder.cs
           test -s Assets/Scripts/Player/AfterrustFirstPersonController.cs
           test -s Assets/Scripts/Gameplay/SalvageablePart.cs
           test -s Assets/Scripts/Gameplay/AfterrustInteraction.cs
