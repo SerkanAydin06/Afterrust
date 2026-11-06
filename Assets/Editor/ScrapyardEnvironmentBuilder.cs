@@ -148,7 +148,7 @@ namespace Afterrust.EditorTools
             label.transform.localPosition = new Vector3(0f, 2.87f, 0.093f);
             label.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
             TextMesh text = label.AddComponent<TextMesh>();
-            text.text = "GUVENLI BOLGE";
+            text.text = "GÜVENLİ BÖLGE";
             text.fontSize = 42;
             text.characterSize = 0.27f;
             text.anchor = TextAnchor.MiddleCenter;
