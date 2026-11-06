@@ -113,7 +113,6 @@ namespace Afterrust.EditorTools
 
             Material gateSheet = MaterialKit.Lit("M_SafeGate_CorrugatedRust", "corrugated_rust", 2f, 0.22f, 0.35f);
             Material frame = MaterialKit.Lit("M_SafeGate_SteelFrame", "rusty_steel", 2f, 0.24f, 0.55f);
-            Material paint = MaterialKit.Plain("M_SafeGate_SignPaint", new Color(0.14f, 0.21f, 0.18f), 0.17f, 0.25f);
             Material caution = MaterialKit.Plain("M_SafeGate_Caution", new Color(0.85f, 0.63f, 0.23f), 0.25f, 0.2f);
 
             GameObject root = new GameObject("South Safe Zone Gate");
@@ -140,46 +139,32 @@ namespace Afterrust.EditorTools
             // Crossbar is flush with the tops of the existing 2.7 m gateposts.
             GateBox(root.transform, "Gate Lintel", frame,
                 new Vector3(0f, 2.59f, 0f), new Vector3(8.06f, 0.18f, 0.18f), true);
-            GateBox(root.transform, "Entrance Name Plate", paint,
-                new Vector3(0f, 2.87f, 0.03f), new Vector3(3.55f, 0.43f, 0.07f), true);
-
-            GameObject label = new GameObject("Safe Zone Name");
-            label.transform.SetParent(root.transform, false);
-            label.transform.localPosition = new Vector3(0f, 2.87f, 0.093f);
-            label.transform.localEulerAngles = new Vector3(0f, 180f, 0f);
-            TextMesh text = label.AddComponent<TextMesh>();
-            text.text = "GÜVENLİ BÖLGE";
-            text.fontSize = 42;
-            text.characterSize = 0.095f;
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.color = new Color(0.95f, 0.89f, 0.68f);
 
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
         /// <summary>
-        /// Existing v10 scenes already contain the gate. Resize its oversized
-        /// lettering to fit the 3.55 m sign plate without rebuilding the gate
-        /// or resetting its saved open/closed state.
+        /// Remove only the decorative sign board and lettering from existing gates.
+        /// The gate root, hinges, colliders, lintel and saved open state stay intact.
+        /// Safe to run repeatedly after a scene refresh.
         /// </summary>
-        public static void CorrectSafeZoneSign()
+        public static void RemoveSafeZoneSign()
         {
             Transform yard = ScavengerWalkSetup.FindInScene(SceneRootName);
             Transform gate = yard != null ? yard.Find("South Safe Zone Gate") : null;
-            Transform label = gate != null ? gate.Find("Safe Zone Name") : null;
-            TextMesh text = label != null ? label.GetComponent<TextMesh>() : null;
-            if (text == null)
-                throw new System.InvalidOperationException("Safe-zone gate text mesh missing.");
-            Undo.RecordObject(text, "Resize safe-zone sign text");
-            Undo.RecordObject(label, "Position safe-zone sign text");
-            text.text = "GÜVENLİ BÖLGE";
-            text.characterSize = 0.095f;
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            label.localPosition = new Vector3(0f, 2.87f, 0.093f);
-            EditorUtility.SetDirty(text);
-            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            if (gate == null)
+                throw new System.InvalidOperationException("South safe-zone gate missing; cannot clean up sign.");
+
+            bool removed = false;
+            foreach (string name in new[] { "Safe Zone Name", "Entrance Name Plate" })
+            {
+                Transform child = gate.Find(name);
+                if (child == null) continue;
+                Undo.DestroyObjectImmediate(child.gameObject);
+                removed = true;
+            }
+
+            if (removed) EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
         private static void AddGateLeaf(Transform hinge, string name, Material sheet,
