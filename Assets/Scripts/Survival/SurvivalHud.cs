@@ -16,7 +16,7 @@ namespace Afterrust
         public SurvivorVitals vitals;
         public AfterrustFirstPersonController controller;
 
-        private enum Panel { None, Inventory, Crafting }
+        private enum Panel { None, Inventory, Crafting, Storage }
         private Panel panel = Panel.None;
         private Vector2 scroll;
         private int openedFrame = -1;
@@ -25,6 +25,9 @@ namespace Afterrust
         private SleepSystem sleep;
         private AfterrustAudio audio;
         private FirstExpeditionGuide expedition;
+        private ShelterStorage activeStorage;
+        private Vector2 storageBackpackScroll;
+        private Vector2 storageChestScroll;
 
         // Unscaled frame-time sampling: the number stays meaningful when the
         // survival day/night system or any gameplay time scale changes.
@@ -58,6 +61,13 @@ namespace Afterrust
         public void ToggleInventory() { SetPanel(panel == Panel.Inventory ? Panel.None : Panel.Inventory); }
         public void OpenCrafting() { OpenStation(CraftStation.Workbench, null); }
 
+        public void OpenStorage(ShelterStorage storage)
+        {
+            if (storage == null) return;
+            activeStorage = storage;
+            SetPanel(Panel.Storage);
+        }
+
         public void OpenStation(CraftStation station, Stove stove)
         {
             this.station = station;
@@ -69,6 +79,8 @@ namespace Afterrust
         {
             panel = p;
             scroll = Vector2.zero;
+            storageBackpackScroll = Vector2.zero;
+            storageChestScroll = Vector2.zero;
             openedFrame = Time.frameCount;
             if (controller != null) controller.SetUiMode(p != Panel.None);
         }
@@ -108,7 +120,7 @@ namespace Afterrust
                 return;
             }
             if (panel != Panel.None && (kb.escapeKey.wasPressedThisFrame ||
-                (panel == Panel.Crafting && kb.eKey.wasPressedThisFrame)))
+                ((panel == Panel.Crafting || panel == Panel.Storage) && kb.eKey.wasPressedThisFrame)))
                 SetPanel(Panel.None);
         }
 
@@ -256,6 +268,7 @@ namespace Afterrust
 
             if (panel == Panel.Inventory) DrawInventory(sw, sh);
             else if (panel == Panel.Crafting) DrawCrafting(sw, sh);
+            else if (panel == Panel.Storage) DrawStorage(sw, sh);
         }
 
         private Rect PanelRect(float sw, float sh, string heading, string hint)
@@ -294,6 +307,77 @@ namespace Afterrust
                     GUI.Button(new Rect(content.width - 100f, y + 4f, 90f, 24f), def.category == ItemCategory.Drink ? "İç" :
                         def.category == ItemCategory.Food ? "Ye" : "Kullan", button))
                     interaction?.Notify(inventory.Consume(g.id, vitals));
+            }
+            GUI.EndScrollView();
+        }
+
+        /// <summary>
+        /// Two lists, one item transferred per click. The storage component owns
+        /// weight checks and copies; the HUD never mutates item lists directly.
+        /// </summary>
+        private void DrawStorage(float sw, float sh)
+        {
+            Rect r = PanelRect(sw, sh, "Kişisel Depo", "E / Esc kapat   •   Tek seferde bir eşya taşınır");
+            if (inventory == null || activeStorage == null) return;
+
+            float halfWidth = (r.width - 60f) * 0.5f;
+            float columnY = r.y + 94f;
+            float viewHeight = r.height - 147f;
+            float leftX = r.x + 20f;
+            float rightX = r.x + 40f + halfWidth;
+
+            GUI.Label(new Rect(leftX, r.y + 49f, halfWidth, 23f),
+                "Çanta  " + inventory.CurrentMassKg.ToString("0.0") + " / " +
+                inventory.capacityKg.ToString("0") + " kg", label);
+            GUI.Label(new Rect(rightX, r.y + 49f, halfWidth, 23f),
+                "Depo  " + activeStorage.CurrentMassKg.ToString("0.0") + " / " +
+                activeStorage.capacityKg.ToString("0") + " kg", label);
+
+            List<AfterrustInventory.Group> backpack = inventory.Grouped();
+            List<AfterrustInventory.Group> stored = activeStorage.Grouped();
+
+            DrawStorageColumn(
+                new Rect(leftX, columnY, halfWidth, viewHeight),
+                backpack, ref storageBackpackScroll, "Koy", true);
+            DrawStorageColumn(
+                new Rect(rightX, columnY, halfWidth, viewHeight),
+                stored, ref storageChestScroll, "Al", false);
+        }
+
+        private void DrawStorageColumn(Rect view, List<AfterrustInventory.Group> groups,
+            ref Vector2 position, string verb, bool storing)
+        {
+            float contentWidth = view.width - 18f;
+            float rowHeight = 48f;
+            Rect content = new Rect(0f, 0f, contentWidth,
+                Mathf.Max(view.height, groups.Count * rowHeight + 6f));
+            position = GUI.BeginScrollView(view, position, content);
+
+            if (groups.Count == 0)
+                GUI.Label(new Rect(8f, 8f, contentWidth - 16f, 24f),
+                    storing ? "Çanta boş." : "Depo boş.", labelSmall);
+
+            for (int i = 0; i < groups.Count; i++)
+            {
+                AfterrustInventory.Group group = groups[i];
+                float y = i * rowHeight;
+                if (i % 2 == 0)
+                    Fill(new Rect(0f, y, contentWidth, rowHeight - 2f),
+                        new Color(1f, 1f, 1f, 0.055f));
+
+                GUI.Label(new Rect(8f, y + 3f, contentWidth - 76f, 23f),
+                    group.displayName + " ×" + group.count, labelSmall);
+                GUI.Label(new Rect(8f, y + 24f, contentWidth - 76f, 19f),
+                    group.massKg.ToString("0.0") + " kg", labelSmall);
+
+                if (GUI.Button(new Rect(contentWidth - 67f, y + 10f, 62f, 28f), verb, button))
+                {
+                    string outcome = storing
+                        ? activeStorage.StoreOne(inventory, group.id)
+                        : activeStorage.TakeOne(inventory, group.id);
+                    interaction?.Notify(outcome);
+                    audio?.PlayInteraction();
+                }
             }
             GUI.EndScrollView();
         }
