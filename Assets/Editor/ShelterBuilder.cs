@@ -52,6 +52,9 @@ namespace Afterrust.EditorTools
             BuildExterior(Group(root, "Yard Props"));
             RestyleSalvageParts();
             RestyleTrader();
+            // Keep the same interactive storage in both fresh scene builds and
+            // incremental v13 upgrades; never create a duplicate chest.
+            ShelterStorageBuilder.EnsureStorage();
 
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
