@@ -176,7 +176,7 @@ namespace Afterrust
             }
 
             // Compact first-excursion objective, no full-screen tutorial interruption.
-            if (expedition != null && sw >= 820f)
+            if (expedition != null && expedition.isActiveAndEnabled && sw >= 820f)
             {
                 Rect objective = new Rect(sw * 0.5f - 250f, 14f, 500f, 30f);
                 Fill(objective, new Color(0f, 0f, 0f, 0.45f));

@@ -3,12 +3,13 @@
 1. GitHub'dan `SerkanAydin06/Afterrust` deposunu klonla veya güncelle.
 2. Unity Hub'da klasörü aç ve **6000.3.27f2** editörünü kullan (`ProjectSettings/ProjectVersion.txt`).
 3. Paketler ve C# derlemesi bitince `Assets/Scenes/AfterrustPrototype.unity` sahnesini aç.
-4. `AfterrustSceneSync` sahne sürümünü kontrol eder ve eksik yapım adımlarını otomatik uygular (mevcut hedef v8). Console'da **`[Afterrust] Scene updated to version 8 and saved.`** mesajını gör. Hata görürsen önce düzelt; sahne güncellenmeden Play engellenir.
+4. `AfterrustSceneSync` sahne sürümünü kontrol eder ve eksik yapım adımlarını otomatik uygular (mevcut hedef v9). Console'da **`[Afterrust] Scene updated to version 9 and saved.`** mesajını gör. Hata görürsen önce düzelt; sahne güncellenmeden Play engellenir.
 5. Play aç ve ana sistemleri doğrula: hareket, yağma, açlık/susuzluk, sığınak kapısı, tezgâh, soba, uyku, gece/yağmur, F5/F9 kayıt ve yükleme.
 6. `Window > General > Test Runner > EditMode` içindeki testleri çalıştır. Testlerin varlığı, çalıştırıldıklarını veya geçtiklerini tek başına kanıtlamaz.
-7. Sağanak sırasında sığınağa gir: kapalı çatının altında damla görünmemeli, kapıdan bakıldığında dışarıdaki yağmur sürmelidir. Tüccar tentesini de kontrol et. Rüzgâr/yağmur sesinde tekrar/kesinti dinle.
-8. Güney kapısından avluyu terk et, yardım büfesini veya konteyneri ara, kimyasal sızıntıya yaklaşmadan sığınağa dön. Adım/yağmur/rüzgâr ve üretim seslerini kontrol et.
-9. `QA/Screenshots/latest/` altında **bu sahne sürümüne ait** PNG'lerin üretildiğini kontrol et. Gerekli sahne, mesh, prefab, .meta ve QA değişikliklerini GitHub'a commit/push et.
+7. Güvenli bölgenin güney çitindeki iki kanatlı metal kapının kapalı başladığını kontrol et. Bir kanada bakıp **E** ile her iki kanadı birlikte açıp kapat; F5 ile açık halde kaydet, F9 ile yükleyip durumu kontrol et. Tüccar tentesinin dört direğe oturduğunu ve yatay desteklerini incele. Adım sesinin diğer sesleri bastırmadığını doğrula.
+8. Sağanak sırasında sığınağa gir: kapalı çatının altında damla görünmemeli, kapıdan bakıldığında dışarıdaki yağmur sürmelidir. Tüccar tentesini de kontrol et. Rüzgâr/yağmur sesinde tekrar/kesinti dinle.
+9. Güney kapısından avluyu terk et, yardım büfesini veya konteyneri ara, kimyasal sızıntıya yaklaşmadan sığınağa dön. Adım/yağmur/rüzgâr ve üretim seslerini kontrol et.
+10. `QA/Screenshots/latest/` altında **bu sahne sürümüne ait** PNG'lerin üretildiğini kontrol et. Gerekli sahne, mesh, prefab, .meta ve QA değişikliklerini GitHub'a commit/push et.
 
 ## Kontroller
 - **WASD** hareket; fareyle bak; **Shift** koş; **Space** zıpla.

@@ -47,7 +47,10 @@ jobs:
           assert json.loads(Path("Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef").read_text())["name"] == "Afterrust.EditModeTests"
           assert "m_Name: Player" in Path("Assets/Scenes/AfterrustPrototype.unity").read_text()
           scene_sync = Path("Assets/Editor/AfterrustSceneSync.cs").read_text()
-          assert "private const int Latest = 8" in scene_sync
+          assert "private const int Latest = 9" in scene_sync
+          assert "ScrapyardEnvironmentBuilder.EnsureSafeZoneGate" in scene_sync
+          assert "ShelterBuilder.AlignTradeStallRoof" in scene_sync
+          assert "FirstExpeditionBuilder.PauseExpedition" in scene_sync
           assert "ShelterBuilder.EnsureRainColliders" in scene_sync
           assert "FirstExpeditionBuilder.Build" in scene_sync
           assert "FirstExpeditionBuilder.EnableAudio" in scene_sync
@@ -76,7 +79,22 @@ jobs:
           assert "ContinuousAmbientNoise" in audio and "GenerateAmbient" in audio
           assert Path("Assets/Tests/EditMode/RainAndAudioTests.cs").is_file()
           assert Path("Assets/Tests/EditMode/RainAndAudioTests.cs.meta").is_file()
-          print("V8 roof-occluded rain and continuous audio structure validated.")
+          gate_source = Path("Assets/Scripts/World/SafeZoneGate.cs")
+          assert gate_source.is_file()
+          assert "GetPrompt" in gate_source.read_text() and "SetOpen" in gate_source.read_text()
+          assert Path(str(gate_source) + ".meta").is_file()
+          gate_tests = Path("Assets/Tests/EditMode/SafeZoneGateTests.cs")
+          assert gate_tests.is_file() and Path(str(gate_tests) + ".meta").is_file()
+          yard = Path("Assets/Editor/ScrapyardEnvironmentBuilder.cs").read_text()
+          assert "EnsureSafeZoneGate" in yard and "AddGateLeaf" in yard
+          shelter = Path("Assets/Editor/ShelterBuilder.cs").read_text()
+          assert "AlignTradeStallRoof" in shelter and "EnsureTradeStallSupports" in shelter
+          save = Path("Assets/Scripts/Survival/SaveSystem.cs").read_text()
+          assert "foreach (SafeZoneGate gate" in save
+          assert "footstepsVolume = 0.10f" in audio
+          assert "12_safe_zone_gate" in {view["id"] for view in plan["views"]}
+          assert len(plan["views"]) == 12
+          print("V9 safe-yard gate, trader roof and footstep mix structure validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:

@@ -142,6 +142,18 @@ namespace Afterrust.EditorTools
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
+        /// <summary>Temporarily focus the tutorial on the safe starting yard.</summary>
+        public static void PauseExpedition()
+        {
+            FirstExpeditionGuide guide = Object.FindFirstObjectByType<FirstExpeditionGuide>(FindObjectsInactive.Include);
+            if (guide != null)
+            {
+                guide.enabled = false;
+                EditorUtility.SetDirty(guide);
+                EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+            }
+        }
+
         private static Transform Group(Transform parent, string name)
         {
             GameObject go = new GameObject(name);

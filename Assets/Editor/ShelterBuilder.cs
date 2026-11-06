@@ -326,9 +326,53 @@ namespace Afterrust.EditorTools
             foreach (float z in new[] { -1.0f, 1.0f })
                 Part(p, "Stall Post", BoxB(0.08f, 2.4f, 0.08f), steel, new Vector3(x, 0f, z));
             Mesh roofSheet = MeshKit.Corrugated("Corrugated_Roof_4_3x2_4", 4.3f, 2.4f, 56, 0.018f, 0f);
-            Part(p, "Stall Roof", roofSheet, sheet, new Vector3(0f, 2.42f, 1.2f), new Vector3(-85f, 0f, 0f), false);
-            AddRainBarrier(p, "Trade Stall Weather Barrier", new Vector3(0f, 2.42f, 1.2f),
-                new Vector3(5f, 0f, 0f), new Vector3(4.3f, 0.12f, 2.4f));
+            // The old -85 degree pitch left the rear of the canopy ~20 cm above
+            // the 2.4 m posts. A level roof touches both rows of supports.
+            Part(p, "Stall Roof", roofSheet, sheet, new Vector3(0f, 2.42f, 1.2f),
+                new Vector3(-90f, 0f, 0f), false);
+            EnsureTradeStallSupports(p);
+            AddRainBarrier(p, "Trade Stall Weather Barrier", new Vector3(0f, 2.42f, 0f),
+                Vector3.zero, new Vector3(4.4f, 0.12f, 2.5f));
+        }
+
+        /// <summary>
+        /// Fixes a visual and physical mismatch in previously generated trade stalls.
+        /// Changes only the roof transform, weather collider and two supporting crossbeams;
+        /// trader/NPC positions, shelter props and saved inventory remain unchanged.
+        /// </summary>
+        public static void AlignTradeStallRoof()
+        {
+            Transform shelter = ScavengerWalkSetup.FindInScene(RootName);
+            Transform stall = shelter != null ? shelter.Find("Trade Stall") : null;
+            if (stall == null)
+                throw new System.InvalidOperationException("Trade Stall was not found under Shelter.");
+
+            Transform roof = stall.Find("Stall Roof");
+            if (roof == null)
+                throw new System.InvalidOperationException("Stall Roof mesh is missing.");
+            roof.localPosition = new Vector3(0f, 2.42f, 1.2f);
+            roof.localEulerAngles = new Vector3(-90f, 0f, 0f);
+            EnsureTradeStallSupports(stall);
+            AddRainBarrier(stall, "Trade Stall Weather Barrier",
+                new Vector3(0f, 2.42f, 0f), Vector3.zero,
+                new Vector3(4.4f, 0.12f, 2.5f));
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+
+        private static void EnsureTradeStallSupports(Transform stall)
+        {
+            // Migration runs after script reload; static material fields may be unset.
+            Material supportSteel = steel != null ? steel :
+                MaterialKit.Lit("M_RustySteel", "rusty_steel", 2f, 0.25f, 0.5f);
+            // Horizontal beams meet the four post caps at y=2.4 m. Keep
+            // their names stable for repeated scene migration.
+            foreach (float z in new[] { -1f, 1f })
+            {
+                string name = z < 0f ? "Rear Canopy Support" : "Front Canopy Support";
+                if (stall.Find(name) != null) continue;
+                Part(stall, name, BoxC(4.05f, 0.11f, 0.13f), supportSteel,
+                    new Vector3(0f, 2.34f, z), Vector3.zero, false);
+            }
         }
 
         /// <summary>
@@ -349,8 +393,8 @@ namespace Afterrust.EditorTools
                 new Vector3(Mathf.Atan2(RoofDrop, Depth) * Mathf.Rad2Deg, 0f, 0f),
                 new Vector3(8.7f, 0.12f, 6.4f));
             AddRainBarrier(stall, "Trade Stall Weather Barrier",
-                new Vector3(0f, 2.42f, 1.2f), new Vector3(5f, 0f, 0f),
-                new Vector3(4.3f, 0.12f, 2.4f));
+                new Vector3(0f, 2.42f, 0f), Vector3.zero,
+                new Vector3(4.4f, 0.12f, 2.5f));
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 

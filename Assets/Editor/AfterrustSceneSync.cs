@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 8;
+        private const int Latest = 9;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -132,6 +132,18 @@ namespace Afterrust.EditorTools
                 // Existing v7 roofs are visual-only; add collision without rebuilding
                 // loot, door, stove or any persistent gameplay hierarchy.
                 Step("Weatherproof shelter and trade stall roofs", ShelterBuilder.EnsureRainColliders);
+            }
+
+            if (current < 9)
+            {
+                // Work on the sheltered starting yard first. Do NOT rebuild the whole
+                // fence or shelter here: old saves rely on the existing hierarchy.
+                Step("Close south safe-zone perimeter with an interactive double gate",
+                    ScrapyardEnvironmentBuilder.EnsureSafeZoneGate);
+                Step("Align trader canopy with all four support posts",
+                    ShelterBuilder.AlignTradeStallRoof);
+                Step("Pause outside-expedition objective while the safe yard is refined",
+                    FirstExpeditionBuilder.PauseExpedition);
             }
 
             if (!allStepsSucceeded)

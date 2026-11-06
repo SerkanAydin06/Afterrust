@@ -15,6 +15,9 @@ namespace Afterrust
         [Range(0f, 1f)] public float masterVolume = 0.65f;
         [Range(0f, 1f)] public float ambienceVolume = 0.18f;
         [Range(0f, 1f)] public float effectsVolume = 0.32f;
+        [Header("Footsteps")]
+        [Tooltip("Independent footstep mix. Default is intentionally quiet so footsteps never mask weather or interactions.")]
+        [Range(0f, 0.5f)] public float footstepsVolume = 0.10f;
 
         [Header("Optional replacement clips")]
         public AudioClip windClip;
@@ -119,7 +122,7 @@ namespace Afterrust
             {
                 AudioClip step = footstepVariations[Random.Range(0, footstepVariations.Length)];
                 effects.pitch = (running ? 1.08f : 0.92f) * Random.Range(0.94f, 1.06f);
-                effects.PlayOneShot(step, masterVolume * effectsVolume *
+                effects.PlayOneShot(step, masterVolume * effectsVolume * footstepsVolume *
                     (running ? 0.7f : 0.48f) * Random.Range(0.9f, 1.08f));
             }
         }
