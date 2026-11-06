@@ -1,9 +1,9 @@
 {
-    "capturedAtUtc": "2026-11-06T17:24:36.9459970Z",
+    "capturedAtUtc": "2026-11-06T17:42:13.4607786Z",
     "unityVersion": "6000.3.27f2",
     "scene": "AfterrustPrototype",
     "planAsset": "Assets/Resources/qa_screenshot_plan.json",
-    "imageCount": 8,
+    "imageCount": 11,
     "images": [
         {
             "file": "01_spawn_shelter_front.png",
@@ -114,6 +114,48 @@
             "rotation": {
                 "x": 9.0,
                 "y": 120.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "09_first_expedition.png",
+            "description": "V7: checkpoint approach from the south gate, two searchable structures",
+            "position": {
+                "x": -2.0,
+                "y": 6.300000190734863,
+                "z": -25.0
+            },
+            "rotation": {
+                "x": 24.0,
+                "y": 169.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "10_relief_kiosk.png",
+            "description": "V7: enterable roadside relief kiosk, cabinet and food supplies",
+            "position": {
+                "x": -11.0,
+                "y": 1.850000023841858,
+                "z": -31.0
+            },
+            "rotation": {
+                "x": 6.0,
+                "y": 180.0,
+                "z": 0.0
+            }
+        },
+        {
+            "file": "11_toxic_depot.png",
+            "description": "V7: visible chemical spill and scavengable cargo container",
+            "position": {
+                "x": 9.0,
+                "y": 6.5,
+                "z": -33.5
+            },
+            "rotation": {
+                "x": 28.0,
+                "y": 180.0,
                 "z": 0.0
             }
         }
