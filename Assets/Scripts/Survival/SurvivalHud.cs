@@ -16,7 +16,7 @@ namespace Afterrust
         public SurvivorVitals vitals;
         public AfterrustFirstPersonController controller;
 
-        private enum Panel { None, Inventory, Crafting, Storage }
+        private enum Panel { None, Inventory, Crafting, Storage, Trader }
         private Panel panel = Panel.None;
         private Vector2 scroll;
         private int openedFrame = -1;
@@ -26,6 +26,8 @@ namespace Afterrust
         private AfterrustAudio audio;
         private FirstExpeditionGuide expedition;
         private ShelterStorage activeStorage;
+        private AfterrustTrader activeTrader;
+        private Vector2 traderSaleScroll;
         private Vector2 storageBackpackScroll;
         private Vector2 storageChestScroll;
 
@@ -61,6 +63,13 @@ namespace Afterrust
         public void ToggleInventory() { SetPanel(panel == Panel.Inventory ? Panel.None : Panel.Inventory); }
         public void OpenCrafting() { OpenStation(CraftStation.Workbench, null); }
 
+        public void OpenTrader(AfterrustTrader trader)
+        {
+            if (trader == null) return;
+            activeTrader = trader;
+            SetPanel(Panel.Trader);
+        }
+
         public void OpenStorage(ShelterStorage storage)
         {
             if (storage == null) return;
@@ -81,6 +90,7 @@ namespace Afterrust
             scroll = Vector2.zero;
             storageBackpackScroll = Vector2.zero;
             storageChestScroll = Vector2.zero;
+            traderSaleScroll = Vector2.zero;
             openedFrame = Time.frameCount;
             if (controller != null) controller.SetUiMode(p != Panel.None);
         }
@@ -120,7 +130,8 @@ namespace Afterrust
                 return;
             }
             if (panel != Panel.None && (kb.escapeKey.wasPressedThisFrame ||
-                ((panel == Panel.Crafting || panel == Panel.Storage) && kb.eKey.wasPressedThisFrame)))
+                ((panel == Panel.Crafting || panel == Panel.Storage ||
+                  panel == Panel.Trader) && kb.eKey.wasPressedThisFrame)))
                 SetPanel(Panel.None);
         }
 
@@ -269,6 +280,7 @@ namespace Afterrust
             if (panel == Panel.Inventory) DrawInventory(sw, sh);
             else if (panel == Panel.Crafting) DrawCrafting(sw, sh);
             else if (panel == Panel.Storage) DrawStorage(sw, sh);
+            else if (panel == Panel.Trader) DrawTrader(sw, sh);
         }
 
         private Rect PanelRect(float sw, float sh, string heading, string hint)
@@ -380,6 +392,86 @@ namespace Afterrust
                 }
             }
             GUI.EndScrollView();
+        }
+
+        /// <summary>Deliberate trading: sales are one-by-one, no accidental sell-all on E.</summary>
+        private void DrawTrader(float sw, float sh)
+        {
+            Rect r = PanelRect(sw, sh, "Tüccar", "E / Esc kapat   •   Her tıklamada 1 eşya");
+            if (activeTrader == null || inventory == null) return;
+
+            GUI.Label(new Rect(r.x + 20f, r.y + 49f, r.width - 40f, 26f),
+                "Kredi " + inventory.credits + " K     Çanta " +
+                inventory.CurrentMassKg.ToString("0.0") + " / " +
+                inventory.capacityKg.ToString("0") + " kg", label);
+
+            float side = (r.width - 60f) * 0.5f;
+            float leftX = r.x + 20f;
+            float rightX = r.x + 40f + side;
+            float top = r.y + 84f;
+            float height = r.height - 128f;
+
+            GUI.Label(new Rect(leftX, top, side, 22f), "Satılacak hurdalar", label);
+            GUI.Label(new Rect(rightX, top, side, 22f), "Satın al", label);
+            top += 27f;
+            height -= 27f;
+
+            List<AfterrustInventory.Group> salvage = new List<AfterrustInventory.Group>();
+            foreach (AfterrustInventory.Group g in inventory.Grouped())
+                if (ItemDatabase.CategoryOf(g.id) == ItemCategory.Salvage) salvage.Add(g);
+
+            Rect saleView = new Rect(leftX, top, side, height);
+            float contentWidth = side - 18f;
+            Rect saleContent = new Rect(0f, 0f, contentWidth,
+                Mathf.Max(height, salvage.Count * 48f + 6f));
+            traderSaleScroll = GUI.BeginScrollView(saleView, traderSaleScroll, saleContent);
+            if (salvage.Count == 0)
+                GUI.Label(new Rect(8f, 8f, contentWidth - 16f, 48f),
+                    "Çantada satılabilir hurda yok.", labelSmall);
+
+            for (int i = 0; i < salvage.Count; i++)
+            {
+                AfterrustInventory.Group group = salvage[i];
+                float y = i * 48f;
+                if (i % 2 == 0)
+                    Fill(new Rect(0f, y, contentWidth, 46f), new Color(1f, 1f, 1f, 0.055f));
+                AfterrustInventory.ItemStack first = inventory.items.Find(
+                    item => item != null && item.id == group.id);
+                int price = first != null ? first.saleValue : 0;
+                GUI.Label(new Rect(8f, y + 4f, contentWidth - 72f, 22f),
+                    group.displayName + " ×" + group.count, labelSmall);
+                GUI.Label(new Rect(8f, y + 25f, contentWidth - 72f, 20f),
+                    price + " K/adet", labelSmall);
+                if (GUI.Button(new Rect(contentWidth - 67f, y + 10f, 62f, 28f), "Sat", button))
+                {
+                    interaction?.Notify(activeTrader.SellOne(inventory, group.id));
+                    audio?.PlayInteraction();
+                }
+            }
+            GUI.EndScrollView();
+
+            for (int i = 0; i < AfterrustTrader.Offers.Length; i++)
+            {
+                AfterrustTrader.Offer offer = AfterrustTrader.Offers[i];
+                float y = top + i * 48f;
+                if (i % 2 == 0)
+                    Fill(new Rect(rightX, y, side, 46f), new Color(1f, 1f, 1f, 0.055f));
+
+                GUI.Label(new Rect(rightX + 8f, y + 4f, side - 82f, 20f),
+                    offer.name, labelSmall);
+                string detail = offer.id == "wire_cutter" && inventory.hasWireCutter
+                    ? "Sende var"
+                    : offer.price + " K";
+                GUI.Label(new Rect(rightX + 8f, y + 25f, side - 82f, 20f),
+                    detail, labelSmall);
+                GUI.enabled = offer.id != "wire_cutter" || !inventory.hasWireCutter;
+                if (GUI.Button(new Rect(rightX + side - 67f, y + 10f, 62f, 28f), "Al", button))
+                {
+                    interaction?.Notify(activeTrader.Buy(inventory, offer.id));
+                    audio?.PlayInteraction();
+                }
+                GUI.enabled = true;
+            }
         }
 
         private void DrawCrafting(float sw, float sh)
