@@ -1,4 +1,4 @@
-# Afterrust — Prototip Durumu (2026-11-05)
+# Afterrust — Prototip Durumu (2026-11-06)
 
 ## Yön
 Distopik hayatta kalma (bkz. `DECISIONS.md`, `GAME_DESIGN.md` v2.0): yaşamsal ihtiyaçlar → yağma → üretim → gelişim.
@@ -26,3 +26,11 @@ Distopik hayatta kalma (bkz. `DECISIONS.md`, `GAME_DESIGN.md` v2.0): yaşamsal i
 
 ## Sonraki
 Kayıt/yükleme, ses, gün-gece, uyku/sıcaklık, ocak/yemek pişirme, uGUI arayüz ve eşya ikonları, avlu dışı keşif bölgeleri, tehlikeler.
+
+## 6 Kasım — teknik sağlamlaştırma
+- Kayıtlar önce geçici dosyaya yazılır; önceki kayıt `.bak` olarak korunur. Ana kayıt bozuksa yedekten geri okumaya çalışılır; yeni oyun iki dosyayı da temizler.
+- Üretimde farklı kütleli aynı eşya türlerinin ağırlık hesabı ile envanterden çıkarılma sırası eşleştirildi; hatalı tarifler güvenli reddedilir.
+- `AfterrustSceneSync` güncel olmayan sahnede Play'i engeller.
+- QA planı mevcut v6 çevre/sığınak/tüccara göre sekiz kareye güncellendi; mevcut GitHub PNG'leri otomatik olarak güncellenmez.
+- GitHub Actions statik kontrollerine ek doğrulama eklendi. Unity EditMode işi **yalnızca lisans ve UNITY_CI_ENABLED yapılandırılırsa** çalışır.
+- Bu değişiklikler GitHub kod incelemesine dayalıdır; yerel Unity derlemesi ve sahne/screenshot yenilemesi henüz yapılmadı.
