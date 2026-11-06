@@ -7,11 +7,12 @@ Durum: P0 hayatta kalma döngüsü uygulanıyor.
 - [x] Eşya veritabanı, ağırlık tabanlı envanter, tüketme (1 ye, 2 iç, 3 bandaj).
 - [x] Aranabilir kaplar ve ganimet tabloları; yağmur varili.
 - [x] Tezgâhta üretim: bandaj, temiz su, kablo kesici, büyük çanta, geri dönüşüm.
-- [ ] Kayıt/yükleme.
+- [x] Kayıt/yükleme (F5/F9, otomatik kayıt, açılışta devam).
+- [x] Gün-gece döngüsü (24 dk = 1 gün), kasvetli kapalı hava, sağanak ve şimşek, fener.
 - [ ] Ses (adım, arama, üretim, ortam).
 
 ## P1: Derinlik
-- Uyku/yorgunluk, vücut ısısı, hastalık ve yara türleri; gün-gece döngüsü ve hava.
+- Uyku/yorgunluk, vücut ısısı (yağmur ve gece etkisi), hastalık ve yara türleri.
 - Ocak/ateş, yemek pişirme, yağmur toplayıcı, sığınak yükseltmeleri (kapı, depo, yatak).
 - uGUI tabanlı arayüz, eşya ikonları.
 - Meshy ile özgün eşya/kap modelleri.

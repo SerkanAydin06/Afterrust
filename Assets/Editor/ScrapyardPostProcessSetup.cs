@@ -45,6 +45,16 @@ namespace Afterrust.EditorTools
             bloomIntensity = 0.8f, vignette = 0.34f, aoIntensity = 0.75f, grain = 0.18f
         };
 
+        /// <summary>Bleak storm look: cold, desaturated, heavier vignette and grain.</summary>
+        public static readonly Grade Storm = new Grade
+        {
+            name = "Storm",
+            temperature = -9f, tint = 2f, saturation = -32f, contrast = 16f, postExposure = 0.3f,
+            lift = new Color(0.98f, 1f, 1.04f, -0.02f), gamma = new Color(0.99f, 1f, 1.03f, 0f),
+            gain = new Color(0.97f, 1f, 1.03f, 0f),
+            bloomIntensity = 1.1f, vignette = 0.38f, aoIntensity = 0.75f, grain = 0.2f
+        };
+
         public static void Apply(Grade g)
         {
             PostProcessProfile profile = BuildProfile(g);

@@ -12,10 +12,14 @@ Distopik hayatta kalma (bkz. `DECISIONS.md`, `GAME_DESIGN.md` v2.0): yaşamsal i
 - Üretim (tezgâh): bandaj, temiz su, kablo kesici, büyük sırt çantası, alternatör geri dönüşümü.
 - Söküm: akü kıskacı → akü, alternatör kablosu (kablo kesici) → alternatör.
 - Tüccar: yalnız hurda/söküm parçası satın alır; 60 krediye kablo kesici.
-- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 2).
+- Kayıt/yükleme: F5 kaydet, F9 son kayda dön, 3 dakikada bir ve çıkışta otomatik kayıt, açılışta kayıttan devam; ölünce R son kayıt, N yeni oyun. Kaydedilenler: konum, değerler, envanter/aletler, aranmış kaplar, sökülen parçalar, yağmur varili, saat ve hava. Dosya: `Application.persistentDataPath/afterrust_save.json`.
+- Gün-gece: 24 dakikada bir gün, 07:30'da başlar; gece ay ışığı ve çok karanlık, lambalar karanlıkta yanar, L ile fener.
+- Hava: sürekli kapalı ve kasvetli; koyu fırtına bulutları kayar, ara sıra sağanak (çatılara çarpıp kaybolan yağmur), sağanakta şimşek; yağmurda varil 4 kat hızlı dolar. Soğuk "Storm" renk düzenlemesi.
+- Duvar birleşimlerindeki titreme (üst üste binen aynı düzlemli yüzeyler) giderildi: duvarlar artık birbirine yalnız değiyor.
+- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 3).
 
 ## Test
-- EditMode: `SalvageRulesTests`, `SurvivalRulesTests` (Window > General > Test Runner). Bu ortamda Unity yok; testler henüz çalıştırılmadı.
+- EditMode: `SalvageRulesTests`, `SurvivalRulesTests`, `SaveAndWorldTests` (Window > General > Test Runner). Bu ortamda Unity yok; testler henüz çalıştırılmadı.
 
 ## Sonraki
 Kayıt/yükleme, ses, gün-gece, uyku/sıcaklık, ocak/yemek pişirme, uGUI arayüz ve eşya ikonları, avlu dışı keşif bölgeleri, tehlikeler.

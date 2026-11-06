@@ -9,7 +9,7 @@ Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan
 
 **Onaylanan oyun yönü (2026-11-05):** distopik hayatta kalma — yaşamsal ihtiyaçlar → yağma → üretim → gelişim. Söküm malzeme kaynağıdır; ticaret ikincildir. Nihai hedef kesintisiz açık dünya.
 
-**Kontroller:** WASD yürü, Shift koş, Space zıpla, E etkileşim (kapları aramak için basılı tut), F tüccardan alet al, Tab envanter, 1 ye, 2 iç, 3 bandaj, Esc paneli kapat, R öldükten sonra yeniden başla.
+**Kontroller:** WASD yürü, Shift koş, Space zıpla, E etkileşim (kapları aramak için basılı tut), F tüccardan alet al, Tab envanter, 1 ye, 2 iç, 3 bandaj, L fener, F5 kaydet, F9 yükle, Esc paneli kapat; ölünce R son kayıttan devam, N yeni oyun.
 
 ## Dokümantasyon
 - [Karar günlüğü](docs/DECISIONS.md) — kesin ve öneri durumundaki kararlar

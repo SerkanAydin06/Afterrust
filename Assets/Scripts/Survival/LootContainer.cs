@@ -36,6 +36,14 @@ namespace Afterrust
         [SerializeField] private List<string> contents = new List<string>();
 
         public bool IsEmpty => rolled && contents.Count == 0;
+        public bool Rolled => rolled;
+        public List<string> Contents => contents;
+
+        public void Restore(bool wasRolled, List<string> savedContents)
+        {
+            rolled = wasRolled;
+            contents = savedContents != null ? new List<string>(savedContents) : new List<string>();
+        }
         public float HoldSeconds => rolled ? 0f : searchSeconds;
 
         public string GetPrompt(AfterrustInteraction player)

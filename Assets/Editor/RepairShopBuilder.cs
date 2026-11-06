@@ -80,12 +80,15 @@ namespace Afterrust.EditorTools
 
         private static void BuildShell(Transform p)
         {
-            Part(p, "Floor", BoxC(8.5f, 0.15f, 6.25f), slab, new Vector3(0f, -0.045f, 3f));
+            // Floor starts at z = 0 so it never overlaps the forecourt tiles.
+            Part(p, "Floor", BoxC(8.5f, 0.15f, 6.125f), slab, new Vector3(0f, -0.045f, 3.0625f));
             Part(p, "Back Wall", BoxB(8.5f, 3f, 0.25f), block, new Vector3(0f, 0f, 6f));
 
             // Left wall: back half intact, front half broken down with a ragged top.
-            Part(p, "Left Wall Back", BoxB(0.25f, 3f, 3f), block, new Vector3(-4.125f, 0f, 4.5f));
-            Part(p, "Left Wall Front (broken)", BoxB(0.25f, 2.3f, 3f), block, new Vector3(-4.125f, 0f, 1.5f));
+            // Walls only touch, never overlap: coplanar overlapping faces z-fight (flicker).
+            // Side walls run between the front (z <= 0.125) and back (z >= 5.875) walls.
+            Part(p, "Left Wall Back", BoxB(0.25f, 3f, 2.875f), block, new Vector3(-4.125f, 0f, 4.4375f));
+            Part(p, "Left Wall Front (broken)", BoxB(0.25f, 2.3f, 2.875f), block, new Vector3(-4.125f, 0f, 1.5625f));
             Part(p, "Broken Edge A", BoxB(0.25f, 0.45f, 0.6f), block, new Vector3(-4.125f, 2.3f, 2.7f));
             Part(p, "Broken Edge B", BoxB(0.25f, 0.2f, 0.4f), block, new Vector3(-4.125f, 2.3f, 2.2f));
             System.Random rnd = new System.Random(11);
@@ -97,10 +100,10 @@ namespace Afterrust.EditorTools
             }
 
             // Right wall with a broken window boarded up from outside.
-            Part(p, "Right Wall Low", BoxB(0.25f, 1f, 6f), block, new Vector3(4.125f, 0f, 3f));
-            Part(p, "Right Wall High", BoxB(0.25f, 0.8f, 6f), block, new Vector3(4.125f, 2.2f, 3f));
-            Part(p, "Right Wall Pier A", BoxB(0.25f, 1.2f, 2f), block, new Vector3(4.125f, 1f, 1f));
-            Part(p, "Right Wall Pier B", BoxB(0.25f, 1.2f, 2f), block, new Vector3(4.125f, 1f, 5f));
+            Part(p, "Right Wall Low", BoxB(0.25f, 1f, 5.75f), block, new Vector3(4.125f, 0f, 3f));
+            Part(p, "Right Wall High", BoxB(0.25f, 0.8f, 5.75f), block, new Vector3(4.125f, 2.2f, 3f));
+            Part(p, "Right Wall Pier A", BoxB(0.25f, 1.2f, 1.875f), block, new Vector3(4.125f, 1f, 1.0625f));
+            Part(p, "Right Wall Pier B", BoxB(0.25f, 1.2f, 1.875f), block, new Vector3(4.125f, 1f, 4.9375f));
             float[] boardY = { 1.3f, 1.65f, 2.0f };
             float[] boardTilt = { 9f, -6f, 4f };
             for (int i = 0; i < boardY.Length; i++)
@@ -119,7 +122,8 @@ namespace Afterrust.EditorTools
         {
             float[] beamZ = { 0.15f, 3f, 5.85f };
             foreach (float z in beamZ)
-                Part(p, "Beam", BoxC(8.7f, 0.15f, 0.12f), steel, new Vector3(0f, RoofTop(z) - 0.075f, z));
+                // 20 cm deep so every beam clearly sinks into the wall tops (no near-coplanar contact).
+                Part(p, "Beam", BoxC(8.7f, 0.2f, 0.12f), steel, new Vector3(0f, RoofTop(z) - 0.1f, z));
 
             float slope = Mathf.Atan2(RoofDrop, Depth) * Mathf.Rad2Deg;
             Mesh roofSheet = MeshKit.Corrugated("Corrugated_Roof_4_3x2_4", 4.3f, 2.4f, 56, 0.018f, 0f);
@@ -131,7 +135,7 @@ namespace Afterrust.EditorTools
             {
                 if (r == 1 && c == 1) continue; // missing sheet: light falls onto the engine stand
                 float z = rowStart[r];
-                Part(p, "Roof Sheet", roofSheet, sheet, new Vector3(colX[c], RoofTop(z) + 0.02f + r * 0.012f, z),
+                Part(p, "Roof Sheet", roofSheet, sheet, new Vector3(colX[c], RoofTop(z) + 0.02f + r * 0.035f, z),
                     new Vector3(-90f + slope, (float)(rnd.NextDouble() - 0.5) * 2f, (float)(rnd.NextDouble() - 0.5) * 1.5f),
                     false);
             }
@@ -185,13 +189,14 @@ namespace Afterrust.EditorTools
             Part(p, "Box Under Bench B", BoxB(0.45f, 0.25f, 0.35f), cardboard, new Vector3(0.2f, 0.295f, 0.05f), new Vector3(0f, -4f, 0f), false);
 
             // Pegboard with tools on the back wall (inner face z = 5.875).
-            Part(p, "Pegboard", BoxC(2.4f, 1.0f, 0.02f), peg, new Vector3(0f, 1.75f, 0.41f), Vector3.zero, false);
+            // 1.5 cm off the wall; tools hang 2 mm in front of the board.
+            Part(p, "Pegboard", BoxC(2.4f, 1.0f, 0.02f), peg, new Vector3(0f, 1.75f, 0.40f), Vector3.zero, false);
             for (int i = 0; i < 5; i++)
                 Part(p, "Wrench " + i, BoxC(0.03f, 0.2f + i * 0.03f, 0.008f), steel,
-                    new Vector3(-1.0f + i * 0.11f, 1.78f, 0.395f), new Vector3(0f, 0f, 4f - i * 2f), false);
+                    new Vector3(-1.0f + i * 0.11f, 1.78f, 0.384f), new Vector3(0f, 0f, 4f - i * 2f), false);
             Part(p, "Hammer Handle", BoxC(0.03f, 0.3f, 0.03f), wood, new Vector3(-0.25f, 1.68f, 0.385f), Vector3.zero, false);
             Part(p, "Hammer Head", BoxC(0.12f, 0.04f, 0.04f), steel, new Vector3(-0.25f, 1.84f, 0.385f), Vector3.zero, false);
-            Part(p, "Saw", BoxC(0.45f, 0.12f, 0.004f), steel, new Vector3(0.45f, 1.9f, 0.397f), new Vector3(0f, 0f, -3f), false);
+            Part(p, "Saw", BoxC(0.45f, 0.12f, 0.004f), steel, new Vector3(0.45f, 1.9f, 0.386f), new Vector3(0f, 0f, -3f), false);
             for (int i = 0; i < 4; i++)
                 Part(p, "Screwdriver " + i, Cyl(0.012f, 0.1f, 10), i % 2 == 0 ? paintRed : paintYellow,
                     new Vector3(0.2f + i * 0.08f, 1.55f, 0.385f), Vector3.zero, false);

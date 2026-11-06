@@ -22,7 +22,7 @@ namespace Afterrust
         private int openedFrame = -1;
 
         private Texture2D white;
-        private GUIStyle label, labelSmall, labelCenter, title, button, box, prompt;
+        private GUIStyle label, labelSmall, labelCenter, title, button, box, prompt, rightSmall;
         private static readonly Color Ink = new Color(0.92f, 0.9f, 0.84f);
         private static readonly Color Dim = new Color(0.62f, 0.6f, 0.55f);
         private static readonly Color Panel1 = new Color(0.07f, 0.065f, 0.06f, 0.88f);
@@ -59,7 +59,8 @@ namespace Afterrust
             {
                 if (panel != Panel.None) SetPanel(Panel.None);
                 if (controller != null) controller.SetUiMode(true);
-                if (kb.rKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                if (kb.rKey.wasPressedThisFrame) SaveSystem.ReloadFromSave();
+                else if (kb.nKey.wasPressedThisFrame) SaveSystem.NewGame();
                 return;
             }
             if (Time.frameCount == openedFrame) return;   // opened this frame by the same key press
@@ -84,6 +85,7 @@ namespace Afterrust
             labelSmall = new GUIStyle(label) { fontSize = 13 };
             labelSmall.normal.textColor = Dim;
             labelCenter = new GUIStyle(label) { alignment = TextAnchor.MiddleCenter };
+            rightSmall = new GUIStyle(labelSmall) { alignment = TextAnchor.MiddleRight };
             prompt = new GUIStyle(labelCenter) { fontSize = 18, fontStyle = FontStyle.Bold };
             title = new GUIStyle(label) { fontSize = 22, fontStyle = FontStyle.Bold };
             title.normal.textColor = Accent;
@@ -118,7 +120,8 @@ namespace Afterrust
             {
                 Fill(new Rect(0, 0, sw, sh), new Color(0.05f, 0f, 0f, 0.82f));
                 GUI.Label(new Rect(0, sh * 0.4f, sw, 40f), "HAYATTA KALAMADIN", new GUIStyle(title) { alignment = TextAnchor.MiddleCenter, fontSize = 34 });
-                GUI.Label(new Rect(0, sh * 0.4f + 50f, sw, 30f), "Yeniden başlamak için R", labelCenter);
+                GUI.Label(new Rect(0, sh * 0.4f + 50f, sw, 30f),
+                    SaveSystem.HasSave ? "R - Son kayıttan devam    N - Yeni oyun" : "R / N - Yeni oyun", labelCenter);
                 return;
             }
 
@@ -142,9 +145,18 @@ namespace Afterrust
                     " kg    Kredi " + inventory.credits, labelSmall);
             }
 
+            // Clock and weather (top-right)
+            DayNightWeather world = DayNightWeather.Instance;
+            if (world != null)
+            {
+                Fill(new Rect(sw - 214f, 14f, 200f, 30f), new Color(0f, 0f, 0f, 0.35f));
+                GUI.Label(new Rect(sw - 204f, 18f, 190f, 24f), world.ClockText + "   " + world.WeatherText, labelSmall);
+            }
+
             // Quick keys (bottom-right)
-            GUI.Label(new Rect(sw - 330f, sh - 34f, 320f, 24f), "1 Ye   2 İç   3 Bandaj   Tab Envanter",
-                new GUIStyle(labelSmall) { alignment = TextAnchor.MiddleRight });
+            GUI.Label(new Rect(sw - 520f, sh - 34f, 510f, 24f),
+                "1 Ye   2 İç   3 Bandaj   Tab Envanter   L Fener   F5 Kaydet   F9 Yükle",
+                rightSmall);
 
             if (panel == Panel.None)
             {
