@@ -23,6 +23,7 @@ namespace Afterrust
         private CraftStation station = CraftStation.Workbench;
         private Stove stove;
         private SleepSystem sleep;
+        private AfterrustAudio audio;
 
         private Texture2D white;
         private GUIStyle label, labelSmall, labelCenter, title, button, box, prompt, rightSmall;
@@ -42,6 +43,7 @@ namespace Afterrust
             if (vitals == null) vitals = GetComponent<SurvivorVitals>();
             if (controller == null) controller = GetComponent<AfterrustFirstPersonController>();
             sleep = GetComponent<SleepSystem>();
+            audio = GetComponent<AfterrustAudio>();
         }
 
         public void ToggleInventory() { SetPanel(panel == Panel.Inventory ? Panel.None : Panel.Inventory); }
@@ -270,10 +272,16 @@ namespace Afterrust
                     stove.IsLit ? "Ateş yanıyor: " + stove.TimeLeftText + " kaldı" : "Soba sönük. Yakıt ekle:", label);
                 GUI.enabled = inventory.CountOf("wood") > 0;
                 if (GUI.Button(new Rect(r.xMax - 260f, top, 115f, 26f), "Odun (" + inventory.CountOf("wood") + ")", button))
+                {
                     interaction?.Notify(stove.AddFuel(inventory, "wood"));
+                    audio?.PlayCrafting();
+                }
                 GUI.enabled = inventory.CountOf("charcoal") > 0;
                 if (GUI.Button(new Rect(r.xMax - 135f, top, 115f, 26f), "Kömür (" + inventory.CountOf("charcoal") + ")", button))
+                {
                     interaction?.Notify(stove.AddFuel(inventory, "charcoal"));
+                    audio?.PlayCrafting();
+                }
                 GUI.enabled = true;
                 top += 36f;
             }
@@ -295,7 +303,10 @@ namespace Afterrust
                         : Crafting.Describe(rec, inventory), labelSmall);
                 GUI.enabled = can;
                 if (GUI.Button(new Rect(content.width - 100f, y + 17f, 90f, 28f), atStove ? "Pişir" : "Üret", button))
+                {
                     interaction?.Notify(Crafting.Craft(rec, inventory));
+                    audio?.PlayCrafting();
+                }
                 GUI.enabled = true;
             }
             GUI.EndScrollView();
