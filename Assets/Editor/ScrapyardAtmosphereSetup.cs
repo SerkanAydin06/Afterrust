@@ -131,6 +131,9 @@ namespace Afterrust.EditorTools
             }
 
             BuildLamps(p.lampIntensity);
+            // Reapply focused shelter settings after a manual atmosphere-preset
+            // rebuild; otherwise BuildLamps would reset the interior fixtures.
+            ShelterInteriorLightingPass.Apply();
             ScrapyardPostProcessSetup.Apply(p.name == Overcast.name
                 ? ScrapyardPostProcessSetup.Overcast : ScrapyardPostProcessSetup.GoldenHour);
             DynamicGI.UpdateEnvironment();
