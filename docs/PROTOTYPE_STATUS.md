@@ -78,3 +78,11 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - Mevcut `SurvivalHud` sağ üst köşede saat/hava durumunun hemen altında **FPS ve ortalama kare süresi (ms)** gösterir. Gerçek zamanı `Time.unscaledDeltaTime` üzerinden hesaplar; değer yarım saniyede bir güncellenir, varsayılan açık ve her zaman görünür.
 - FPS bilgisi oyun içi IMGUI katmanındadır. Otomatik QA ekran görüntüleri `Camera.Render` ile çekildiğinden FPS/HUD bu PNG'lere yazılmaz. FPS değerini Play/Game penceresinde kontrol et.
 - Yeni v12 değişiklikleri GitHub statik CI ile denetlenir. Unity gerçek çalışması ve FPS ölçümü yerel Play'de değerlendirilmelidir.
+
+## 6 Kasım — güvenli bölge içi kişisel depo (sahne v13)
+- Sığınağın sağ iç duvarına, kapıdan geçişi ve mevcut tezgâh/yatak/sobayı engellemeyen yeni **Kişisel Depo** sandığı eklendi. Sadece bu nesne eklenir; sahne geçişi diğer güvenli bölge nesnelerini yeniden kurmaz.
+- `E` ile açılan iki sütunlu panel: çanta ve depo içeriği ayrı ayrı listelenir; **Koy** ve **Al** butonları her tıklamada 1 eşya taşır. `E`/`Esc` ile kapatılır.
+- Kapasite: **120 kg**, başlangıçta **boş**. Depo kapasitesi ve sırt çantası ağırlık kontrolü eşya aktarımlarını güvenli tutar; eşya kondisyonu, ağırlığı ve satış değeri korunur.
+- F5/F9 ve otomatik kayıt için `SaveSystem.storages` alanı eklendi. Eski v2 kayıtlarında depo bilgisi olmadığında sandık boş başlar; kayıt biçimi sürümü değiştirilmedi.
+- `ShelterStorageTests` taşıma, dolu çanta/depo, kopyalama ve eski kayıt ayrıştırma kontrollerini içerir.
+- 14. QA kamera açısı eklendi: `14_shelter_storage`. Yeni PNG görüntüsü yalnız yerel Unity'de Play çalıştırıldığında oluşur ve GitHub'a ayrıca gönderilmelidir.
