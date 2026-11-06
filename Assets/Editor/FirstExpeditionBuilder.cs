@@ -137,6 +137,8 @@ namespace Afterrust.EditorTools
             }
             if (player.GetComponent<AfterrustAudio>() == null)
                 player.gameObject.AddComponent<AfterrustAudio>();
+            if (player.GetComponent<FirstExpeditionGuide>() == null)
+                player.gameObject.AddComponent<FirstExpeditionGuide>();
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
