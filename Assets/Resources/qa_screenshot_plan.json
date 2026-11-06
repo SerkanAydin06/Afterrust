@@ -21,7 +21,7 @@
         },
         {
             "id": "02_shelter_interior",
-            "description": "Inside the shelter: bed, workbench, shelves, table",
+            "description": "V15 interior PBR QA: wall and floor tones, workbench/shelving material distinction and door clearance",
             "position": {
                 "x": 0.6,
                 "y": 1.7,
@@ -111,7 +111,7 @@
         },
         {
             "id": "08_stove_and_bed",
-            "description": "Survivor shelter: stove, sleeping area and warm fire lighting",
+            "description": "V15 interior PBR QA: bed textile, reused wood, blackened stove and night readability",
             "position": {
                 "x": 0.6,
                 "y": 1.65,
@@ -201,7 +201,7 @@
         },
         {
             "id": "14_shelter_storage",
-            "description": "V13 shelter: new personal storage chest against right interior wall; check walking clearance and lid",
+            "description": "V15 interior PBR QA: chest timber and metal bands, right-side placement and floor/wall material contrast",
             "position": {
                 "x": 0.9,
                 "y": 1.85,
