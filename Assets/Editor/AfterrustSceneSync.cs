@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 13;
+        private const int Latest = 15;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -175,6 +175,14 @@ namespace Afterrust.EditorTools
                 // recreating the shelter, its loot containers, bed or trader.
                 Step("Shelter personal storage chest and interactable",
                     ShelterStorageBuilder.EnsureStorage);
+            }
+
+            if (current < 15)
+            {
+                // AR-1501: leave the saved shelter hierarchy, objects and
+                // colliders untouched. Only replace selected interior materials.
+                Step("V15 shelter interior surface materials",
+                    ShelterInteriorMaterialPass.Apply);
             }
 
             if (!allStepsSucceeded)
