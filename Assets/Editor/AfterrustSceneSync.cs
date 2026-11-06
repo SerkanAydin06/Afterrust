@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 9;
+        private const int Latest = 10;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -144,6 +144,14 @@ namespace Afterrust.EditorTools
                     ShelterBuilder.AlignTradeStallRoof);
                 Step("Pause outside-expedition objective while the safe yard is refined",
                     FirstExpeditionBuilder.PauseExpedition);
+            }
+
+            if (current < 10)
+            {
+                // Keep shelter/loot/save hierarchies intact. Only replace the old
+                // three outdoor oil drums with one empty open-top rain collector.
+                Step("Single open rain collector (rain-only slow filling)",
+                    RainCollectorBuilder.Apply);
             }
 
             if (!allStepsSucceeded)
