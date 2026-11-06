@@ -327,7 +327,7 @@ namespace Afterrust
             foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 if (doors.TryGetValue(PathOf(door.transform), out bool open)) door.SetOpen(open, true);
             foreach (SafeZoneGate gate in FindObjectsByType<SafeZoneGate>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                if (doors.TryGetValue(PathOf(gate.transform), out bool open)) gate.SetOpen(open, true);
+                if (doors.TryGetValue(PathOf(gate.transform), out bool gateOpen)) gate.SetOpen(gateOpen, true);
 
             if (DayNightWeather.Instance != null)
                 DayNightWeather.Instance.Restore(d.timeOfDay, d.day, d.raining, d.weatherTimer);
