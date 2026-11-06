@@ -15,7 +15,7 @@ namespace Afterrust.Tests
                 timeOfDay = 21.5f, day = 3, raining = true
             };
             d.items.Add(new AfterrustInventory.ItemStack { id = "bandage", displayName = "Bandaj", massKg = 0.05f, saleValue = 6, condition = 100 });
-            d.containers.Add(new SaveSystem.ContainerState { id = "Repair Shop/Box#2", rolled = true, contents = new List<string> { "cloth" } });
+            d.containers.Add(new SaveSystem.ContainerState { id = "Shelter/Box#2", rolled = true, contents = new List<string> { "cloth" } });
 
             SaveSystem.SaveData back = JsonUtility.FromJson<SaveSystem.SaveData>(JsonUtility.ToJson(d));
             Assert.AreEqual(SaveSystem.FormatVersion, back.version);
@@ -31,16 +31,16 @@ namespace Afterrust.Tests
         [Test]
         public void PathOf_IsStableAndDistinguishesDuplicates()
         {
-            GameObject root = new GameObject("Repair Shop");
+            GameObject root = new GameObject("Shelter");
             try
             {
                 GameObject a = new GameObject("Box");
                 GameObject b = new GameObject("Box");
                 a.transform.SetParent(root.transform);
                 b.transform.SetParent(root.transform);
-                Assert.AreEqual("Repair Shop/Box#0", SaveSystem.PathOf(a.transform));
-                Assert.AreEqual("Repair Shop/Box#1", SaveSystem.PathOf(b.transform));
-                Assert.AreEqual("Repair Shop", SaveSystem.PathOf(root.transform));
+                Assert.AreEqual("Shelter/Box#0", SaveSystem.PathOf(a.transform));
+                Assert.AreEqual("Shelter/Box#1", SaveSystem.PathOf(b.transform));
+                Assert.AreEqual("Shelter", SaveSystem.PathOf(root.transform));
             }
             finally
             {
@@ -79,6 +79,28 @@ namespace Afterrust.Tests
                 Assert.AreEqual(1, w.day);
                 Assert.IsTrue(w.IsRaining);
                 StringAssert.Contains("01:15", w.ClockText);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+    
+        [Test]
+        public void Door_TogglesAndRestoresInstantly()
+        {
+            GameObject go = new GameObject("Shelter Door");
+            try
+            {
+                Door door = go.AddComponent<Door>();
+                Assert.AreEqual("E - Kapıyı aç", door.GetPrompt(null));
+                door.Interact(null);
+                Assert.IsTrue(door.isOpen);
+                Assert.AreEqual("E - Kapıyı kapat", door.GetPrompt(null));
+                door.SetOpen(true, true);
+                Assert.AreEqual(door.openAngle, door.Angle, 0.001f);
+                door.SetOpen(false, true);
+                Assert.AreEqual(0f, door.Angle, 0.001f);
             }
             finally
             {

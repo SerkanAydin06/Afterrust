@@ -24,6 +24,9 @@ namespace Afterrust
         public sealed class WaterState { public string id; public int units; }
 
         [Serializable]
+        public sealed class DoorState { public string id; public bool open; }
+
+        [Serializable]
         public sealed class SaveData
         {
             public int version = FormatVersion;
@@ -38,6 +41,7 @@ namespace Afterrust
             public List<ContainerState> containers = new List<ContainerState>();
             public List<string> salvaged = new List<string>();
             public List<WaterState> water = new List<WaterState>();
+            public List<DoorState> doors = new List<DoorState>();
             public float timeOfDay;
             public int day;
             public bool raining;
@@ -182,6 +186,8 @@ namespace Afterrust
                 if (p.wasSalvaged) d.salvaged.Add(PathOf(p.transform));
             foreach (WaterSource w in FindObjectsByType<WaterSource>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 d.water.Add(new WaterState { id = PathOf(w.transform), units = w.Units });
+            foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                d.doors.Add(new DoorState { id = PathOf(door.transform), open = door.isOpen });
             DayNightWeather world = DayNightWeather.Instance;
             if (world != null)
             {
@@ -231,6 +237,11 @@ namespace Afterrust
             foreach (WaterState w in d.water) water[w.id] = w.units;
             foreach (WaterSource w in FindObjectsByType<WaterSource>(FindObjectsInactive.Include, FindObjectsSortMode.None))
                 if (water.TryGetValue(PathOf(w.transform), out int units)) w.Restore(units);
+
+            Dictionary<string, bool> doors = new Dictionary<string, bool>();
+            if (d.doors != null) foreach (DoorState ds in d.doors) doors[ds.id] = ds.open;
+            foreach (Door door in FindObjectsByType<Door>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                if (doors.TryGetValue(PathOf(door.transform), out bool open)) door.SetOpen(open, true);
 
             if (DayNightWeather.Instance != null)
                 DayNightWeather.Instance.Restore(d.timeOfDay, d.day, d.raining, d.weatherTimer);

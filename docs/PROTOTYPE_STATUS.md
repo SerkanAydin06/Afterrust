@@ -4,7 +4,7 @@
 Distopik hayatta kalma (bkz. `DECISIONS.md`, `GAME_DESIGN.md` v2.0): yaşamsal ihtiyaçlar → yağma → üretim → gelişim.
 
 ## Oyunda olanlar (kodda; Unity içinde henüz test edilmedi)
-- Sığınak: avlu, çit, harap tamir atölyesi; altın saat ışığı + post-processing.
+- Sığınak: avlu, çit, harap sığınak; altın saat ışığı + post-processing.
 - Yaşamsal değerler: sağlık, açlık (~25 dk), susuzluk (~15 dk), dayanıklılık (koşma/zıplama); açlık/susuzluk sıfırda sağlık düşer, ölüm ekranı, R ile yeniden başlama.
 - Envanter: ağırlık sınırı (35 kg, büyük çanta ile 50 kg), Tab ile envanter, 1 ye / 2 iç / 3 bandaj.
 - Yağma: karton kutular, alet kutusu, sandık, variller, konteynerler (E basılı tut); her kap bir kez rastgele dolar, sığmayanlar içeride kalır.
@@ -16,7 +16,8 @@ Distopik hayatta kalma (bkz. `DECISIONS.md`, `GAME_DESIGN.md` v2.0): yaşamsal i
 - Gün-gece: 24 dakikada bir gün, 07:30'da başlar; gece ay ışığı ve çok karanlık, lambalar karanlıkta yanar, L ile fener.
 - Hava: sürekli kapalı ve kasvetli; koyu fırtına bulutları kayar, ara sıra sağanak (çatılara çarpıp kaybolan yağmur), sağanakta şimşek; yağmurda varil 4 kat hızlı dolar. Soğuk "Storm" renk düzenlemesi.
 - Duvar birleşimlerindeki titreme (üst üste binen aynı düzlemli yüzeyler) giderildi: duvarlar artık birbirine yalnız değiyor.
-- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 3).
+- Sığınak: tamir atölyesi yerine kapısı açılıp kapanan sığınak (yatak, masa, soba); motor dışarıda hurda köşesinde, tüccar tenteli takas tezgâhında.
+- Sahne her Pull sonrası otomatik güncellenir (`AfterrustSceneSync`, sürüm 4).
 
 ## Test
 - EditMode: `SalvageRulesTests`, `SurvivalRulesTests`, `SaveAndWorldTests` (Window > General > Test Runner). Bu ortamda Unity yok; testler henüz çalıştırılmadı.

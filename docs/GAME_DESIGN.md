@@ -1,6 +1,6 @@
 # Afterrust — Oyun Tasarım Belgesi v2.0 (hayatta kalma)
 ## Tanım
-Enerji, tedarik zinciri ve savaş krizleriyle çöken bir dünyada nüfusun büyük kısmı yok olmuştur. Oyuncu, harap bir tamir atölyesine sığınmış tek bir hayatta kalandır. Yaşamak için yiyecek ve su bulmalı, terk edilmiş yerleri yağmalamalı, bulduklarından ihtiyaç duyduğunu üretmeli ve kendini/sığınağını geliştirerek daha tehlikeli bölgelere açılmalıdır.
+Enerji, tedarik zinciri ve savaş krizleriyle çöken bir dünyada nüfusun büyük kısmı yok olmuştur. Oyuncu, harap bir sığınakta yaşayan tek bir hayatta kalandır. Yaşamak için yiyecek ve su bulmalı, terk edilmiş yerleri yağmalamalı, bulduklarından ihtiyaç duyduğunu üretmeli ve kendini/sığınağını geliştirerek daha tehlikeli bölgelere açılmalıdır.
 
 ## Temel ilkeler
 1. **Her şeyin bir bedeli var:** zaman açlık ve susuzluk demektir; koşmak dayanıklılık, taşımak ağırlık ister.
@@ -38,7 +38,7 @@ Yağmur varili kirli su verir (bekleme süresiyle yeniden dolar). Yiyecek yalnı
 Tüccar tezgâhı ikincil: söküm parçaları ve hurda satılır, kredi ile alet alınır. Yiyecek/su satılmaz.
 
 ## Dünya
-Başlangıç: çitle çevrili avlu ve harap tamir atölyesi (sığınak). Sonra çevre bölgeler: Eski Mahalle, Otoyol Mezarlığı, Sanayi, Hastane, Alışveriş Merkezi, Askerî Tesis. Uzun vade: kesintisiz açık dünya.
+Başlangıç: çitle çevrili avlu ve kapısı kilitlenebilir harap sığınak. Sonra çevre bölgeler: Eski Mahalle, Otoyol Mezarlığı, Sanayi, Hastane, Alışveriş Merkezi, Askerî Tesis. Uzun vade: kesintisiz açık dünya.
 
 ## Tehlikeler (sonraki aşamalar)
 Yağmacılar ve diğer hayatta kalanlar, vahşi hayvanlar, çevresel riskler (kimyasal, çökme), hava koşulları ve gece. Kaçış, saklanma ve pazarlık seçenekleri.
