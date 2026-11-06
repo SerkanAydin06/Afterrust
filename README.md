@@ -28,6 +28,7 @@ Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan
 **Marka notu:** Afterrust adının ticari kullanım uygunluğu resmî marka incelemesiyle henüz kesinleşmedi.
 
 ## Unity 6.3 LTS prototip (ilk proje iskeleti)
+- **[Canlı geliştirme planı ve yapılacaklar listesi](docs/DEVELOPMENT_PLAN.md)** — öncelikler ve her sürümün doğrulama durumu
 - [Bilgisayarda açılış adımları](docs/UNITY_QUICKSTART.md)
 - [Otomasyon ve entegrasyon durumları](docs/AI_AUTOMATION_SETUP.md)
 - [Unity teknik kararları](docs/TECH_STACK.md)
@@ -46,3 +47,5 @@ Medeniyet çökmüş, geriye terk edilmiş şehirler ve az sayıda hayatta kalan
 **v13 sığınak deposu:** Sığınağın sağ tarafında tek bir kapaklı sandık bulunur. `E` ile aç, iki sütunlu arayüzde `Koy` / `Al` ile eşyaları çantadan 120 kg kapasiteli depoya ve geri taşı. İçerik F5/F9 ve otomatik kayıtla saklanır. Eski kayıtlar yeni depoyla uyumludur; sandık ilk kullanımda boştur.
 
 **v14 tüccar:** Tezgâha bakıp **E** basarak iki sütunlu ticaret ekranını aç. Hurdaları `Sat` ile **birer birer** sat; `Al` ile temiz su, konserve, bandaj, bez, kömür veya kablo kesici satın al. Eski `E` ile tüm hurdanın anında satılması ve `F` ile gizli satın alma kaldırıldı. Kredi/çanta kapasitesi ve eşya sayısı korunur; ticaret envanter üzerinden F5/F9 kaydedilir.
+
+**v15.1 — Sığınak içi malzeme iyileştirmesi:** mevcut sahne güvenli şekilde güncellenir; duvar/zemin/kapı, tezgâh, raf, yatak, masa, soba ve depo için ayrı, mevcut normal haritaları kullanan iç mekan materyalleri uygulanır. Dış avlu ve ganimet/kapı/depo kayıtları değiştirilmez. Unity gündüz/gece QA ve gerçek FPS ölçümü yapılmadan bu adım tamamlandı sayılmaz.
