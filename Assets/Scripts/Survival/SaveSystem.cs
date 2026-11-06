@@ -314,7 +314,19 @@ namespace Afterrust
             Dictionary<string, ContainerState> containers = new Dictionary<string, ContainerState>();
             foreach (ContainerState c in d.containers) containers[c.id] = c;
             foreach (LootContainer c in FindObjectsByType<LootContainer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-                if (containers.TryGetValue(PathOf(c.transform), out ContainerState s)) c.Restore(s.rolled, s.contents);
+            {
+                string id = PathOf(c.transform);
+                if (!containers.TryGetValue(id, out ContainerState saved))
+                {
+                    // v10 removed three old Oil Drum siblings before the pallet,
+                    // woodpile and shipping containers. Accept their previous keys
+                    // so a player's pre-v10 looted state is not silently reset.
+                    string oldId = LegacyV9YardPathOf(c.transform);
+                    if (oldId == null || !containers.TryGetValue(oldId, out saved))
+                        continue;
+                }
+                c.Restore(saved.rolled, saved.contents);
+            }
 
             HashSet<string> salvaged = new HashSet<string>(d.salvaged);
             foreach (SalvageablePart p in FindObjectsByType<SalvageablePart>(FindObjectsInactive.Include, FindObjectsSortMode.None))
@@ -347,6 +359,37 @@ namespace Afterrust
 
             if (DayNightWeather.Instance != null)
                 DayNightWeather.Instance.Restore(d.timeOfDay, d.day, d.raining, d.weatherTimer);
+        }
+
+        /// <summary>
+        /// Legacy ID for descendants of objects that moved three sibling slots
+        /// when v10 removed the three original outdoor oil drums.
+        /// Only used as a fallback when restoring old loot; new saves retain the
+        /// current PathOf IDs. Does not remap the rain barrel (it starts empty).
+        /// </summary>
+        public static string LegacyV9YardPathOf(Transform t)
+        {
+            if (t == null) return null;
+            Transform shifted = null;
+            for (Transform x = t; x != null && x.parent != null; x = x.parent)
+            {
+                if (x.parent.name == "Yard Props" &&
+                    (x.name == "Pallet Stack" || x.name == "Woodpile" ||
+                     x.name == "Shipping Container"))
+                {
+                    shifted = x;
+                    break;
+                }
+            }
+            if (shifted == null) return null;
+            List<string> parts = new List<string>();
+            for (Transform x = t; x != null; x = x.parent)
+            {
+                string part = x.parent == null ? x.name :
+                    x.name + "#" + (x.GetSiblingIndex() + (x == shifted ? 3 : 0));
+                parts.Insert(0, part);
+            }
+            return string.Join("/", parts);
         }
 
         public static string PathOf(Transform t)

@@ -47,7 +47,9 @@ jobs:
           assert json.loads(Path("Assets/Tests/EditMode/Afterrust.EditModeTests.asmdef").read_text())["name"] == "Afterrust.EditModeTests"
           assert "m_Name: Player" in Path("Assets/Scenes/AfterrustPrototype.unity").read_text()
           scene_sync = Path("Assets/Editor/AfterrustSceneSync.cs").read_text()
-          assert "private const int Latest = 10" in scene_sync
+          assert "private const int Latest = 11" in scene_sync
+          assert "ScrapyardEnvironmentBuilder.CorrectSafeZoneSign" in scene_sync
+          assert "ShelterBuilder.EnsureTraderNightLight" in scene_sync
           assert "RainCollectorBuilder.Apply" in scene_sync
           assert "ScrapyardEnvironmentBuilder.EnsureSafeZoneGate" in scene_sync
           assert "ShelterBuilder.AlignTradeStallRoof" in scene_sync
@@ -107,7 +109,20 @@ jobs:
           assert "hasContinuousFill" in save
           assert "RainCollectorBuilder.Place(p)" in shelter
           assert "case \"Oil Drum\"" not in Path("Assets/Editor/SurvivalSetup.cs").read_text()
-          print("V10 open rain collector and rain-only slow fill structure validated.")
+          assert plan["captureAtFixedDaytime"] is True
+          assert 9 <= plan["captureHour"] <= 14
+          qa_runner = Path("Assets/Scripts/QA/AfterrustScreenshotRunner.cs").read_text()
+          assert "captureAtFixedDaytime" in qa_runner
+          assert "weather.Restore(originalHour" in qa_runner
+          assert "capturedGameHour" in qa_runner
+          assert "LegacyV9YardPathOf" in save
+          legacy_tests = Path("Assets/Tests/EditMode/LegacyYardSaveTests.cs")
+          assert legacy_tests.is_file() and Path(str(legacy_tests) + ".meta").is_file()
+          assert "CorrectSafeZoneSign" in yard
+          assert "characterSize = 0.095f" in yard
+          assert "EnsureTraderNightLight" in shelter
+          assert "0.12f * (1f - rainBlend" in weather
+          print("V11 safe-yard lighting, deterministic daylight QA and legacy save repair validated.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:

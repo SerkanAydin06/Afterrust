@@ -240,25 +240,26 @@ namespace Afterrust
                     ? Quaternion.Euler(elevation, -60f, 0f)
                     : Quaternion.Euler(elevation + 180f, 120f, 0f);           // moon opposite
                 sun.color = isDay ? new Color(0.78f, 0.8f, 0.84f) : new Color(0.55f, 0.62f, 0.8f);
-                sun.intensity = isDay ? Mathf.Lerp(0.05f, 0.55f, dayF) * rainDim : 0.05f * (1f - rainBlend * 0.6f);
+                sun.intensity = isDay ? Mathf.Lerp(0.05f, 0.55f, dayF) * rainDim : 0.12f * (1f - rainBlend * 0.45f);
                 sun.shadowStrength = Mathf.Lerp(0.2f, 0.45f, dayF) * rainDim;
             }
 
-            float bright = Mathf.Max(dayF * rainDim, 0.04f) + flash * 0.9f;
+            // Maintain readable silhouettes at night without turning the stormy yard into daylight.
+            float bright = Mathf.Max(dayF * rainDim, 0.11f) + flash * 0.9f;
             RenderSettings.ambientMode = AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = Color.Lerp(new Color(0.03f, 0.035f, 0.05f), new Color(0.44f, 0.46f, 0.5f), bright);
-            RenderSettings.ambientEquatorColor = Color.Lerp(new Color(0.025f, 0.025f, 0.03f), new Color(0.36f, 0.36f, 0.36f), bright);
-            RenderSettings.ambientGroundColor = Color.Lerp(new Color(0.01f, 0.01f, 0.012f), new Color(0.16f, 0.15f, 0.14f), bright);
+            RenderSettings.ambientSkyColor = Color.Lerp(new Color(0.09f, 0.105f, 0.13f), new Color(0.44f, 0.46f, 0.5f), bright);
+            RenderSettings.ambientEquatorColor = Color.Lerp(new Color(0.065f, 0.070f, 0.085f), new Color(0.36f, 0.36f, 0.36f), bright);
+            RenderSettings.ambientGroundColor = Color.Lerp(new Color(0.035f, 0.04f, 0.05f), new Color(0.16f, 0.15f, 0.14f), bright);
 
             Color dayFog = Color.Lerp(new Color(0.44f, 0.46f, 0.48f), new Color(0.32f, 0.34f, 0.36f), rainBlend);
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.ExponentialSquared;
-            RenderSettings.fogColor = Color.Lerp(new Color(0.03f, 0.035f, 0.045f), dayFog, Mathf.Max(dayF, flash * 0.6f));
+            RenderSettings.fogColor = Color.Lerp(new Color(0.085f, 0.095f, 0.115f), dayFog, Mathf.Max(dayF, flash * 0.6f));
             RenderSettings.fogDensity = Mathf.Lerp(0.015f, 0.03f, rainBlend);
 
             if (sky != null)
             {
-                if (sky.HasProperty("_Exposure")) sky.SetFloat("_Exposure", Mathf.Lerp(0.03f, 0.5f, dayF) * rainDim + flash * 0.8f);
+                if (sky.HasProperty("_Exposure")) sky.SetFloat("_Exposure", Mathf.Lerp(0.16f, 0.5f, dayF) * rainDim + flash * 0.8f);
                 if (sky.HasProperty("_SkyTint")) sky.SetColor("_SkyTint", new Color(0.4f, 0.42f, 0.45f));
                 if (sky.HasProperty("_GroundColor")) sky.SetColor("_GroundColor", new Color(0.25f, 0.25f, 0.25f));
                 if (sky.HasProperty("_SunDisk")) sky.SetFloat("_SunDisk", 0f);

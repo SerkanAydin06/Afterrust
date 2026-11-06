@@ -22,6 +22,8 @@ namespace Afterrust.QA
             public int width = 1280;
             public int height = 720;
             public float delaySeconds = 2f;
+            public bool captureAtFixedDaytime = true;
+            public float captureHour = 11f;
             public ScreenshotView[] views;
         }
 
@@ -42,6 +44,9 @@ namespace Afterrust.QA
             public string unityVersion;
             public string scene;
             public string planAsset;
+            public float capturedGameHour;
+            public bool capturedRain;
+            public string lightingMode;
             public int imageCount;
             public List<CaptureEntry> images = new List<CaptureEntry>();
         }
@@ -97,7 +102,32 @@ namespace Afterrust.QA
                 yield break;
 
             yield return new WaitForSecondsRealtime(Mathf.Clamp(plan.delaySeconds, 0.1f, 30f));
-            Capture(plan);
+
+            // An existing F5 save can start the game at midnight. That made all
+            // 13 previous screenshots virtually black and impossible to inspect.
+            // Capture consistently by day, without changing the player's saved time.
+            DayNightWeather weather = DayNightWeather.Instance;
+            if (!plan.captureAtFixedDaytime || weather == null)
+            {
+                Capture(plan);
+                yield break;
+            }
+
+            float originalHour = weather.timeOfDay;
+            int originalDay = weather.day;
+            bool originalRain = weather.raining;
+            float originalTimer = weather.weatherTimer;
+            try
+            {
+                weather.Restore(Mathf.Clamp(plan.captureHour, 7f, 17f), originalDay, false, originalTimer);
+                // Let the scene's weather and lighting update before rendering.
+                yield return null;
+                Capture(plan);
+            }
+            finally
+            {
+                weather.Restore(originalHour, originalDay, originalRain, originalTimer);
+            }
         }
 
         private static void Capture(ScreenshotPlan plan)
@@ -145,7 +175,12 @@ namespace Afterrust.QA
                     capturedAtUtc = DateTime.UtcNow.ToString("o"),
                     unityVersion = Application.unityVersion,
                     scene = SceneManager.GetActiveScene().name,
-                    planAsset = "Assets/Resources/qa_screenshot_plan.json"
+                    planAsset = "Assets/Resources/qa_screenshot_plan.json",
+                    capturedGameHour = DayNightWeather.Instance != null
+                        ? DayNightWeather.Instance.timeOfDay : -1f,
+                    capturedRain = DayNightWeather.Instance != null &&
+                        DayNightWeather.Instance.IsRaining,
+                    lightingMode = plan.captureAtFixedDaytime ? "fixed-daylight" : "live-game-time"
                 };
 
                 HashSet<string> usedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

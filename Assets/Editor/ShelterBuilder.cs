@@ -376,6 +376,88 @@ namespace Afterrust.EditorTools
         }
 
         /// <summary>
+        /// The trader stands between existing yard lights and was effectively pitch
+        /// black in the real v10 nighttime QA screenshot. Add one low-cost hanging
+        /// lamp under the existing canopy without touching the NPC or shop props.
+        /// Its light and bulb are controlled by the normal day/night system.
+        /// </summary>
+        public static void EnsureTraderNightLight()
+        {
+            Transform shelter = ScavengerWalkSetup.FindInScene(RootName);
+            Transform stall = shelter != null ? shelter.Find("Trade Stall") : null;
+            if (stall == null)
+                throw new System.InvalidOperationException("Trade stall not found for night lamp.");
+
+            Transform holder = stall.Find("Trader Night Lamp");
+            if (holder == null)
+            {
+                holder = new GameObject("Trader Night Lamp").transform;
+                holder.SetParent(stall, false);
+                holder.localPosition = new Vector3(0f, 2.15f, 0.15f);
+                Undo.RegisterCreatedObjectUndo(holder.gameObject, "Install trader night lamp");
+            }
+
+            Material housing = MaterialKit.Plain("M_TraderLamp_Housing",
+                new Color(0.15f, 0.14f, 0.12f), 0.22f, 0.45f);
+            Material glowing = MaterialKit.Plain("M_TraderLamp_Glass",
+                new Color(0.88f, 0.68f, 0.38f), 0.18f, 0f);
+
+            Transform shade = holder.Find("Shade");
+            if (shade == null)
+            {
+                GameObject go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                go.name = "Shade";
+                go.transform.SetParent(holder, false);
+                go.transform.localPosition = new Vector3(0f, 0.08f, 0f);
+                go.transform.localScale = new Vector3(0.33f, 0.09f, 0.33f);
+                Object.DestroyImmediate(go.GetComponent<BoxCollider>());
+                shade = go.transform;
+            }
+            shade.GetComponent<Renderer>().sharedMaterial = housing;
+
+            Transform bulb = holder.Find("Bulb");
+            if (bulb == null)
+            {
+                GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                go.name = "Bulb";
+                go.transform.SetParent(holder, false);
+                go.transform.localPosition = Vector3.zero;
+                go.transform.localScale = Vector3.one * 0.13f;
+                Object.DestroyImmediate(go.GetComponent<Collider>());
+                bulb = go.transform;
+            }
+            Renderer bulbRenderer = bulb.GetComponent<Renderer>();
+            bulbRenderer.sharedMaterial = glowing;
+            bulbRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+            Light light = holder.GetComponent<Light>();
+            if (light == null) light = holder.gameObject.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.range = 5.8f;
+            light.intensity = 1.35f;
+            light.color = new Color(1f, 0.74f, 0.47f);
+            light.shadows = LightShadows.None; // one lamp; keep yard frame times low
+
+            DayNightWeather weather = Object.FindFirstObjectByType<DayNightWeather>(FindObjectsInactive.Include);
+            if (weather == null)
+                throw new System.InvalidOperationException("Weather system missing: cannot control trader lamp.");
+
+            var lights = new List<Light>(weather.lamps ?? new Light[0]);
+            if (!lights.Contains(light)) lights.Add(light);
+            weather.lamps = lights.ToArray();
+
+            var bulbs = new List<Renderer>(weather.lampBulbs ?? new Renderer[0]);
+            if (!bulbs.Contains(bulbRenderer)) bulbs.Add(bulbRenderer);
+            weather.lampBulbs = bulbs.ToArray();
+
+            // It switches on with the rest of the yard lamps at night.
+            light.enabled = false;
+            bulbRenderer.enabled = false;
+            EditorUtility.SetDirty(weather);
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+
+        /// <summary>
         /// Migrate previously generated v7 scenes without rebuilding the shelter, which
         /// would otherwise replace gameplay objects and invalidate parts of saved state.
         /// </summary>

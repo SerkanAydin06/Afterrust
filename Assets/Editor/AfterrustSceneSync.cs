@@ -18,7 +18,7 @@ namespace Afterrust.EditorTools
     internal static class AfterrustSceneSync
     {
         private const string ScenePath = "Assets/Scenes/AfterrustPrototype.unity";
-        private const int Latest = 10;
+        private const int Latest = 11;
 
         private static bool scheduled;
         private static bool allStepsSucceeded;
@@ -152,6 +152,17 @@ namespace Afterrust.EditorTools
                 // three outdoor oil drums with one empty open-top rain collector.
                 Step("Single open rain collector (rain-only slow filling)",
                     RainCollectorBuilder.Apply);
+            }
+
+            if (current < 11)
+            {
+                // v10 generated scene has an oversized name plate and no trader lamp.
+                // Adjust only these small fixtures; do not regenerate the yard, the
+                // gate or any saved loot and water container hierarchies.
+                Step("Fit safe-zone lettering to entrance sign",
+                    ScrapyardEnvironmentBuilder.CorrectSafeZoneSign);
+                Step("Give the trader stall a night lamp",
+                    ShelterBuilder.EnsureTraderNightLight);
             }
 
             if (!allStepsSucceeded)

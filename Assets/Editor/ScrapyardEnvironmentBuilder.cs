@@ -150,11 +150,35 @@ namespace Afterrust.EditorTools
             TextMesh text = label.AddComponent<TextMesh>();
             text.text = "GÜVENLİ BÖLGE";
             text.fontSize = 42;
-            text.characterSize = 0.27f;
+            text.characterSize = 0.095f;
             text.anchor = TextAnchor.MiddleCenter;
             text.alignment = TextAlignment.Center;
             text.color = new Color(0.95f, 0.89f, 0.68f);
 
+            EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
+        }
+
+        /// <summary>
+        /// Existing v10 scenes already contain the gate. Resize its oversized
+        /// lettering to fit the 3.55 m sign plate without rebuilding the gate
+        /// or resetting its saved open/closed state.
+        /// </summary>
+        public static void CorrectSafeZoneSign()
+        {
+            Transform yard = ScavengerWalkSetup.FindInScene(SceneRootName);
+            Transform gate = yard != null ? yard.Find("South Safe Zone Gate") : null;
+            Transform label = gate != null ? gate.Find("Safe Zone Name") : null;
+            TextMesh text = label != null ? label.GetComponent<TextMesh>() : null;
+            if (text == null)
+                throw new System.InvalidOperationException("Safe-zone gate text mesh missing.");
+            Undo.RecordObject(text, "Resize safe-zone sign text");
+            Undo.RecordObject(label, "Position safe-zone sign text");
+            text.text = "GÜVENLİ BÖLGE";
+            text.characterSize = 0.095f;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            label.localPosition = new Vector3(0f, 2.87f, 0.093f);
+            EditorUtility.SetDirty(text);
             EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
         }
 
