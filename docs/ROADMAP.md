@@ -38,3 +38,9 @@ Durum: P0 hayatta kalma döngüsü + güvenli avlu v9 düzenlemesi.
 4. Kablo kesici üretilip alternatör kablosu sökülebilir.
 5. EditMode testleri Unity Editor'da çalıştırılır ve geçer (henüz doğrulanmadı).
 6. İlk keşif: güney kapısından çık, büfeyi veya konteyneri ara, kimyasal bölgeden kaçınarak sığınağa dön.
+
+## Sıradaki güvenli avlu öncelikleri (v12 sonrası)
+1. **Performans ölçümü:** sabit durma/yürüme/koşma/yağmur için gerçek FPS ve kare süresi karşılaştır; gerekiyorsa Unity Profiler ile darboğazı belirle.
+2. **Görsel kalite:** avluda gündüz ve gece aydınlatma, malzeme tekrarları, tüccar çatı düzeni ve yapılar arası geçişleri gözden geçir.
+3. **Etkileşim ve işlev:** açık yağmur varili, iş tezgâhı, depo düzeni, soba, yatak ve tüccar kullanımını baştan sona denetle.
+4. **Sonra dış bölge:** güvenli avlu testleri geçince keşif görevini tekrar etkinleştir ve dünya içeriğini genişlet.
