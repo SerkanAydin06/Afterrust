@@ -104,5 +104,10 @@ Unity testleri, uGUI arayüz ve eşya ikonları, profesyonel ses/miks, çoklu ke
 - Var olan tezgâh duvar lambası sıcak, dar açılı **spot** olarak ayarlandı; gölge hesaplaması kaldırıldı ve ışık sığınağın önüne/dışarı taşmayacak şekilde sınırlandırıldı.
 - Orta sarkıt lamba hafif soğuk/nötr renge, **Hard** gölgeye ve dengeli kapsama alanına ayarlandı. Pahalı Soft shadow yerine Hard shadow kullanılıyor.
 - Soba yandığında mevcut ateş ışığı daha dar sıcak bölgeye odaklandı; söndüğünde v15.1'in siyah metal kaplamasına geri dönmesi sağlandı.
-- **Yeni dinamik ışık, collider veya sahne nesnesi eklenmedi**; mevcut lamp referansları ve saved stove/depo/kapı durumu değişmedi. Atmosfer önayarları elle yeniden uygulanınca aynı ışık pass'i tekrarlanıyor.
+- **Güncelleme:** v15.2 ilk sürümü, önceden yaratılmamış tezgâh veya sarkıt lambada duruyordu. Yeni P0 düzeltme yalnız eksik iç lambaları geri getiriyor ve gün/gece referanslarını tamamlıyor; var olan lambalar ve kayıtlı soba/depo/kapı durumu korunuyor. Eksikse en çok iki düşük maliyetli iç lamba eklenebilir; atmosfer önayarları yeniden uygulanınca da aynı pass çalışır.
 - `docs/DEVELOPMENT_PLAN.md`: AR-1502 `[~]`. Gündüz ve gece 02/08/14 QA ve FPS-ms/Unity derleme testleri bekliyor.
+
+## 7 Kasım — AR-Q005: v15.2 sahne güncellemesi hatası
+- Kullanıcı Unity'de `[Afterrust] Scene update step 'V15.2 shelter lighting and stove material consistency' failed` ve `interior wall lamp or pendant not found` hatasını bildirdi. Bu nedenle `Scene update incomplete` ve Play engeli oluştu.
+- `ShelterInteriorLightingPass` artık belirli lamba adları/pozisyonları eksik olduğunda hata atmak yerine mevcut armatürü arıyor, eksikse yalnız onu inşa ediyor ve `DayNightWeather.lamps` / `lampBulbs` listelerine güvenli, tekrarsız kayıt yapıyor. Tüccar lambası ve dış lambalar korunuyor.
+- Gerçek Unity Editor testi henüz yapılmadı; sahne sürümü **16 olarak kaldı** ve başarısız geçiş bir sonraki Editor açılışında yeniden denenecek. Kayıtlı eşya/sığınak hiyerarşisi yeniden inşa edilmiyor.
