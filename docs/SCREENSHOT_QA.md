@@ -79,3 +79,9 @@ Görüntünün doğru yeri gösterdiğini Play içinde kontrol et. Her yeni sahn
 - **Gündüz**: iki iç lamba normal gün/gece döngüsüyle kapanmalı, dış avlunun ve tüccarın ışığı etkilenmemeli.
 - `02_shelter_interior`, `08_stove_and_bed`, `14_shelter_storage` mevcut açılar yeniden kullanılır. Otomatik QA sadece **11:00 gündüz** çektiği için gece testi ayrıca doğrudan Unity Play/Game penceresinde yapılmalı.
 - FPS/ms değerlerini iç/dış, gündüz/gece, soba açık/kapalı durumlarında karşılaştır. GitHub CI sayısal FPS sonucu üretemez.
+
+## AR-Q005: v15.2 lamba geçişi düzeltmesinin kontrolü
+1. Unity'de derleme bitince Console'da `[Afterrust] Scene updated to version 16 and saved.` gör.
+2. Tekrar Play yap; `interior wall lamp or pendant not found` ve `Scene update incomplete` hataları tekrarlanmamalı.
+3. Gece sığınakta tezgâh/sarkıt lambaları, soba açık/kapalı ve dış tüccar ışığını kontrol et. Mevcut lambalar kopyalanmamalı.
+4. Gündüz 02/08/14 QA kamera açılarını ve FPS/ms değerini karşılaştır. Yeni lamba sadece eskisi gerçekten eksikse oluşturulur.
