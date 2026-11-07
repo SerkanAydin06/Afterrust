@@ -244,6 +244,13 @@ namespace Afterrust.EditorTools
             Transform existing = fixture.Find("Bulb");
             if (existing != null && existing.GetComponent<Renderer>() != null)
                 return existing;
+            if (existing != null)
+            {
+                // Do not create a second child named Bulb that Find() might
+                // keep resolving to an invalid renderer-free legacy node.
+                Undo.RecordObject(existing.gameObject, "Rename invalid legacy bulb");
+                existing.name = "Bulb Legacy (No Renderer)";
+            }
 
             Material housing = MaterialKit.Plain("M_V15_Interior_LampHousing",
                 new Color(0.15f, 0.15f, 0.14f), 0.17f, 0.44f);
