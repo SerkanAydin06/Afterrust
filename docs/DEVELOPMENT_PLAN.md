@@ -44,6 +44,7 @@
 
 | ID | Durum | Öncelik | Görev |
 |---|---|---|---|
+| AR-Q005 | [~] | P0 | **AR-1502 sahne geçişini engelleyen eksik iç lamba hatası:** yüklü sahnede olmayan workbench/pendant armatürlerini idempotent tamamla, gün/gece referanslarını onar; `Scene updated to version 16` + Play doğrulanana kadar açık bırak. PR kodu/testi hazır, gerçek Unity tekrar denemesi bekleniyor. |
 | AR-Q001 | [ ] | P0 | Lisanslı Unity EditMode CI etkinleştirilerek gerçek C# derleme ve EditMode testleri doğrulansın. Bugün GitHub yalnız statik proje ve belge kontrolü çalıştırıyor. |
 | AR-Q002 | [ ] | P1 | Gerçek FPS değerleri (sabit/yürüme/koşma/yağmur/sığınak) ve Unity Profiler ölçümleri toplanıp bütçe oluşturulsun. |
 | AR-Q003 | [ ] | P1 | Oyun kaydı geriye uyumluluk ve sandık-tüccar etkileşimlerinin gerçek Play'de testi. |
@@ -56,3 +57,6 @@
 **Son güncelleme kaydı:** 2026-11-07 — AR-1502 kodlandı (sprint v15.2, teknik sahne sürümü 16). Gerçek Unity kalite kapısı ve performans ölçümü bekliyor. Sıradaki uygulanabilir iş: **AR-1503 iç detay ve yerleşim**, ancak Play'de derleme veya görsel hata tespit edilirse önce AR-Q001 / AR-1505 düzeltmeleri yapılacak.
 
 **Önceki kayıt:** 2026-11-07 — AR-1501 iç materyal geçişi kodlandı.
+
+
+**2026-11-07 hata düzeltme kaydı:** Unity'de `V15.2: interior wall lamp or pendant not found` istisnası sahne 16 geçişini durdurdu. AR-Q005 P0 açıldı. Yeni onarım kodu yalnız eksik iç lambaları tamamlıyor, gün/gece dizilerini yeniliyor ve eski tüccar/avlu lambalarını koruyor. Gerçek Unity Play ve `Scene updated to version 16` mesajı olmadan bitmiş sayılmaz. Sonraki işe geçmeden bu doğrulama yapılmalı.

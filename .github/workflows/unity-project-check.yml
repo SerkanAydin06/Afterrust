@@ -186,13 +186,21 @@ jobs:
           assert 'pendantLight.shadows = LightShadows.Hard' in light_source
           assert 'stove.fireLight.range = 3.8f' in light_source
           assert 'stove.glowOff = matteStove' in light_source
-          assert 'new Light(' not in light_source
-          assert 'AddComponent<Light>' not in light_source
+          assert "MakeFixture(root" in light_source
+          assert "EnsureLight(workbench" in light_source
+          assert "EnsureLight(pendant" in light_source
+          assert "SyncWeatherReferences(root)" in light_source
+          assert "new GameObject(\"Scrapyard Lamps\")" in light_source
+          assert "V15.2: interior wall lamp or pendant not found." not in light_source
+          lamp_recovery_tests = Path("Assets/Tests/EditMode/InteriorLampRecoveryTests.cs")
+          assert lamp_recovery_tests.is_file()
+          assert Path(str(lamp_recovery_tests) + ".meta").is_file()
           atmosphere = Path("Assets/Editor/ScrapyardAtmosphereSetup.cs").read_text()
           assert "ShelterInteriorLightingPass.Apply();" in atmosphere
           plan_text = live_plan.read_text()
           assert '| AR-1502 | [~]' in plan_text
-          print("V15.2 focused shelter lighting, lower shadow cost and tracked plan validated.")
+          assert 'AR-Q005' in live_plan.read_text()
+          print("V15.2 lighting migration now recovers missing fixtures and re-registers weather safely.")
           PY
           echo "Static checks passed. Actual Unity compilation runs in the optional licensed job."
   unity-editmode:
