@@ -47,3 +47,8 @@
 - Gece sığınakta yatak, tezgâh ve sandığın okunurluğuna bak; kapı açık ve kapalıyken ışık sızıntısı olup olmadığını kontrol et.
 - Sobaya yakıt ekleyerek ışık ve kapak parlaklığını kontrol et. Ateşi söndürdüğünde siyah metal kaplamaya dönmeli.
 - İçeride ve avluda FPS/ms değerlerini karşılaştır; Play'de hata, eksik ışık veya material kaybı varsa `docs/DEVELOPMENT_PLAN.md` AR-1502 tekrar açılacak.
+
+## AR-Q005 — v15.2 lamba hatası düzeltmesi
+- Eski `V15.2: interior wall lamp or pendant not found` hatası için Pull sonrası Unity Editor'ın derlemeyi bitirmesini bekle.
+- Sürüm yükseltici yeniden denemede `[Afterrust] Scene updated to version 16 and saved.` yazmalı. Aksi hâlde Console'daki ilk gerçek hatayı paylaş.
+- Gece tezgâh ve sarkıt lambalarının çalıştığını, dış lambaların ve kayıtlı depo/soba durumunun bozulmadığını kontrol et; çift lamba oluşmamalı.
